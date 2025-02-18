@@ -24,10 +24,10 @@ public class Film {
     @NotNull(message = "Дата релиза не должна быть null")
     private LocalDate releaseDate;
     @NotNull(message = "Продолжительность не должна быть null")
-    private Duration duration;
+    private Integer duration;
 
 
-    public Film(int id, String name, String description, LocalDate releaseDate, Duration duration) {
+    public Film(int id, String name, String description, LocalDate releaseDate, Integer duration) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -35,7 +35,7 @@ public class Film {
         this.duration = duration;
     }
 
-    public Film(String name, String description, LocalDate releaseDate, Duration duration) {
+    public Film(String name, String description, LocalDate releaseDate, Integer duration) {
 
         this.name = name;
         this.description = description;

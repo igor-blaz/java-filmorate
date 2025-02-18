@@ -64,7 +64,7 @@ public class FilmController {
             log.warn("(Validation) Дата релиза неверна");
             throw new ValidationException("Дата релиза неверна");
         }
-        if (film.getDuration().isNegative()) {
+        if (film.getDuration() < 0) {
             log.warn("(Validation) Продолжительность указана неверно");
             throw new ValidationException("Продолжительность указана неверно");
         }

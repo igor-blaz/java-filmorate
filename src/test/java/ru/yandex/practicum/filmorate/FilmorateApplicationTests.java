@@ -36,7 +36,7 @@ class FilmorateApplicationTests {
     @BeforeEach
     public void setUp() {
         LocalDate date = LocalDate.now().minusYears(20);
-        Duration duration = Duration.ofMinutes(220);
+        Integer duration = 220;
         film = new Film("KinDzaDza", "description", date, duration);
         client = HttpClient.newHttpClient();
         url = URI.create("http://localhost:8080/films");
@@ -60,8 +60,8 @@ class FilmorateApplicationTests {
                 .POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
-        System.out.println(filmJson);
-
+        Film film3 = gson.fromJson(filmJson, Film.class);
+        System.out.println(film3.getDuration());
     }
 
     @Test
