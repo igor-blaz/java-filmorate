@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-//import ru.yandex.practicum.filmorate.controller.DurationAdapter;
+import ru.yandex.practicum.filmorate.controller.DurationAdapter;
 import ru.yandex.practicum.filmorate.controller.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.controller.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -42,7 +42,7 @@ class FilmorateApplicationTests {
         url = URI.create("http://localhost:8080/films");
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
-        //gsonBuilder.registerTypeAdapter(Duration.class, new DurationAdapter());
+        gsonBuilder.registerTypeAdapter(Duration.class, new DurationAdapter());
         gsonBuilder.setPrettyPrinting();
         gsonBuilder.serializeNulls();
 
