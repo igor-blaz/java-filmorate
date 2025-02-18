@@ -19,7 +19,6 @@ public class Film {
     private Duration duration;
 
 
-
     public Film(String name, String description, LocalDate releaseDate, Duration duration) {
 
         this.name = name;

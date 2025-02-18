@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -23,7 +24,7 @@ public class FilmController {
         id++;
         film.setId(id);
         filmMap.put(id, film);
-        log.info("Фильм добавлен");
+        log.info("Фильм добавлен: id={}", id);
         return film;
     }
 
@@ -34,8 +35,6 @@ public class FilmController {
             log.warn("Нельзя обновить фильм, id которого нет");
             throw new ValidationException("Фильм с таким ID не найден");
         }
-        id++;
-        film.setId(id);
         filmMap.put(id, film);
         log.info("Фильм обновлен");
         return film;
@@ -47,8 +46,12 @@ public class FilmController {
         return new ArrayList<>(filmMap.values());
     }
 
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<String> handleValidationException(ValidationException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 
-    public void validation(Film film) throws ValidationException{
+    public void validation(Film film) throws ValidationException {
         if (film.getName().isBlank() || film.getName().isEmpty()) {
             log.warn("(Validation) Нет названия");
             throw new ValidationException("Нет названия");
