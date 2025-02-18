@@ -46,10 +46,10 @@ public class FilmController {
         return new ArrayList<>(filmMap.values());
     }
 
-    @ExceptionHandler(ValidationException.class)
+    /*@ExceptionHandler(ValidationException.class)
     public ResponseEntity<String> handleValidationException(ValidationException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
-    }
+    }*/
 
     public void validation(Film film) throws ValidationException {
         if (film.getName().isBlank() || film.getName().isEmpty()) {

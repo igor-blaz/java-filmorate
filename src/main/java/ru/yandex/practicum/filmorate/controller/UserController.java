@@ -49,10 +49,10 @@ public class UserController {
         return new ArrayList<>(userMap.values());
     }
 
-    @ExceptionHandler(ValidationException.class)
+   /* @ExceptionHandler(ValidationException.class)
     public ResponseEntity<String> handleValidationException(ValidationException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
-    }
+    }*/
 
     public void validation(User user) {
         if (!user.getEmail().contains("@") || user.getEmail().isBlank()) {
