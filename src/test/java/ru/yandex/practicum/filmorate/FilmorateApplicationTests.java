@@ -53,11 +53,11 @@ class FilmorateApplicationTests {
     @Test
     public void postCorrectFilmTest() throws IOException, InterruptedException {
         filmJson = gson.toJson(film);
-        HttpRequest request = HttpRequest.
-                newBuilder().
-                header("Content-Type", "application/json").
-                uri(url).
-                POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .header("Content-Type", "application/json")
+                .uri(url)
+                .POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
@@ -67,11 +67,11 @@ class FilmorateApplicationTests {
     public void postBadReleaseValidationFilmTest() throws IOException, InterruptedException {
         film.setReleaseDate(LocalDate.MIN);
         filmJson = gson.toJson(film);
-        HttpRequest request = HttpRequest.
-                newBuilder().
-                header("Content-Type", "application/json").
-                uri(url).
-                POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .header("Content-Type", "application/json")
+                .uri(url)
+                .POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(400, response.statusCode());
         assertThrows(ValidationException.class, () -> {
@@ -90,11 +90,11 @@ class FilmorateApplicationTests {
         String description = sb.toString();
         film.setDescription(description);
         filmJson = gson.toJson(film);
-        HttpRequest request = HttpRequest.
-                newBuilder().
-                header("Content-Type", "application/json").
-                uri(url).
-                POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .header("Content-Type", "application/json")
+                .uri(url)
+                .POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(400, response.statusCode());
     }
@@ -102,20 +102,20 @@ class FilmorateApplicationTests {
     @Test
     public void putFilmTest() throws IOException, InterruptedException {
         filmJson = gson.toJson(film);
-        HttpRequest request = HttpRequest.
-                newBuilder().
-                header("Content-Type", "application/json").
-                uri(url).
-                POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .header("Content-Type", "application/json")
+                .uri(url)
+                .POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         film.setDescription("newDescription");
         film.setId(1);
         String filmJsonTwo = gson.toJson(film);
-        HttpRequest requestTwo = HttpRequest.
-                newBuilder().
-                header("Content-Type", "application/json").
-                uri(url).
-                PUT(HttpRequest.BodyPublishers.ofString(filmJsonTwo)).build();
+        HttpRequest requestTwo = HttpRequest
+                .newBuilder()
+                .header("Content-Type", "application/json")
+                .uri(url)
+                .PUT(HttpRequest.BodyPublishers.ofString(filmJsonTwo)).build();
         HttpResponse<String> responseTwo = client.send(requestTwo, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, responseTwo.statusCode());
     }
@@ -123,25 +123,25 @@ class FilmorateApplicationTests {
     @Test
     public void getFilmTest() throws IOException, InterruptedException {
         filmJson = gson.toJson(film);
-        HttpRequest request = HttpRequest.
-                newBuilder().
-                header("Content-Type", "application/json").
-                uri(url).
-                POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .header("Content-Type", "application/json")
+                .uri(url)
+                .POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        HttpRequest requestTwo = HttpRequest.
-                newBuilder().
-                header("Content-Type", "application/json").
-                uri(url).
-                POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
+        HttpRequest requestTwo = HttpRequest
+                .newBuilder()
+                .header("Content-Type", "application/json")
+                .uri(url)
+                .POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
         HttpResponse<String> responseTwo = client.send(requestTwo, HttpResponse.BodyHandlers.ofString());
 
-        HttpRequest requestThree = HttpRequest.
-                newBuilder().
-                header("Content-Type", "application/json").
-                uri(url).
-                GET().build();
+        HttpRequest requestThree = HttpRequest
+                .newBuilder()
+                .header("Content-Type", "application/json")
+                .uri(url)
+                .GET().build();
         HttpResponse<String> responseThree = client.send(requestThree, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, responseThree.statusCode());
 

@@ -52,11 +52,11 @@ public class UserFilmorateTests {
     @Test
     public void postCorrectUserTest() throws IOException, InterruptedException {
         userJson = gson.toJson(user);
-        HttpRequest request = HttpRequest.
-                newBuilder().
-                header("Content-Type", "application/json").
-                uri(url).
-                POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .header("Content-Type", "application/json")
+                .uri(url)
+                .POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
 
@@ -66,11 +66,11 @@ public class UserFilmorateTests {
     public void postBadReleaseValidationUserTest() throws IOException, InterruptedException {
         user.setBirthday(LocalDate.MAX);
         userJson = gson.toJson(user);
-        HttpRequest request = HttpRequest.
-                newBuilder().
-                header("Content-Type", "application/json").
-                uri(url).
-                POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .header("Content-Type", "application/json")
+                .uri(url)
+                .POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(400, response.statusCode());
         assertThrows(ValidationException.class, () -> {
@@ -89,11 +89,11 @@ public class UserFilmorateTests {
         String description = sb.toString();
         user.setEmail("l ld d w 99");
         userJson = gson.toJson(user);
-        HttpRequest request = HttpRequest.
-                newBuilder().
-                header("Content-Type", "application/json").
-                uri(url).
-                POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .header("Content-Type", "application/json")
+                .uri(url)
+                .POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(400, response.statusCode());
     }
@@ -101,20 +101,20 @@ public class UserFilmorateTests {
     @Test
     public void putUserTest() throws IOException, InterruptedException {
         userJson = gson.toJson(user);
-        HttpRequest request = HttpRequest.
-                newBuilder().
-                header("Content-Type", "application/json").
-                uri(url).
-                POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .header("Content-Type", "application/json")
+                .uri(url)
+                .POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         user.setLogin("newLogin");
         user.setId(1);
         String userJsonTwo = gson.toJson(user);
-        HttpRequest requestTwo = HttpRequest.
-                newBuilder().
-                header("Content-Type", "application/json").
-                uri(url).
-                PUT(HttpRequest.BodyPublishers.ofString(userJsonTwo)).build();
+        HttpRequest requestTwo = HttpRequest
+                .newBuilder()
+                .header("Content-Type", "application/json")
+                .uri(url)
+                .PUT(HttpRequest.BodyPublishers.ofString(userJsonTwo)).build();
         HttpResponse<String> responseTwo = client.send(requestTwo, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, responseTwo.statusCode());
     }
@@ -122,25 +122,25 @@ public class UserFilmorateTests {
     @Test
     public void getUserTest() throws IOException, InterruptedException {
         userJson = gson.toJson(user);
-        HttpRequest request = HttpRequest.
-                newBuilder().
-                header("Content-Type", "application/json").
-                uri(url).
-                POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .header("Content-Type", "application/json")
+                .uri(url)
+                .POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        HttpRequest requestTwo = HttpRequest.
-                newBuilder().
-                header("Content-Type", "application/json").
-                uri(url).
-                POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
+        HttpRequest requestTwo = HttpRequest
+                .newBuilder()
+                .header("Content-Type", "application/json")
+                .uri(url)
+                .POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
         HttpResponse<String> responseTwo = client.send(requestTwo, HttpResponse.BodyHandlers.ofString());
 
-        HttpRequest requestThree = HttpRequest.
-                newBuilder().
-                header("Content-Type", "application/json").
-                uri(url).
-                GET().build();
+        HttpRequest requestThree = HttpRequest
+                .newBuilder()
+                .header("Content-Type", "application/json")
+                .uri(url)
+                .GET().build();
         HttpResponse<String> responseThree = client.send(requestThree, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, responseThree.statusCode());
 
