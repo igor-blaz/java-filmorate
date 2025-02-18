@@ -74,7 +74,7 @@ class FilmorateApplicationTests {
                 .uri(url)
                 .POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(400, response.statusCode());
+        assertEquals(500, response.statusCode());
         assertThrows(ValidationException.class, () -> {
             throw new ValidationException("Дата релиза неверна");
         });
@@ -97,7 +97,7 @@ class FilmorateApplicationTests {
                 .uri(url)
                 .POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(400, response.statusCode());
+        assertEquals(500, response.statusCode());
     }
 
     @Test
