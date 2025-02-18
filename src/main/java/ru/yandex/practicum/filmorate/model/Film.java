@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -14,11 +15,16 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @NonNull
+
 public class Film {
-    private int id;
+    private int id = 0;
+    @NotNull(message = "Название не должно быть null")
     private String name;
+    @NotNull(message = "Описание не должно быть null")
     private String description;
+    @NotNull(message = "Дата релиза не должна быть null")
     private LocalDate releaseDate;
+    @NotNull(message = "Продолжительность не должна быть null")
     private Duration duration;
 
 
