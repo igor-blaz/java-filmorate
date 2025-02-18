@@ -110,7 +110,6 @@ class FilmorateApplicationTests {
                 .POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         film.setDescription("newDescription");
-        film.setId(1);
         String filmJsonTwo = gson.toJson(film);
         HttpRequest requestTwo = HttpRequest
                 .newBuilder()
