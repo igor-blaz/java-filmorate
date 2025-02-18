@@ -1,0 +1,19 @@
+package ru.yandex.practicum.filmorate.controller;
+
+import com.google.gson.*;
+
+import java.lang.reflect.Type;
+import java.time.LocalDate;
+
+public class LocalDateAdapter implements JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
+
+    @Override
+    public JsonElement serialize(LocalDate src, Type typeOfSrc, JsonSerializationContext context) {
+        return new JsonPrimitive(src.toString()); // Преобразуем LocalDate в строку
+    }
+
+    @Override
+    public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        return LocalDate.parse(json.getAsString()); // Преобразуем строку обратно в LocalDate
+    }
+}
