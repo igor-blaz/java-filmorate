@@ -60,6 +60,7 @@ class FilmorateApplicationTests {
                 .POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
+        System.out.println(filmJson);
 
     }
 

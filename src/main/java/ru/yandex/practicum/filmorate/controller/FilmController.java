@@ -21,10 +21,9 @@ public class FilmController {
     @PostMapping
     public Film addMovie(@RequestBody Film film) {
         validation(film);
-        id++;
-        film.setId(id);
-        filmMap.put(id, film);
-        log.info("Фильм добавлен: id={}", id);
+        film.setId(id++);
+        filmMap.put(film.getId(), film);
+        log.info("Фильм добавлен: id={}", film.getId());
         return film;
     }
 
@@ -35,7 +34,7 @@ public class FilmController {
             log.warn("Нельзя обновить фильм, id которого нет");
             throw new ValidationException("Фильм с таким ID не найден");
         }
-        filmMap.put(id, film);
+        filmMap.put(film.getId(), film);
         log.info("Фильм обновлен");
         return film;
     }

@@ -25,7 +25,7 @@ public class UserController {
     public User addUser(@RequestBody User user) {
         validation(user);
         user.setId(id++);
-        userMap.put(id, user);
+        userMap.put(user.getId(), user);
         log.info("Пользователь добавлен");
         return user;
     }
@@ -37,8 +37,7 @@ public class UserController {
             log.warn("ID пользователя не найден. Невозможно обновить");
             throw new ValidationException("Аккаунт с таким ID не найден");
         }
-        user.setId(id++);
-        userMap.put(id, user);
+        userMap.put(user.getId(), user);
         log.info("Данные пользователя успешно обновлены");
         return user;
     }
