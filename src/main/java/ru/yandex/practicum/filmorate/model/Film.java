@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @NonNull
-
 public class Film {
     private int id = 0;
     @NotNull(message = "Название не должно быть null")
