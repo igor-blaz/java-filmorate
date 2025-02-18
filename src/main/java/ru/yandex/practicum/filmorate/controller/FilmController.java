@@ -16,7 +16,7 @@ public class FilmController {
     Integer id = 0;
     static final int MAX_DESCRIPTION = 200;
     static final LocalDate OLDEST_FILM = LocalDate.of(1895, 12, 28);
-    private final static Logger log = LoggerFactory.getLogger(FilmController.class);
+    private static final Logger log = LoggerFactory.getLogger(FilmController.class);
 
     @PostMapping
     public Film addMovie(@RequestBody Film film) {
