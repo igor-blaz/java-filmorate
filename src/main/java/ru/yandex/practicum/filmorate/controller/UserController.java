@@ -63,7 +63,7 @@ public class UserController {
             log.warn("(Validation) Логин не указан корректно");
             throw new ValidationException("(Validation) Логин не указан корректно");
         }
-        if (user.getName().isBlank()) {
+        if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
         if (user.getBirthday().isAfter(LocalDate.now())) {
