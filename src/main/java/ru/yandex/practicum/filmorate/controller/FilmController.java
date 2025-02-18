@@ -56,7 +56,7 @@ public class FilmController {
             log.warn("(Validation) Нет названия");
             throw new ValidationException("Нет названия");
         }
-        if (film.getDescription().length() > MAX_DESCRIPTION) {
+        if (film.getDescription().length() >= MAX_DESCRIPTION) {
             log.warn("(Validation) Название больше 200 символов");
             throw new ValidationException("Название больше 200 символов");
         }
