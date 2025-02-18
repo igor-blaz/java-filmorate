@@ -108,6 +108,7 @@ public class UserFilmorateTests {
                 .POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         user.setLogin("newLogin");
+        user.setId(1);
         String userJsonTwo = gson.toJson(user);
         HttpRequest requestTwo = HttpRequest
                 .newBuilder()
