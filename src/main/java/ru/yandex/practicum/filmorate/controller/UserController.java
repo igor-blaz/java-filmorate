@@ -24,7 +24,8 @@ public class UserController {
     @PostMapping
     public User addUser(@RequestBody User user) {
         validation(user);
-        user.setId(id++);
+        id++;
+        user.setId(id);
         userMap.put(user.getId(), user);
         log.info("Пользователь добавлен");
         return user;

@@ -21,7 +21,8 @@ public class FilmController {
     @PostMapping
     public Film addMovie(@RequestBody Film film) {
         validation(film);
-        film.setId(id++);
+        id++;
+        film.setId(id);
         filmMap.put(film.getId(), film);
         log.info("Фильм добавлен: id={}", film.getId());
         return film;
