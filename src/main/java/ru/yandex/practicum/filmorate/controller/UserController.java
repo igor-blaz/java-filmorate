@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @PostMapping
-    public User addUser(@RequestBody User user) {
+    public User addUser(@Valid @RequestBody User user) {
         validation(user);
         user.setId(id++);
         userMap.put(user.getId(), user);
@@ -30,7 +31,7 @@ public class UserController {
     }
 
     @PutMapping
-    public User updateUser(@RequestBody User user) {
+    public User updateUser(@Valid @RequestBody User user) {
         validation(user);
         if (!userMap.containsKey(user.getId())) {
             log.warn("ID пользователя не найден. Невозможно обновить");
@@ -55,13 +56,6 @@ public class UserController {
         if (user.getLogin().isBlank() || user.getLogin().contains(" ")) {
             log.warn("(Validation) Логин не указан корректно");
             throw new ValidationException("(Validation) Логин не указан корректно");
-        }
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            log.warn("(Validation) День рождения указан некорректно");
-            throw new ValidationException("День рождения указан некорректно");
         }
         log.info("(Validation) Пользователь прошел валидацию");
     }

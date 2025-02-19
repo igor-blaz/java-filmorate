@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class FilmController {
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
 
     @PostMapping
-    public Film addMovie(@RequestBody Film film) {
+    public Film addMovie(@Valid @RequestBody Film film) {
         validation(film);
         film.setId(id++);
         filmMap.put(film.getId(), film);
@@ -27,7 +28,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film updateMovie(@RequestBody Film film) {
+    public Film updateMovie(@Valid @RequestBody Film film) {
         validation(film);
         if (!filmMap.containsKey(film.getId())) {
             log.warn("Нельзя обновить фильм, id которого нет");
