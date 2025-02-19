@@ -10,14 +10,14 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 public class User {
-    int id = 0;
+    private int id = 0;
     @NotBlank(message = "@Email не должен быть пустым")
-    String email;
+    private String email;
     @NotBlank(message = "логин не должен быть пустым")
-    String login;
-    String name;
+    private String login;
+    private String name;
     @PastOrPresent(message = "День рождения не должно быть в будущем")
-    LocalDate birthday;
+    private LocalDate birthday;
 
     public User(int id, String email, String login, String name, LocalDate birthday) {
         this.id = id;
