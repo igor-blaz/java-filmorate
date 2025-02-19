@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.controller.DurationAdapter;
 import ru.yandex.practicum.filmorate.controller.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.controller.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -40,11 +39,8 @@ public class UserFilmorateTests {
         client = HttpClient.newHttpClient();
         url = URI.create("http://localhost:8080/users");
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
-        gsonBuilder.registerTypeAdapter(Duration.class, new DurationAdapter());
         gsonBuilder.setPrettyPrinting();
-        gsonBuilder.serializeNulls();
-
+        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
         this.gson = gsonBuilder.create();
 
     }
@@ -108,7 +104,6 @@ public class UserFilmorateTests {
                 .POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         user.setLogin("newLogin");
-        user.setId(1);
         String userJsonTwo = gson.toJson(user);
         HttpRequest requestTwo = HttpRequest
                 .newBuilder()

@@ -1,9 +1,13 @@
 package ru.yandex.practicum.filmorate.model;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import ru.yandex.practicum.filmorate.controller.MinimumDate;
 
 import java.time.LocalDate;
 
@@ -13,34 +17,24 @@ import java.time.LocalDate;
  */
 @Data
 @NoArgsConstructor
-@NonNull
+@AllArgsConstructor
 public class Film {
     private int id = 0;
-    @NotNull(message = "Название не должно быть null")
+    @NotBlank(message = "Название не должно быть null")
     private String name;
-    @NotNull(message = "Описание не должно быть null")
+    @NotBlank(message = "Описание не должно быть null")
     private String description;
-    @NotNull(message = "Дата релиза не должна быть null")
+    @PastOrPresent(message = "Дата релиза не должна быть null")
+    @MinimumDate
     private LocalDate releaseDate;
-    @NotNull(message = "Продолжительность не должна быть null")
+    @Positive(message = "Продолжительность должна быть положительной")
     private Integer duration;
 
-
-    public Film(int id, String name, String description, LocalDate releaseDate, Integer duration) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.duration = duration;
-    }
-
     public Film(String name, String description, LocalDate releaseDate, Integer duration) {
-
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
     }
-
 
 }
