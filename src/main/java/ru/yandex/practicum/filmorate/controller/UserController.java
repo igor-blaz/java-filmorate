@@ -48,10 +48,7 @@ public class UserController {
     }
 
     private void validation(User user) {
-        if (!user.getEmail().contains("@") || user.getEmail().isBlank()) {
-            log.warn("(Validation)  Email не указан корректно");
-            throw new ValidationException("Email не указан корректно");
-        }
+
         if (user.getLogin().isBlank() || user.getLogin().contains(" ")) {
             log.warn("(Validation) Логин не указан корректно");
             throw new ValidationException("(Validation) Логин не указан корректно");

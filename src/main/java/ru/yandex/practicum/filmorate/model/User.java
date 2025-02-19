@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 public class User {
     private int id = 0;
     @NotBlank(message = "@Email не должен быть пустым")
+    @Email
     private String email;
     @NotBlank(message = "логин не должен быть пустым")
     private String login;

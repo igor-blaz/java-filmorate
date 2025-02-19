@@ -20,7 +20,6 @@ public class FilmController {
 
     @PostMapping
     public Film addMovie(@Valid @RequestBody Film film) {
-        validation(film);
         film.setId(id++);
         filmMap.put(film.getId(), film);
         log.info("Фильм добавлен: id={}", film.getId());
@@ -29,7 +28,6 @@ public class FilmController {
 
     @PutMapping
     public Film updateMovie(@Valid @RequestBody Film film) {
-        validation(film);
         if (!filmMap.containsKey(film.getId())) {
             log.warn("Нельзя обновить фильм, id которого нет");
             throw new ValidationException("Фильм с таким ID не найден");
@@ -44,17 +42,7 @@ public class FilmController {
         log.info("Отправлены все фильмы");
         return new ArrayList<>(filmMap.values());
     }
-
-    private void validation(Film film) throws ValidationException {
-
-        if (film.getDescription().length() >= MAX_DESCRIPTION) {
-            log.warn("(Validation) Название больше 200 символов");
-            throw new ValidationException("Название больше 200 символов");
-        }
-        if (film.getReleaseDate().isBefore(OLDEST_FILM)) {
-            log.warn("(Validation) Дата релиза неверна");
-            throw new ValidationException("Дата релиза неверна");
-        }
-        log.info("(Validation) Фильм прошел валидацию");
-    }
 }
+
+
+

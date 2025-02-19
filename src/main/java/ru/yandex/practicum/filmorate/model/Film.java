@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.model;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,8 +22,8 @@ public class Film {
     @NotBlank(message = "Название не должно быть null")
     private String name;
     @NotBlank(message = "Описание не должно быть null")
+    @Size(min = 1, max = 200)
     private String description;
-    @PastOrPresent(message = "Дата релиза не должна быть null")
     @MinimumDate
     private LocalDate releaseDate;
     @Positive(message = "Продолжительность должна быть положительной")
