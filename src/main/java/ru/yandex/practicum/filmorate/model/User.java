@@ -15,7 +15,6 @@ public class User {
     String email;
     @NotBlank(message = "логин не должен быть null")
     String login;
-    @NotBlank(message = "Имя не должно быть null")
     String name;
     @Past(message = "День рождения не должно быть null")
     LocalDate birthday;
