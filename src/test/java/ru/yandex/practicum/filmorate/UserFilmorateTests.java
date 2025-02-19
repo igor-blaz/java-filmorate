@@ -34,7 +34,7 @@ public class UserFilmorateTests {
     @BeforeEach
     public void setUp() {
         LocalDate date = LocalDate.now().minusYears(20);
-        user = new User("@VasiliyVIP", "Vas1337", "Василий.К", date);
+        user = new User("Vasilisk445@mail.ru", "Vas1337", "Василий.К", date);
         client = HttpClient.newHttpClient();
         url = URI.create("http://localhost:8080/users");
         GsonBuilder gsonBuilder = new GsonBuilder();
