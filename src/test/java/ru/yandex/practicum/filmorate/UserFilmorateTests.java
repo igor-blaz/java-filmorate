@@ -90,7 +90,7 @@ public class UserFilmorateTests {
                 .uri(url)
                 .POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(500, response.statusCode());
+        assertEquals(400, response.statusCode());
     }
 
     @Test
