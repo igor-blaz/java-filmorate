@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,12 +11,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class User {
     int id = 0;
-    @NotBlank(message = "@Email не должен быть null")
+    @NotBlank(message = "@Email не должен быть пустым")
     String email;
-    @NotBlank(message = "логин не должен быть null")
+    @NotBlank(message = "логин не должен быть пустым")
     String login;
     String name;
-    @Past(message = "День рождения не должно быть null")
+    @PastOrPresent(message = "День рождения не должно быть в будущем")
     LocalDate birthday;
 
     public User(int id, String email, String login, String name, LocalDate birthday) {
