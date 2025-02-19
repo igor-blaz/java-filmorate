@@ -17,7 +17,7 @@ public class UserController {
 
 
     private final Map<Integer, User> userMap = new HashMap<>();
-    private Integer id = 0;
+    private Integer id = 1;
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @PostMapping
