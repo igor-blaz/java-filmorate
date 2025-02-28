@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -20,6 +21,7 @@ public class User {
     private String name;
     @PastOrPresent(message = "День рождения не должно быть в будущем")
     private LocalDate birthday;
+    private Set<Integer> friends;
 
     public User(int id, String email, String login, String name, LocalDate birthday) {
         this.id = id;

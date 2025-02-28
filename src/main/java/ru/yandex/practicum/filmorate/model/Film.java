@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import ru.yandex.practicum.filmorate.controller.MinimumDate;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 
 /**
@@ -28,6 +29,7 @@ public class Film {
     private LocalDate releaseDate;
     @Positive(message = "Продолжительность должна быть положительной")
     private Integer duration;
+    private Set<Integer> likersId;
 
     public Film(String name, String description, LocalDate releaseDate, Integer duration) {
         this.name = name;
