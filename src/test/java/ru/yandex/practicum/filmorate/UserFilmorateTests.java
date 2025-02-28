@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.LocalDateAdapter;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 
 import java.io.IOException;
 import java.net.URI;
@@ -20,12 +20,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-class FilmorateApplicationTests {
+public class UserFilmorateTests {
     private URI url;
     Gson gson;
-    String filmJson;
+    String userJson;
     HttpClient client;
-    Film film;
+    User user;
 
     @Test
     void contextLoads() {
@@ -34,10 +34,9 @@ class FilmorateApplicationTests {
     @BeforeEach
     public void setUp() {
         LocalDate date = LocalDate.now().minusYears(20);
-        Integer duration = 220;
-        film = new Film("KinDzaDza", "description", date, duration);
+        user = new User("Vasilisk445@mail.ru", "Vas1337", "Василий.К", date);
         client = HttpClient.newHttpClient();
-        url = URI.create("http://localhost:8080/films");
+        url = URI.create("http://localhost:8080/users");
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setPrettyPrinting();
         gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
@@ -46,28 +45,27 @@ class FilmorateApplicationTests {
     }
 
     @Test
-    public void postCorrectFilmTest() throws IOException, InterruptedException {
-        filmJson = gson.toJson(film);
+    public void postCorrectUserTest() throws IOException, InterruptedException {
+        userJson = gson.toJson(user);
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .header("Content-Type", "application/json")
                 .uri(url)
-                .POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
+                .POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
-        Film film3 = gson.fromJson(filmJson, Film.class);
-        System.out.println(film3.getDuration());
+
     }
 
     @Test
-    public void postBadReleaseValidationFilmTest() throws IOException, InterruptedException {
-        film.setReleaseDate(LocalDate.MIN);
-        filmJson = gson.toJson(film);
+    public void postBadReleaseValidationUserTest() throws IOException, InterruptedException {
+        user.setBirthday(LocalDate.MAX);
+        userJson = gson.toJson(user);
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .header("Content-Type", "application/json")
                 .uri(url)
-                .POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
+                .POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(400, response.statusCode());
         assertThrows(ValidationException.class, () -> {
@@ -76,7 +74,7 @@ class FilmorateApplicationTests {
     }
 
     @Test
-    public void postBadDescriptionValidationFilmTest() throws IOException, InterruptedException {
+    public void postBadEmailValidationUserTest() throws IOException, InterruptedException {
         StringBuilder sb = new StringBuilder();
         int i = 0;
         while (i != 210) {
@@ -84,53 +82,53 @@ class FilmorateApplicationTests {
             i++;
         }
         String description = sb.toString();
-        film.setDescription(description);
-        filmJson = gson.toJson(film);
+        user.setEmail("l ld d w 99");
+        userJson = gson.toJson(user);
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .header("Content-Type", "application/json")
                 .uri(url)
-                .POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
+                .POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(400, response.statusCode());
     }
 
     @Test
-    public void putFilmTest() throws IOException, InterruptedException {
-        filmJson = gson.toJson(film);
+    public void putUserTest() throws IOException, InterruptedException {
+        userJson = gson.toJson(user);
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .header("Content-Type", "application/json")
                 .uri(url)
-                .POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
+                .POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        film.setDescription("newDescription");
-        film.setId(1);
-        String filmJsonTwo = gson.toJson(film);
+        user.setLogin("newLogin");
+        user.setId(1);
+        String userJsonTwo = gson.toJson(user);
         HttpRequest requestTwo = HttpRequest
                 .newBuilder()
                 .header("Content-Type", "application/json")
                 .uri(url)
-                .PUT(HttpRequest.BodyPublishers.ofString(filmJsonTwo)).build();
+                .PUT(HttpRequest.BodyPublishers.ofString(userJsonTwo)).build();
         HttpResponse<String> responseTwo = client.send(requestTwo, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, responseTwo.statusCode());
     }
 
     @Test
-    public void getFilmTest() throws IOException, InterruptedException {
-        filmJson = gson.toJson(film);
+    public void getUserTest() throws IOException, InterruptedException {
+        userJson = gson.toJson(user);
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .header("Content-Type", "application/json")
                 .uri(url)
-                .POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
+                .POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         HttpRequest requestTwo = HttpRequest
                 .newBuilder()
                 .header("Content-Type", "application/json")
                 .uri(url)
-                .POST(HttpRequest.BodyPublishers.ofString(filmJson)).build();
+                .POST(HttpRequest.BodyPublishers.ofString(userJson)).build();
         HttpResponse<String> responseTwo = client.send(requestTwo, HttpResponse.BodyHandlers.ofString());
 
         HttpRequest requestThree = HttpRequest
@@ -143,6 +141,3 @@ class FilmorateApplicationTests {
 
     }
 }
-
-
-
