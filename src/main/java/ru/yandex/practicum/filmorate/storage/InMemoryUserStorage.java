@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -41,6 +42,14 @@ public class InMemoryUserStorage implements UserStorage {
         userMap.put(user.getId(), user);
         log.info("Данные пользователя успешно обновлены");
         return user;
+    }
+
+    public List<User> getAllUsers() {
+        return userMap.values().stream().toList();
+    }
+
+    public User getUser(int id) {
+        return userMap.get(id);
     }
 
     private void validation(User user) {

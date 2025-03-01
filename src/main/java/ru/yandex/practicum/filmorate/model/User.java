@@ -37,4 +37,11 @@ public class User {
         this.name = name;
         this.birthday = birthday;
     }
+    public Set<Integer>addFriend(int friendId){
+        friends.add(friendId);
+        return friends;
+    }
+    public void removeFriend(int friendId){
+        friends.remove(friendId);
+    }
 }

@@ -37,5 +37,14 @@ public class Film {
         this.releaseDate = releaseDate;
         this.duration = duration;
     }
+    public int getLikesSize(){
+        return likersId.size();
+    }
+    public void addLike(int id){
+        likersId.add(id);
+    }
+    public void removeLike(int id){
+        likersId.remove(id);
+    }
 
 }
