@@ -13,7 +13,7 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationException(ValidationException e) {
-        return new ErrorResponse(e.getMessage(), "Ошибка валидации");
+        return new ErrorResponse(e.getMessage(), "Ошибка в валидации");
     }
 
     @ExceptionHandler(NotFoundException.class)
