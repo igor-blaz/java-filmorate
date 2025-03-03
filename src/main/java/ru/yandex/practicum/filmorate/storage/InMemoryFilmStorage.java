@@ -1,10 +1,9 @@
 package ru.yandex.practicum.filmorate.storage;
 
-import com.sun.source.tree.Tree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.*;
@@ -34,10 +33,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film updateFilm(Film film) {
-        if (!filmMap.containsKey(film.getId())) {
-            log.warn("Нельзя обновить фильм, id которого нет");
-            throw new ValidationException("Фильм с таким ID не найден");
-        }
+        isRealFilmId(List.of(film.getId()));
         filmMap.put(film.getId(), film);
         rated.add(film);
         log.info("Фильм обновлен");
@@ -45,6 +41,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     public Film getFilm(int id) {
+        isRealFilmId(List.of(id));
         return filmMap.get(id);
     }
 
@@ -53,7 +50,15 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     public List<Film> getRatedFilms() {
-        return rated.stream().toList().reversed();
+        return rated.stream().toList();
+    }
+
+    private void isRealFilmId(List<Integer> idS) {
+        for (int id : idS) {
+            if (!filmMap.containsKey(id)) {
+                throw new NotFoundException("Аккаунт с ID " + id + " не найден");
+            }
+        }
     }
 
 }

@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
@@ -33,11 +32,13 @@ public class UserController {
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
+        inMemoryUserStorage.isRealUserId(List.of(user.getId()));
         return inMemoryUserStorage.updateUser(user);
     }
 
     @PutMapping("/{id}/friends/{friendId}")
     public Set<Integer> addToFriends(@PathVariable int id, @PathVariable int friendId) {
+        inMemoryUserStorage.isRealUserId(List.of(id, friendId));
         return userService.addToFriends(id, friendId);
     }
 
@@ -61,17 +62,5 @@ public class UserController {
         userService.deleteFriend(id, friendId);
     }
 
-
-    private void validation(User user) {
-
-        if (user.getLogin().isBlank() || user.getLogin().contains(" ")) {
-            log.warn("(Validation) Логин не указан корректно");
-            throw new ValidationException("(Validation) Логин не указан корректно");
-        }
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-        log.info("(Validation) Пользователь прошел валидацию");
-    }
 
 }

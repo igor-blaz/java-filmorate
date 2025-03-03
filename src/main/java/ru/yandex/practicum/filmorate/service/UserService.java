@@ -1,24 +1,19 @@
 package ru.yandex.practicum.filmorate.service;
 
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-// Добавление в друзья, удаление, вывод списка общих друзей
-// не одобряем заявки, а принимаем автоматически. Если 1 друг 2, то 2 друг 1
-//Set <long>
+
 
 @Service
 public class UserService {
-    private InMemoryUserStorage inMemoryUserStorage;
+    private final InMemoryUserStorage inMemoryUserStorage;
 
     @Autowired
     public UserService(InMemoryUserStorage inMemoryUserStorage) {
@@ -27,6 +22,8 @@ public class UserService {
 
     public Set<Integer> addToFriends(int id, int newFriendId) {
         User user = inMemoryUserStorage.getUser(id);
+        User newFriend = inMemoryUserStorage.getUser(newFriendId);
+        newFriend.addFriend(id);
         user.addFriend(newFriendId);
         return user.getFriends();
     }
@@ -46,6 +43,8 @@ public class UserService {
 
     public void deleteFriend(int userId, int friendToDelete) {
         User user = inMemoryUserStorage.getUser(userId);
+        User deleteUser = inMemoryUserStorage.getUser(friendToDelete);
+        deleteUser.removeFriend(userId);
         user.removeFriend(friendToDelete);
     }
 

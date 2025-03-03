@@ -11,6 +11,8 @@ import java.lang.annotation.RetentionPolicy;
 @Past
 public @interface MinimumDate {
     String message() default "Дата релиза должна быть не раньше 1895-12-28";
+
     Class<?>[] groups() default {};
+
     Class<?>[] payload() default {};
 }

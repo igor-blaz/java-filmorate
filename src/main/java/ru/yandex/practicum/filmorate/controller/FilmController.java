@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.util.*;
 
@@ -17,11 +18,14 @@ public class FilmController {
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
     private final FilmService filmservice;
     private final InMemoryFilmStorage inMemoryFilmStorage;
+    private final InMemoryUserStorage inMemoryUserStorage;
 
     @Autowired
-    public FilmController(FilmService filmservice, InMemoryFilmStorage inMemoryFilmStorage) {
+    public FilmController(FilmService filmservice, InMemoryFilmStorage inMemoryFilmStorage,
+                          InMemoryUserStorage inMemoryUserStorage) {
         this.filmservice = filmservice;
         this.inMemoryFilmStorage = inMemoryFilmStorage;
+        this.inMemoryUserStorage = inMemoryUserStorage;
     }
 
     @PostMapping
@@ -44,15 +48,17 @@ public class FilmController {
         return filmservice.getTopRatedFilms(count);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}/like/{userId}")
     public Film deleteLike(@PathVariable Integer id,
                            @PathVariable Integer userId) {
+        inMemoryUserStorage.isRealUserId(List.of(userId));
         return filmservice.removeLike(id, userId);
     }
 
-    @PutMapping
+    @PutMapping("/{id}/like/{userId}")
     public Film makeLike(@PathVariable Integer id,
                          @PathVariable Integer userId) {
+        inMemoryUserStorage.isRealUserId(List.of(userId));
         return filmservice.makeLike(id, userId);
     }
 }

@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.storage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.controller.UserController;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -37,7 +37,7 @@ public class InMemoryUserStorage implements UserStorage {
         validation(user);
         if (!userMap.containsKey(user.getId())) {
             log.warn("ID пользователя не найден. Невозможно обновить");
-            throw new ValidationException("Аккаунт с таким ID не найден");
+            throw new NotFoundException("Аккаунт с таким ID не найден");
         }
         userMap.put(user.getId(), user);
         log.info("Данные пользователя успешно обновлены");
@@ -49,7 +49,16 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     public User getUser(int id) {
+        isRealUserId(List.of(id));
         return userMap.get(id);
+    }
+
+    public void isRealUserId(List<Integer> idS) {
+        for (int id : idS) {
+            if (!userMap.containsKey(id)) {
+                throw new NotFoundException("Аккаунт с ID " + id + " не найден");
+            }
+        }
     }
 
     private void validation(User user) {
