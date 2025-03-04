@@ -19,7 +19,7 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(NotFoundException e) {
-        return new ErrorResponse(e.getMessage(), "Объект не найден");
+        return new ErrorResponse(e.getMessage(), "Объект не найден.");
     }
 
     @ExceptionHandler(Exception.class)
