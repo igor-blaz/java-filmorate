@@ -44,4 +44,19 @@ public class FilmService {
         return allFilms.subList(0, count);
     }
 
+    public Film createFilm(Film film) {
+        return filmStorage.createFilm(film);
+    }
+
+    public Film updateFilm(Film film) {
+        return filmStorage.updateFilm(film);
+    }
+
+    public List<Film> getAllFilms() {
+        return filmStorage.getAllFilms();
+    }
+    public void isRealFilmId(List<Integer> ids) {
+        filmStorage.isRealFilmId(ids);
+    }
+
 }

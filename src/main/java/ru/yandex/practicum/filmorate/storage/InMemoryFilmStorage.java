@@ -53,7 +53,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         return rated.stream().toList();
     }
 
-    private void isRealFilmId(List<Integer> idS) {
+    public void isRealFilmId(List<Integer> idS) {
         for (int id : idS) {
             if (!filmMap.containsKey(id)) {
                 throw new NotFoundException("Аккаунт с ID " + id + " не найден");
