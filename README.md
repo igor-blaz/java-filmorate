@@ -1,2 +1,1 @@
-# java-filmorate
-Template repository for Filmorate project.
+![ER-диаграмма](https://github.com/igor-blaz/java-filmorate/blob/main/DataBase_Design.png)
