@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
@@ -58,6 +57,7 @@ public class UserService {
                 .filter(Objects::nonNull)
                 .toList();
     }
+
     public User createUser(User user) {
         return inMemoryUserStorage.createUser(user);
     }
@@ -69,6 +69,7 @@ public class UserService {
     public List<User> getAllUsers() {
         return inMemoryUserStorage.getAllUsers();
     }
+
     public void isRealUserId(List<Integer> ids) {
         inMemoryUserStorage.isRealUserId(ids);
     }
