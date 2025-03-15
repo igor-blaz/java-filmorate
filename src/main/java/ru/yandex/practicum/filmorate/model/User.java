@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -20,6 +21,7 @@ public class User {
     private String name;
     @PastOrPresent(message = "День рождения не должно быть в будущем")
     private LocalDate birthday;
+    private Set<Integer> friends = new HashSet<>();
 
     public User(int id, String email, String login, String name, LocalDate birthday) {
         this.id = id;
@@ -34,5 +36,27 @@ public class User {
         this.login = login;
         this.name = name;
         this.birthday = birthday;
+    }
+
+    public Set<Integer> addFriend(int friendId) {
+        friends.add(friendId);
+        return friends;
+    }
+
+    public void removeFriend(int friendId) {
+        friends.remove(friendId);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
