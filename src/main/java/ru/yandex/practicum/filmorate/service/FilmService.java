@@ -55,8 +55,6 @@ public class FilmService {
     public List<Film> getAllFilms() {
         return filmStorage.getAllFilms();
     }
-    public void isRealFilmId(List<Integer> ids) {
-        filmStorage.isRealFilmId(ids);
-    }
+
 
 }
