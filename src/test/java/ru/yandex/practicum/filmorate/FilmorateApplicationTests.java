@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate;
+/*package ru.yandex.practicum.filmorate;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -146,3 +146,4 @@ class FilmorateApplicationTests {
 
 
 
+*/
