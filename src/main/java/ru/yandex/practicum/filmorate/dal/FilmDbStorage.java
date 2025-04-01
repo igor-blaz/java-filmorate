@@ -4,22 +4,28 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.mapper.FilmRowMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 
 @Repository
 public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
-    private final JdbcTemplate jdbcTemplate;
-    private final FilmRowMapper mapper;
+    private static final String FIND_ALL_QUERY = "SELECT * FROM films";
+    private static final String FIND_BY_EMAIL_QUERY = "SELECT * FROM films WHERE email = ?";
+    private static final String FIND_BY_ID_QUERY = "SELECT * FROM films WHERE id = ?";
+    private static final String DELETE_BY_FILM_ID_QUERY = "DELETE FROM films WHERE id = ?;";
+
+
 
     public FilmDbStorage(JdbcTemplate jdbcTemplate, FilmRowMapper mapper) {
         super(jdbcTemplate, mapper);
-        this.jdbcTemplate = jdbcTemplate;
-        this.mapper = mapper;
+
     }
 
     @Override
@@ -46,7 +52,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
 
     @Override
     public void deleteFilm(Film film) {
-     //   jdbcTemplate.update(query, id);
+        findOne(DELETE_BY_FILM_ID_QUERY, film.getId());
     }
 
     @Override
@@ -55,7 +61,20 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     }
 
     public Film getFilm(int id) {
-        String query = "SELECT * FROM films WHERE ID = ?";
-        return findOne(query, mapper, id);
+        return findOne(FIND_BY_ID_QUERY, id)
+                .orElseThrow(() -> new NotFoundException("Фильм с ID " + id + " не найден"));
+    }
+
+
+    public void isRealFilmId(List<Integer> filmIds) {
+        List<Film> films = findMany(FIND_BY_ID_QUERY, filmIds.toArray());
+
+        if (films.size() != filmIds.size()) {
+            for (int i = 0; i < filmIds.size(); i++) {
+                if (i >= films.size() || films.get(i) == null) {
+                    throw new NotFoundException("Фильм с ID " + filmIds.get(i) + " не найден");
+                }
+            }
+        }
     }
 }

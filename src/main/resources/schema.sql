@@ -14,7 +14,6 @@ CREATE TABLE IF NOT EXISTS users (
     login VARCHAR(100) NOT NULL,
     name VARCHAR(255),
     birthday DATE,
-    status VARCHAR(50)
 );
 
 CREATE TABLE IF NOT EXISTS film (
@@ -46,7 +45,7 @@ CREATE TABLE IF NOT EXISTS film_genre (
 CREATE TABLE IF NOT EXISTS user_friends (
     user_id BIGINT,
     friend_id BIGINT,
-    status VARCHAR(20),
+    is_confirmed BOOLEAN,
     PRIMARY KEY (user_id, friend_id),
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (friend_id) REFERENCES users(id)
