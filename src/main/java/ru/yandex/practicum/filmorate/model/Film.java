@@ -31,13 +31,14 @@ public class Film {
     private LocalDate releaseDate;
     @Positive(message = "Продолжительность должна быть положительной")
     private Integer duration;
-    private String genre;
+    private Integer mpaId;
 
-    public Film(String name, String description, LocalDate releaseDate, Integer duration) {
+    public Film(String name, String description, LocalDate releaseDate, Integer duration, Integer mpaId) {
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
+        this.mpaId=mpaId;
     }
 
     public int getLikesSize() {

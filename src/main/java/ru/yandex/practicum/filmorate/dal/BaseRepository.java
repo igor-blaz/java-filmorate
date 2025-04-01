@@ -29,10 +29,11 @@ public class BaseRepository<T> {
     protected List<T> findMany(String query, Object... params) {
         return jdbc.query(query, mapper, params);
     }
-    protected List<T> deleteMany(String query, Object... params) {
-        return jdbc.query(query, mapper, params);
+    protected int update(String query, Object... params) {
+        return jdbc.update(query, mapper, params);
     }
-    protected long insert(String query, Object... params) {
+
+    protected int insert(String query, Object... params) {
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(connection -> {
             PreparedStatement ps = connection
@@ -42,16 +43,13 @@ public class BaseRepository<T> {
             }
             return ps;
         }, keyHolder);
-
-        Long id = keyHolder.getKeyAs(Long.class);
-
+        Integer id = keyHolder.getKeyAs(Integer.class);
         if (id != null) {
             return id;
         } else {
             throw new InternalServerException("Не удалось сохранить данные");
         }
     }
-
 
 
 }

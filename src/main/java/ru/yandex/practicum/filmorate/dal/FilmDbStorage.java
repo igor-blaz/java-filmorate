@@ -20,7 +20,8 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     private static final String FIND_BY_EMAIL_QUERY = "SELECT * FROM films WHERE email = ?";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM films WHERE id = ?";
     private static final String DELETE_BY_FILM_ID_QUERY = "DELETE FROM films WHERE id = ?;";
-
+    private static final String INSERT_FILM_VALUES = "INSERT INTO films " +
+            "(name, description, release_date, duration, rating_id) Values(?,?,?,?,?);";
 
 
     public FilmDbStorage(JdbcTemplate jdbcTemplate, FilmRowMapper mapper) {
@@ -30,23 +31,8 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
 
     @Override
     public Film createFilm(Film film) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbc.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, film.getName());
-            ps.setString(2, film.getDescription());
-            ps.setDate(3, Date.valueOf(film.getReleaseDate())); // Убедись, что у тебя releaseDate — это LocalDate
-            ps.setInt(4, film.getDuration());
-            return ps;
-        }, keyHolder);
-
-        // Устанавливаем ID, который был сгенерирован БД
-        if (keyHolder.getKey() != null) {
-            film.setId(keyHolder.getKey().intValue());
-        }
-
-        return film;
+        insert(INSERT_FILM_VALUES, film.getName(), film.getDescription(),
+                film.getReleaseDate(), film.getDuration(), film.getGenre());
     }
 
 
