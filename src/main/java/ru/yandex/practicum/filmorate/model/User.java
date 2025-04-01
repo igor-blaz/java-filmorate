@@ -21,7 +21,6 @@ public class User {
     private String name;
     @PastOrPresent(message = "День рождения не должно быть в будущем")
     private LocalDate birthday;
-    private Set<Integer> friends = new HashSet<>();
 
     public User(int id, String email, String login, String name, LocalDate birthday) {
         this.id = id;

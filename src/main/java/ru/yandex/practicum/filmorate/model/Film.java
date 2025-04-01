@@ -31,7 +31,7 @@ public class Film {
     private LocalDate releaseDate;
     @Positive(message = "Продолжительность должна быть положительной")
     private Integer duration;
-    private Set<Integer> likersId = new HashSet<>();
+    private String genre;
 
     public Film(String name, String description, LocalDate releaseDate, Integer duration) {
         this.name = name;
