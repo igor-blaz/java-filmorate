@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.dal;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.mapper.MpaRowMapper;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
@@ -34,12 +35,13 @@ public class MpaDbStorage extends BaseRepository<Mpa> {
         return update(DELETE_MPA_VALUES_BY_ID, mpa.getId());
     }
 
-    public List<Mpa> findAll() {
+    public List<Mpa> getAllMpa() {
         return findMany(FIND_ALL_QUERY);
     }
 
-    public Optional<Mpa> findById(int id) {
-        return findOne(FIND_BY_ID_QUERY, id);
+    public Mpa findById(int id) {
+        return findOne(FIND_BY_ID_QUERY, id).
+                 orElseThrow(() -> new NotFoundException("Рейтинг с ID " + id + " не найден"));
     }
 }
 

@@ -20,28 +20,24 @@ public class FilmService {
         this.userStorage = userStorage;
     }
 
+    public List<Film> getRatedFilms(int count) {
+        return filmStorage.getTopRatedFilms(count);
+    }
+
     public Film makeLike(int filmId, int userId) {
-        Film film = filmStorage.getFilm(filmId);
-        film.addLike(userId);
-        filmStorage.updateFilm(film);
-        return film;
+        filmStorage.makeLike(filmId, userId);
+        return filmStorage.getFilm(filmId);
     }
 
     public Film removeLike(int filmId, int userId) {
         userStorage.isRealUserId(List.of(filmId));
         Film film = filmStorage.getFilm(filmId);
-        film.removeLike(userId);
-        filmStorage.updateFilm(film);
+        filmStorage.deleteLike(filmId, userId);
         return film;
     }
 
     public List<Film> getTopRatedFilms(int count) {
-        List<Film> allFilms = new ArrayList<>(filmStorage.getRatedFilms());
-        Collections.reverse(allFilms);
-        if (count >= allFilms.size()) {
-            return allFilms;
-        }
-        return allFilms.subList(0, count);
+        return filmStorage.getTopRatedFilms(count);
     }
 
     public Film createFilm(Film film) {

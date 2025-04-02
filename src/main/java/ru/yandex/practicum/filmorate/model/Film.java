@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 import ru.yandex.practicum.filmorate.controller.MinimumDate;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -31,26 +29,17 @@ public class Film {
     private LocalDate releaseDate;
     @Positive(message = "Продолжительность должна быть положительной")
     private Integer duration;
-    private Integer mpaId;
+    private List<Integer> mpa = new ArrayList<>();
+    private List<Integer> genres = new ArrayList<>();
 
-    public Film(String name, String description, LocalDate releaseDate, Integer duration, Integer mpaId) {
+    public Film(String name, String description, LocalDate releaseDate, Integer duration,
+                List<Integer> mpa, List<Integer> genres) {
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
-        this.mpaId=mpaId;
-    }
-
-    public int getLikesSize() {
-        return likersId.size();
-    }
-
-    public void addLike(int id) {
-        likersId.add(id);
-    }
-
-    public void removeLike(int id) {
-        likersId.remove(id);
+        this.mpa = mpa;
+        this.genres = genres;
     }
 
     @Override
