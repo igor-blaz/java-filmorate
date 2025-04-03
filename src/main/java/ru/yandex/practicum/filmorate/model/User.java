@@ -37,15 +37,6 @@ public class User {
         this.birthday = birthday;
     }
 
-    public Set<Integer> addFriend(int friendId) {
-        friends.add(friendId);
-        return friends;
-    }
-
-    public void removeFriend(int friendId) {
-        friends.remove(friendId);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

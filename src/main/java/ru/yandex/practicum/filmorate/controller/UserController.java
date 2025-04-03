@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public Set<Integer> addToFriends(@PathVariable int id, @PathVariable int friendId) {
+    public Set<User> addToFriends(@PathVariable int id, @PathVariable int friendId) {
         userService.isRealUserId(List.of(id, friendId));
         return userService.addToFriends(id, friendId);
     }
@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends")
-    public List<User> getUserFriends(@PathVariable int id) {
+    public Set<User> getUserFriends(@PathVariable int id) {
         return userService.getUserFriends(id);
     }
 
