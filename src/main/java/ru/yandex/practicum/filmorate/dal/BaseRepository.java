@@ -1,17 +1,19 @@
 package ru.yandex.practicum.filmorate.dal;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import ru.yandex.practicum.filmorate.exception.InternalServerException;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 public class BaseRepository<T> {
     protected final JdbcTemplate jdbc;
@@ -29,8 +31,12 @@ public class BaseRepository<T> {
     protected List<T> findMany(String query, Object... params) {
         return jdbc.query(query, mapper, params);
     }
+    protected List<Integer> findManyIds(String query, Object... params) {
+        return jdbc.queryForList(query, Integer.class, params);
+    }
+
     protected int update(String query, Object... params) {
-        return jdbc.update(query, mapper, params);
+        return jdbc.update(query, params);
     }
 
     protected int insert(String query, Object... params) {
@@ -47,7 +53,8 @@ public class BaseRepository<T> {
         if (id != null) {
             return id;
         } else {
-            throw new InternalServerException("Не удалось сохранить данные");
+            log.error("Ошибка. id = null!");
+            throw new NotFoundException("Ошибка добавления в базу данных");
         }
     }
 

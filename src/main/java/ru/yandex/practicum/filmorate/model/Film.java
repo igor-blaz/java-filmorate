@@ -29,17 +29,16 @@ public class Film {
     private LocalDate releaseDate;
     @Positive(message = "Продолжительность должна быть положительной")
     private Integer duration;
-    private List<Integer> mpa = new ArrayList<>();
-    private List<Integer> genres = new ArrayList<>();
+    private Mpa mpa;
+    private List<Genre> genres = new ArrayList<>();
 
-    public Film(String name, String description, LocalDate releaseDate, Integer duration,
-                List<Integer> mpa, List<Integer> genres) {
+
+    public Film(String name, String description, LocalDate releaseDate, Integer duration) {
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
-        this.mpa = mpa;
-        this.genres = genres;
+
     }
 
     @Override

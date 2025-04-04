@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS genre (
 );
 
 CREATE TABLE IF NOT EXISTS users (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(255) NOT NULL,
     login VARCHAR(100) NOT NULL,
     name VARCHAR(255),
@@ -17,25 +17,23 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS film (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
     description VARCHAR(200),
     release_date DATE NOT NULL,
-    duration INT NOT NULL,
-    mpa_id INT,
-    FOREIGN KEY (mpa_id) REFERENCES rating(id) ON DELETE SET NULL
+    duration INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS film_likes (
-    film_id BIGINT,
-    user_id BIGINT,
+    film_id INT,
+    user_id INT,
     PRIMARY KEY (film_id, user_id),
     FOREIGN KEY (film_id) REFERENCES film(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS film_genre (
-    film_id BIGINT,
+    film_id INT,
     genre_id INT,
     PRIMARY KEY (film_id, genre_id),
     FOREIGN KEY (film_id) REFERENCES film(id) ON DELETE CASCADE,
@@ -43,10 +41,8 @@ CREATE TABLE IF NOT EXISTS film_genre (
 );
 
 CREATE TABLE IF NOT EXISTS user_friends (
-    user_id BIGINT,
-    friend_id BIGINT,
-    is_confirmed BOOLEAN,
-    PRIMARY KEY (user_id, friend_id),
+    user_id INT,
+    friend_id INT,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (friend_id) REFERENCES users(id) ON DELETE CASCADE
 );

@@ -20,19 +20,20 @@ public class UserController {
 
     @PostMapping
     public User addUser(@Valid @RequestBody User user) {
+        log.trace("Пользователь добавляется");
         return userService.createUser(user);
     }
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
-        userService.isRealUserId(List.of(user.getId()));
         return userService.updateUser(user);
     }
 
-    @PutMapping("/{id}/friends/{friendId}")
-    public Set<User> addToFriends(@PathVariable int id, @PathVariable int friendId) {
-        userService.isRealUserId(List.of(id, friendId));
-        return userService.addToFriends(id, friendId);
+    @PutMapping("/{id}/friends/{friend_id}")
+    public List<User> addToFriends(@PathVariable int id, @PathVariable int friend_id) {
+        log.info("Запрос на добавление в друзья");
+        userService.addToFriends(id, friend_id);
+        return userService.getUserFriends(id);
     }
 
     @GetMapping
@@ -40,13 +41,13 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getCommonFriends(@PathVariable int id, @PathVariable int otherId) {
-        return userService.findCommonFriends(id, otherId);
+    @GetMapping("/{id}/friends/common/{friend_id}")
+    public List<User> getCommonFriends(@PathVariable int id, @PathVariable int friend_id) {
+        return userService.findCommonFriends(id, friend_id);
     }
 
     @GetMapping("/{id}/friends")
-    public Set<User> getUserFriends(@PathVariable int id) {
+    public List<User> getUserFriends(@PathVariable int id) {
         return userService.getUserFriends(id);
     }
 

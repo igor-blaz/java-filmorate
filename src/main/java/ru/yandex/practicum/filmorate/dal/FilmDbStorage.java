@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.dal;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -14,6 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 
+@Slf4j
 @Repository
 public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     private static final String FIND_ALL_QUERY = "SELECT * FROM films";
@@ -30,7 +32,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM films WHERE id = ?";
     private static final String DELETE_BY_FILM_ID_QUERY = "DELETE FROM films WHERE id = ?;";
     private static final String INSERT_FILM_VALUES = "INSERT INTO films " +
-            "(name, description, release_date, duration, mpa_id, genres_id) Values(?,?,?,?,?,?);";
+            "(name, description, release_date, duration) Values(?,?,?,?);";
     private static final String ADD_LIKE_QUERY = "INSERT INTO film_likes (film_id, user_id) VALUES (?, ?)";
     private static final String REMOVE_LIKE_QUERY = "DELETE FROM film_likes WHERE film_id = ? AND user_id = ?";
     private static final String GET_LIKE_COUNT_QUERY = "SELECT COUNT(*) FROM film_likes WHERE film_id = ?";
@@ -54,9 +56,10 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
 
     @Override
     public Film createFilm(Film film) {
-        insert(INSERT_FILM_VALUES, film.getName(), film.getDescription(),
-                film.getReleaseDate(), film.getDuration(), film.getMpa(), film.getGenres());
-        return film;
+        int generateId = insert(INSERT_FILM_VALUES, film.getName(), film.getDescription(),
+                film.getReleaseDate(), film.getDuration());
+        log.info("Фильм создан с ID {}", generateId);
+        return getFilm(generateId);
     }
 
     @Override
@@ -68,7 +71,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     @Override
     public Film updateFilm(Film film) {
         update(UPDATE_FILM_BY_ID, film.getName(), film.getDescription(),
-                film.getReleaseDate(), film.getDuration(), film.getMpa(), film.getGenres(), film.getId());
+                film.getReleaseDate(), film.getDuration());
         return film;
     }
 
