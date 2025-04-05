@@ -18,6 +18,9 @@ import java.util.List;
         public Mpa getMpa(int id){
             return mpaDbStorage.findById(id);
         }
+        public Mpa addMpa(Mpa mpa){
+            return mpaDbStorage.insertMpa(mpa);
+        }
         public List<Mpa> getAllMpa(){
             return mpaDbStorage.getAllMpa();
         }

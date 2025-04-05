@@ -3,8 +3,11 @@ package ru.yandex.practicum.filmorate.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.FilmDbStorage;
+import ru.yandex.practicum.filmorate.dal.GenreDbStorage;
+import ru.yandex.practicum.filmorate.dal.MpaDbStorage;
 import ru.yandex.practicum.filmorate.dal.UserDbStorage;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.util.*;
 
@@ -14,10 +17,12 @@ public class FilmService {
     private final FilmDbStorage filmStorage;
     private final UserDbStorage userStorage;
 
+
     @Autowired
     public FilmService(FilmDbStorage filmStorage, UserDbStorage userStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
+
     }
 
     public List<Film> getRatedFilms(int count) {
@@ -29,11 +34,9 @@ public class FilmService {
         return filmStorage.getFilm(filmId);
     }
 
-    public Film removeLike(int filmId, int userId) {
-        userStorage.isRealUserId(List.of(filmId));
+    public void removeLike(int filmId, int userId) {
         Film film = filmStorage.getFilm(filmId);
         filmStorage.deleteLike(filmId, userId);
-        return film;
     }
 
     public List<Film> getTopRatedFilms(int count) {
@@ -50,6 +53,12 @@ public class FilmService {
 
     public List<Film> getAllFilms() {
         return filmStorage.getAllFilms();
+    }
+    public List<Film> getFilmsByGenre(int genreId) {
+        return filmStorage.getFilmByGenre(genreId);
+    }
+    public Film getFilm(int id){
+        return filmStorage.getFilm(id);
     }
 
 

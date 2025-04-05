@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.dal;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
@@ -9,6 +10,7 @@ import ru.yandex.practicum.filmorate.model.Mpa;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Repository
 public class MpaDbStorage extends BaseRepository<Mpa> {
 
@@ -40,8 +42,10 @@ public class MpaDbStorage extends BaseRepository<Mpa> {
     }
 
     public Mpa findById(int id) {
+        log.info("SQL запрос поиск Mpa {}", id);
         return findOne(FIND_BY_ID_QUERY, id).
-                 orElseThrow(() -> new NotFoundException("Рейтинг с ID " + id + " не найден"));
+                orElseThrow(() -> new NotFoundException("Рейтинг с ID " + id + " не найден"));
     }
+
 }
 

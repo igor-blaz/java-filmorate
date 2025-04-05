@@ -20,7 +20,7 @@ public class UserController {
 
     @PostMapping
     public User addUser(@Valid @RequestBody User user) {
-        log.trace("Пользователь добавляется");
+        log.trace("Новый пользователь добавляется");
         return userService.createUser(user);
     }
 
@@ -38,6 +38,7 @@ public class UserController {
 
     @GetMapping
     public List<User> getAllUsers() {
+        log.info("Запрос на получение всех пользователей");
         return userService.getAllUsers();
     }
 
@@ -48,6 +49,7 @@ public class UserController {
 
     @GetMapping("/{id}/friends")
     public List<User> getUserFriends(@PathVariable int id) {
+        log.info("Запрос на получение друзей пользователя {}", id);
         return userService.getUserFriends(id);
     }
 

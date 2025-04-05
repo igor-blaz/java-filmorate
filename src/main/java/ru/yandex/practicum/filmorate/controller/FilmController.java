@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.MpaService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.*;
@@ -41,10 +42,9 @@ public class FilmController {
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public Film deleteLike(@PathVariable Integer id,
+    public void deleteLike(@PathVariable Integer id,
                            @PathVariable Integer userId) {
-        userService.isRealUserId(List.of(userId));
-        return filmservice.removeLike(id, userId);
+        filmservice.removeLike(id, userId);
     }
 
     @PutMapping("/{id}/like/{userId}")
@@ -52,6 +52,17 @@ public class FilmController {
                          @PathVariable Integer userId) {
         userService.isRealUserId(List.of(userId));
         return filmservice.makeLike(id, userId);
+    }
+
+    /*@GetMapping("/{id}")
+    public List<Film> getFilmByGenre(@PathVariable Integer genreId) {
+        log.info("Запрос на поиск фильмов по жанрам");
+        return filmservice.getFilmsByGenre(genreId);
+    }*/
+    @GetMapping("/{id}")
+    public Film getFilmByGenre(@PathVariable Integer id) {
+        log.info("Запрос на поиск фильмa");
+        return filmservice.getFilm(id);
     }
 }
 
