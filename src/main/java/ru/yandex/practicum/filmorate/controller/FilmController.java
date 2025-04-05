@@ -60,7 +60,7 @@ public class FilmController {
         return filmservice.getFilmsByGenre(genreId);
     }*/
     @GetMapping("/{id}")
-    public Film getFilmByGenre(@PathVariable Integer id) {
+    public Film getFilm(@PathVariable Integer id) {
         log.info("Запрос на поиск фильмa");
         return filmservice.getFilm(id);
     }

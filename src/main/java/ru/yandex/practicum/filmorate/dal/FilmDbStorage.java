@@ -69,11 +69,12 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
                 film.getReleaseDate(), film.getDuration());
         log.info("Фильм создан с ID {}", generatedId);
         log.info(String.valueOf(film.getMpa()));
-        System.out.println(film.getMpa());
         film.setId(generatedId);
-        film.setMpa(findNameForMpa(film.getMpa()));
+        Mpa mpa = findNameForMpa(film.getMpa());
+        log.info("создан Mpa рейтинг {}", mpa);
+        film.setMpa(mpa);
         film.setGenres(genreDbStorage.getManyGenres(film.getGenres()));
-
+        mpaDbStorage.insertMpa(mpa);
         System.out.println(film.getGenres());
         return film;
     }
@@ -92,9 +93,13 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     }
 
     public Film getFilm(int id) {
-        return findOne(FIND_BY_ID_QUERY, id)
+        log.info("Поиск фильма по id...");
+        Film film = findOne(FIND_BY_ID_QUERY, id)
                 .orElseThrow(() -> new NotFoundException("Фильм с ID " + id + " не найден"));
+        System.out.println(film);
+        return film;
     }
+
 
     public List<Film> getAllFilms() {
         System.out.println(findMany(FIND_ALL_QUERY));
@@ -123,6 +128,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     }
 
     public Mpa findNameForMpa(Mpa mpa) {
+        log.info("Поиск имени Mpa рейтинга - {}", mpa.getId());
         return mpaDbStorage.findById(mpa.getId());
     }
 

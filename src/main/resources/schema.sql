@@ -21,7 +21,9 @@ CREATE TABLE IF NOT EXISTS film (
     name VARCHAR(100) NOT NULL,
     description VARCHAR(200),
     release_date DATE NOT NULL,
-    duration INT NOT NULL
+    duration INT NOT NULL,
+    mpa_id INT,
+    mpa_name VARCHAR
 );
 
 CREATE TABLE IF NOT EXISTS film_likes (
