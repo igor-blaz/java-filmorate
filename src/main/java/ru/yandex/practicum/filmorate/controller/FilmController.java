@@ -61,7 +61,7 @@ public class FilmController {
     }*/
     @GetMapping("/{id}")
     public Film getFilm(@PathVariable Integer id) {
-        log.info("Запрос на поиск фильмa");
+        log.info("Запрос на поиск фильма");
         return filmservice.getFilm(id);
     }
 }

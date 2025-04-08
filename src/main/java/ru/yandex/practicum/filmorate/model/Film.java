@@ -35,8 +35,6 @@ public class Film {
     private List<Genre> genres = new ArrayList<>();
 
 
-
-
     public Film(String name, String description, LocalDate releaseDate, Integer duration, Mpa mpa) {
         this.name = name;
         this.description = description;

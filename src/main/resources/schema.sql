@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS film (
     release_date DATE NOT NULL,
     duration INT NOT NULL,
     mpa_id INT,
-    mpa_name VARCHAR
+    FOREIGN KEY (mpa_id) REFERENCES mpa(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS film_likes (

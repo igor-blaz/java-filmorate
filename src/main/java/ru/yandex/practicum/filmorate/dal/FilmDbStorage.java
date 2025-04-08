@@ -35,7 +35,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM film WHERE id = ?";
     private static final String DELETE_BY_FILM_ID_QUERY = "DELETE FROM film WHERE id = ?;";
     private static final String INSERT_FILM_VALUES = "INSERT INTO film " +
-            "(name, description, release_date, duration) Values(?,?,?,?);";
+            "(name, description, release_date, duration, mpa_id) Values(?,?,?,?,?);";
     private static final String ADD_LIKE_QUERY = "INSERT INTO film_likes (film_id, user_id) VALUES (?, ?)";
     private static final String REMOVE_LIKE_QUERY = "DELETE FROM film_likes WHERE film_id = ? AND user_id = ?";
     private static final String GET_LIKE_COUNT_QUERY = "SELECT COUNT(*) FROM film_likes WHERE film_id = ?";
@@ -66,7 +66,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     public Film createFilm(Film film) {
         log.info("Создание фильма...");
         int generatedId = insert(INSERT_FILM_VALUES, film.getName(), film.getDescription(),
-                film.getReleaseDate(), film.getDuration());
+                film.getReleaseDate(), film.getDuration(), film.getMpa().getId());
         log.info("Фильм создан с ID {}", generatedId);
         log.info(String.valueOf(film.getMpa()));
         film.setId(generatedId);
@@ -76,6 +76,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
         film.setGenres(genreDbStorage.getManyGenres(film.getGenres()));
         mpaDbStorage.insertMpa(mpa);
         System.out.println(film.getGenres());
+        System.out.println(film);
         return film;
     }
 
@@ -96,7 +97,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
         log.info("Поиск фильма по id...");
         Film film = findOne(FIND_BY_ID_QUERY, id)
                 .orElseThrow(() -> new NotFoundException("Фильм с ID " + id + " не найден"));
-        System.out.println(film);
+        System.out.println("Получение фильма" + film.getMpa());
         return film;
     }
 
