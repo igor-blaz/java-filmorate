@@ -30,6 +30,7 @@ public class FilmController {
 
     @PutMapping
     public Film updateMovie(@Valid @RequestBody Film film) {
+        log.info("Запрос на обновление фильма{}", film);
         return filmservice.updateFilm(film);
     }
 
@@ -56,19 +57,11 @@ public class FilmController {
         return filmservice.makeLike(id, userId);
     }
 
-    /*@GetMapping("/{id}")
-    public List<Film> getFilmByGenre(@PathVariable Integer genreId) {
-        log.info("Запрос на поиск фильмов по жанрам");
-        return filmservice.getFilmsByGenre(genreId);
-    }*/
+
     @GetMapping("/{id}")
     public Film getFilm(@PathVariable Integer id) {
         log.info("Запрос на поиск фильма");
         log.info("Фильм после get запроса{}", filmservice.getFilm(id));
-        //log.info("Фильм после get запроса{}", filmservice.getFilm(id).getMpa().getId());
-        //Film film = filmservice.getFilm(id);
-        //film.setMpa(mpaService.);
-
         return filmservice.getFilm(id);
     }
 }

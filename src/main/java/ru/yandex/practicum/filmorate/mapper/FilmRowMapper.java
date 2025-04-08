@@ -26,8 +26,6 @@ public class FilmRowMapper implements RowMapper<Film> {
         Mpa mpa = new Mpa();
         mpa.setId(resultSet.getInt("mpa_id"));
         film.setMpa(mpa);
-        List<Genre> genres = new ArrayList<>();
-
         return film;
     }
 }

@@ -1,12 +1,8 @@
-/*package ru.yandex.practicum.filmorate.controller;
+package ru.yandex.practicum.filmorate.controller;
 
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.google.gson.*;
-
 import java.lang.reflect.Type;
 import java.time.LocalDate;
-
 
 public class LocalDateAdapter implements JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
 
@@ -20,5 +16,3 @@ public class LocalDateAdapter implements JsonSerializer<LocalDate>, JsonDeserial
         return LocalDate.parse(json.getAsString());
     }
 }
-
-*/

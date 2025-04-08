@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.controller.MinimumDate;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -32,7 +33,7 @@ public class Film {
     @Positive(message = "Продолжительность должна быть положительной")
     private Integer duration;
     private Mpa mpa;
-    private List<Genre> genres = new ArrayList<>();
+    private Set<Genre> genres = new HashSet<>();
 
 
     public Film(String name, String description, LocalDate releaseDate, Integer duration, Mpa mpa) {
@@ -41,7 +42,7 @@ public class Film {
         this.releaseDate = releaseDate;
         this.duration = duration;
         this.mpa = mpa;
-        this.genres = new ArrayList<>();
+        this.genres = new HashSet<>();
 
     }
 
@@ -56,6 +57,11 @@ public class Film {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+    public Set<Genre> getGenres() {
+        return genres.stream()
+                .sorted(Comparator.comparingInt(Genre::getId))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
 

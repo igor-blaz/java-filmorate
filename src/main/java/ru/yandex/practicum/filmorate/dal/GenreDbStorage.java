@@ -8,9 +8,7 @@ import ru.yandex.practicum.filmorate.mapper.GenreRowMapper;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Genre;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class GenreDbStorage extends BaseRepository<Genre> {
@@ -47,9 +45,9 @@ public class GenreDbStorage extends BaseRepository<Genre> {
                 orElseThrow(() -> new NotFoundException("Жанр с ID " + id + " не найден"));
     }
 
-    public List<Genre> getManyGenres(List<Genre> genresWithoutName) {
+    public Set<Genre> getManyGenres(Set<Genre> genresWithoutName) {
 
-        List<Genre> genres = new ArrayList<>();
+        Set<Genre> genres = new HashSet<>();
         for (Genre genre : genresWithoutName) {
             int id = genre.getId();
             genres.add(getGenre(id));

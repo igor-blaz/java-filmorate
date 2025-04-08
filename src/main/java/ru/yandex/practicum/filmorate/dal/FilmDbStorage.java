@@ -16,21 +16,33 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Repository
 public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
-    private static final String FIND_ALL_QUERY = "SELECT * FROM films";
-    private static final String UPDATE_FILM_BY_ID = "UPDATE films SET name = ?, " +
-            "description = ?, release_date=?, duration = ?, mpa_id=?, genres_id=? " +
-            "WHERE id =?;";
+    private static final String FIND_ALL_QUERY = "SELECT * FROM film";
+    private static final String UPDATE_FILM_BY_ID = """
+             UPDATE film SET name = ?,
+             description = ?, release_date=?, duration = ?,
+             mpa_id = ?
+             WHERE id =?;
+            """;
     private static final String FIND_TOP_POPULAR_QUERY = """
-            SELECT film_id, COUNT(user_id) AS like_count
+            SELECT film_id
             FROM film_likes
             GROUP BY film_id
-            ORDER BY like_count DESC
-            LIMIT ?;
+            ORDER BY COUNT(user_id) DESC
+            LIMIT ?
+            """;
+    private static final String FIND_ALL_POPULAR_QUERY = """
+            SELECT film_id
+            FROM film_likes
+            GROUP BY film_id
+            ORDER BY COUNT(user_id) DESC
+            
             """;
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM film WHERE id = ?";
     private static final String DELETE_BY_FILM_ID_QUERY = "DELETE FROM film WHERE id = ?;";
@@ -41,7 +53,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     private static final String REMOVE_LIKE_QUERY = "DELETE FROM film_likes WHERE film_id = ? AND user_id = ?";
     private static final String GET_LIKE_COUNT_QUERY = "SELECT COUNT(*) FROM film_likes WHERE film_id = ?";
     private static final String GET_FILMS_BY_GENRE = "SELECT * FROM film_genre WHERE genre_id = ?";
-    private static final String GET_GENRES_BY_FILM = "SELECT genre_id FROM film_genre WHERE film_id = ?";
+    private static final String GET_GENRES_BY_FILM = "SELECT genre_id FROM film_genre WHERE film_id = ?  ORDER BY genre_id";
     MpaDbStorage mpaDbStorage;
     GenreDbStorage genreDbStorage;
 
@@ -64,7 +76,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
         return jdbc.queryForObject(GET_LIKE_COUNT_QUERY, Integer.class, filmId);
     }
 
-    public void insertFilmAndGenre(int id, List<Genre> genres) {
+    public void insertFilmAndGenre(int id, Set<Genre> genres) {
         List<Integer> genreIds = genres.stream().map(Genre::getId).toList();
         for (int genreId : genreIds) {
             update(INSERT_FILM_GENRE, id, genreId);
@@ -75,11 +87,12 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     @Override
     public Film createFilm(Film film) {
         log.info("Создание фильма...");
+        Mpa mpa = findNameForMpa(film.getMpa());
+        film.setMpa(mpa);
         int generatedId = insert(INSERT_FILM_VALUES, film.getName(), film.getDescription(),
                 film.getReleaseDate(), film.getDuration(), film.getMpa().getId());
         film.setId(generatedId);
-        Mpa mpa = findNameForMpa(film.getMpa());
-        film.setMpa(mpa);
+
         System.out.println(film.getGenres());
         film.setGenres(genreDbStorage.getManyGenres(film.getGenres()));
         insertFilmAndGenre(generatedId, film.getGenres());
@@ -94,8 +107,11 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
 
     @Override
     public Film updateFilm(Film film) {
+        isRealFilmId(List.of(film.getId()));
         update(UPDATE_FILM_BY_ID, film.getName(), film.getDescription(),
-                film.getReleaseDate(), film.getDuration());
+                film.getReleaseDate(), film.getDuration(), film.getMpa().
+                        getId(), film.getId());
+
         return film;
     }
 
@@ -105,12 +121,11 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
                 .orElseThrow(() -> new NotFoundException("Фильм с ID " + id + " не найден"));
         film.setMpa(mpaDbStorage.findById(film.getMpa().getId()));
         List<Integer> genresIds = findManyIds(GET_GENRES_BY_FILM, id);
-        List<Genre> genres = new ArrayList<>();
+        Set<Genre> genres = new HashSet<>();
         for (int genreId : genresIds) {
             genres.add(genreDbStorage.getGenre(genreId));
         }
         film.setGenres(genres);
-        log.info("ГОГА{}", film);
         return film;
     }
 
@@ -122,7 +137,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
 
     public List<Film> getTopRatedFilms(int count) {
         if (getAllFilms().size() < count) {
-            return getAllFilms();
+            return findMany(FIND_ALL_POPULAR_QUERY);
         }
         return findMany(FIND_TOP_POPULAR_QUERY, count);
     }
@@ -142,6 +157,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     }
 
     public Mpa findNameForMpa(Mpa mpa) {
+
         log.info("Поиск имени Mpa рейтинга - {}", mpa.getId());
         log.info("Mpa созданный в findNameForMpa{}", mpaDbStorage.findById(mpa.getId()));
         return mpaDbStorage.findById(mpa.getId());

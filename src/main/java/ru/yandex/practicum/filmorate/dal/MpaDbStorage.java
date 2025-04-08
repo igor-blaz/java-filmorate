@@ -47,5 +47,6 @@ public class MpaDbStorage extends BaseRepository<Mpa> {
                 orElseThrow(() -> new NotFoundException("Рейтинг с ID " + id + " не найден"));
     }
 
+
 }
 
