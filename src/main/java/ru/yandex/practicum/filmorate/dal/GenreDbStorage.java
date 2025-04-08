@@ -48,6 +48,7 @@ public class GenreDbStorage extends BaseRepository<Genre> {
     }
 
     public List<Genre> getManyGenres(List<Genre> genresWithoutName) {
+
         List<Genre> genres = new ArrayList<>();
         for (Genre genre : genresWithoutName) {
             int id = genre.getId();

@@ -36,10 +36,12 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     private static final String DELETE_BY_FILM_ID_QUERY = "DELETE FROM film WHERE id = ?;";
     private static final String INSERT_FILM_VALUES = "INSERT INTO film " +
             "(name, description, release_date, duration, mpa_id) Values(?,?,?,?,?);";
+    private static final String INSERT_FILM_GENRE = "INSERT INTO film_genre (film_id, genre_id) Values(?,?);";
     private static final String ADD_LIKE_QUERY = "INSERT INTO film_likes (film_id, user_id) VALUES (?, ?)";
     private static final String REMOVE_LIKE_QUERY = "DELETE FROM film_likes WHERE film_id = ? AND user_id = ?";
     private static final String GET_LIKE_COUNT_QUERY = "SELECT COUNT(*) FROM film_likes WHERE film_id = ?";
     private static final String GET_FILMS_BY_GENRE = "SELECT * FROM film_genre WHERE genre_id = ?";
+    private static final String GET_GENRES_BY_FILM = "SELECT genre_id FROM film_genre WHERE film_id = ?";
     MpaDbStorage mpaDbStorage;
     GenreDbStorage genreDbStorage;
 
@@ -62,21 +64,25 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
         return jdbc.queryForObject(GET_LIKE_COUNT_QUERY, Integer.class, filmId);
     }
 
+    public void insertFilmAndGenre(int id, List<Genre> genres) {
+        List<Integer> genreIds = genres.stream().map(Genre::getId).toList();
+        for (int genreId : genreIds) {
+            update(INSERT_FILM_GENRE, id, genreId);
+            log.info("Добавлен жанр {} для фильма {}", genreId, id);
+        }
+    }
+
     @Override
     public Film createFilm(Film film) {
         log.info("Создание фильма...");
         int generatedId = insert(INSERT_FILM_VALUES, film.getName(), film.getDescription(),
                 film.getReleaseDate(), film.getDuration(), film.getMpa().getId());
-        log.info("Фильм создан с ID {}", generatedId);
-        log.info(String.valueOf(film.getMpa()));
         film.setId(generatedId);
         Mpa mpa = findNameForMpa(film.getMpa());
-        log.info("создан Mpa рейтинг {}", mpa);
         film.setMpa(mpa);
-        film.setGenres(genreDbStorage.getManyGenres(film.getGenres()));
-        mpaDbStorage.insertMpa(mpa);
         System.out.println(film.getGenres());
-        System.out.println(film);
+        film.setGenres(genreDbStorage.getManyGenres(film.getGenres()));
+        insertFilmAndGenre(generatedId, film.getGenres());
         return film;
     }
 
@@ -97,7 +103,14 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
         log.info("Поиск фильма по id...");
         Film film = findOne(FIND_BY_ID_QUERY, id)
                 .orElseThrow(() -> new NotFoundException("Фильм с ID " + id + " не найден"));
-        System.out.println("Получение фильма" + film.getMpa());
+        film.setMpa(mpaDbStorage.findById(film.getMpa().getId()));
+        List<Integer> genresIds = findManyIds(GET_GENRES_BY_FILM, id);
+        List<Genre> genres = new ArrayList<>();
+        for (int genreId : genresIds) {
+            genres.add(genreDbStorage.getGenre(genreId));
+        }
+        film.setGenres(genres);
+        log.info("ГОГА{}", film);
         return film;
     }
 
@@ -130,6 +143,7 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
 
     public Mpa findNameForMpa(Mpa mpa) {
         log.info("Поиск имени Mpa рейтинга - {}", mpa.getId());
+        log.info("Mpa созданный в findNameForMpa{}", mpaDbStorage.findById(mpa.getId()));
         return mpaDbStorage.findById(mpa.getId());
     }
 

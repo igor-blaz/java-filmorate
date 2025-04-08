@@ -19,10 +19,12 @@ public class FilmController {
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
     private final FilmService filmservice;
     private final UserService userService;
+    private final MpaService mpaService;
 
     @PostMapping
     public Film addMovie(@Valid @RequestBody Film film) {
         log.info("Запрос на создание фильма");
+        log.info("Фильм целиком{}", film);
         return filmservice.createFilm(film);
     }
 
@@ -62,6 +64,11 @@ public class FilmController {
     @GetMapping("/{id}")
     public Film getFilm(@PathVariable Integer id) {
         log.info("Запрос на поиск фильма");
+        log.info("Фильм после get запроса{}", filmservice.getFilm(id));
+        //log.info("Фильм после get запроса{}", filmservice.getFilm(id).getMpa().getId());
+        //Film film = filmservice.getFilm(id);
+        //film.setMpa(mpaService.);
+
         return filmservice.getFilm(id);
     }
 }
