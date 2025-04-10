@@ -23,8 +23,8 @@ public class GenreDbStorage extends BaseRepository<Genre> {
     }
 
     public Genre getGenre(int id) {
-        return findOne(FIND_BY_ID_QUERY, id).
-                orElseThrow(() -> new NotFoundException("Жанр с ID " + id + " не найден"));
+        return findOne(FIND_BY_ID_QUERY, id)
+                .orElseThrow(() -> new NotFoundException("Жанр с ID " + id + " не найден"));
     }
 
     public Set<Genre> getManyGenres(Set<Genre> genresWithoutName) {
