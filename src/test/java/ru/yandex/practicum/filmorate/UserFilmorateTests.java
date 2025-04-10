@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.controller.LocalDateAdapter;
-import ru.yandex.practicum.filmorate.controller.ValidationException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class UserFilmorateTests {
     @BeforeEach
     public void setUp() {
         LocalDate date = LocalDate.now().minusYears(20);
-        user = new User("@VasiliyVIP", "Vas1337", "Василий.К", date);
+        user = new User("Vasilisk445@mail.ru", "Vas1337", "Василий.К", date);
         client = HttpClient.newHttpClient();
         url = URI.create("http://localhost:8080/users");
         GsonBuilder gsonBuilder = new GsonBuilder();
