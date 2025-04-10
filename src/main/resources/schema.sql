@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS film_likes (
 );
 
 CREATE TABLE IF NOT EXISTS film_genre (
-    film_id INT,   -- теперь film_id уникален
+    film_id INT,
     genre_id INT NOT NULL,
     FOREIGN KEY (film_id) REFERENCES film(id) ON DELETE CASCADE,
     FOREIGN KEY (genre_id) REFERENCES genre(id) ON DELETE CASCADE

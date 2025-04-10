@@ -32,6 +32,7 @@ public class BaseRepository<T> {
     protected List<T> findMany(String query, Object... params) {
         return jdbc.query(query, mapper, params);
     }
+
     protected List<Integer> findManyIds(String query, Object... params) {
         return jdbc.queryForList(query, Integer.class, params);
     }

@@ -15,10 +15,12 @@ public class GenreService {
     public GenreService(GenreDbStorage genreDbStorage) {
         this.genreDbStorage = genreDbStorage;
     }
-    public Genre getGenre(int id){
+
+    public Genre getGenre(int id) {
         return genreDbStorage.getGenre(id);
     }
-    public List<Genre> getAllGenre(){
+
+    public List<Genre> getAllGenre() {
         return genreDbStorage.findAll();
     }
 

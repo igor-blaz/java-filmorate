@@ -3,11 +3,8 @@ package ru.yandex.practicum.filmorate.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.FilmDbStorage;
-import ru.yandex.practicum.filmorate.dal.GenreDbStorage;
-import ru.yandex.practicum.filmorate.dal.MpaDbStorage;
 import ru.yandex.practicum.filmorate.dal.UserDbStorage;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.util.*;
 
@@ -40,6 +37,7 @@ public class FilmService {
     }
 
     public List<Film> getTopRatedFilms(int count) {
+        System.out.println("Service");
         return filmStorage.getTopRatedFilms(count);
     }
 
@@ -54,10 +52,8 @@ public class FilmService {
     public List<Film> getAllFilms() {
         return filmStorage.getAllFilms();
     }
-    public List<Film> getFilmsByGenre(int genreId) {
-        return filmStorage.getFilmByGenre(genreId);
-    }
-    public Film getFilm(int id){
+
+    public Film getFilm(int id) {
         return filmStorage.getFilm(id);
     }
 

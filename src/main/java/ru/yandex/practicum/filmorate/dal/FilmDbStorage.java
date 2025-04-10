@@ -2,19 +2,13 @@ package ru.yandex.practicum.filmorate.dal;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.mapper.FilmRowMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -22,7 +16,7 @@ import java.util.Set;
 
 @Slf4j
 @Repository
-public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
+public class FilmDbStorage extends BaseRepository<Film> {
     private static final String FIND_ALL_QUERY = "SELECT * FROM film";
     private static final String UPDATE_FILM_BY_ID = """
              UPDATE film SET name = ?,
@@ -42,7 +36,6 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
             FROM film_likes
             GROUP BY film_id
             ORDER BY COUNT(user_id) DESC
-            
             """;
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM film WHERE id = ?";
     private static final String DELETE_BY_FILM_ID_QUERY = "DELETE FROM film WHERE id = ?;";
@@ -51,7 +44,6 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     private static final String INSERT_FILM_GENRE = "INSERT INTO film_genre (film_id, genre_id) Values(?,?);";
     private static final String ADD_LIKE_QUERY = "INSERT INTO film_likes (film_id, user_id) VALUES (?, ?)";
     private static final String REMOVE_LIKE_QUERY = "DELETE FROM film_likes WHERE film_id = ? AND user_id = ?";
-    private static final String GET_LIKE_COUNT_QUERY = "SELECT COUNT(*) FROM film_likes WHERE film_id = ?";
     private static final String GET_FILMS_BY_GENRE = "SELECT * FROM film_genre WHERE genre_id = ?";
     private static final String GET_GENRES_BY_FILM = "SELECT genre_id FROM film_genre WHERE film_id = ?  ORDER BY genre_id";
     MpaDbStorage mpaDbStorage;
@@ -72,9 +64,6 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
         update(REMOVE_LIKE_QUERY, filmId, userId);
     }
 
-    public Integer getLikesCount(int filmId) {
-        return jdbc.queryForObject(GET_LIKE_COUNT_QUERY, Integer.class, filmId);
-    }
 
     public void insertFilmAndGenre(int id, Set<Genre> genres) {
         List<Integer> genreIds = genres.stream().map(Genre::getId).toList();
@@ -84,7 +73,6 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
         }
     }
 
-    @Override
     public Film createFilm(Film film) {
         log.info("Создание фильма...");
         Mpa mpa = findNameForMpa(film.getMpa());
@@ -99,13 +87,6 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
         return film;
     }
 
-    @Override
-    public void deleteFilm(Film film) {
-        findOne(DELETE_BY_FILM_ID_QUERY, film.getId())
-                .orElseThrow(() -> new NotFoundException("Фильм с ID " + film.getId() + " не найден"));
-    }
-
-    @Override
     public Film updateFilm(Film film) {
         isRealFilmId(List.of(film.getId()));
         update(UPDATE_FILM_BY_ID, film.getName(), film.getDescription(),
@@ -136,11 +117,9 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     }
 
     public List<Film> getTopRatedFilms(int count) {
-        if (getAllFilms().size() < count) {
-            return findMany(FIND_ALL_POPULAR_QUERY);
-        }
-        return findMany(FIND_TOP_POPULAR_QUERY, count);
+        return idToFilmConverter(findManyIds(FIND_TOP_POPULAR_QUERY, count));
     }
+
 
     public List<Film> getFilmByGenre(int genreId) {
         List<Integer> ids = findManyIds(GET_FILMS_BY_GENRE, genreId);

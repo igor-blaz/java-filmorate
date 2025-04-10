@@ -8,21 +8,24 @@ import ru.yandex.practicum.filmorate.model.Mpa;
 import java.util.List;
 
 @Service
-    public class MpaService {
-        private final MpaDbStorage mpaDbStorage;
+public class MpaService {
+    private final MpaDbStorage mpaDbStorage;
 
-        @Autowired
-        public MpaService(MpaDbStorage mpaDbStorage) {
-            this.mpaDbStorage = mpaDbStorage;
-        }
-        public Mpa getMpa(int id){
-            return mpaDbStorage.findById(id);
-        }
-        public Mpa addMpa(Mpa mpa){
-            return mpaDbStorage.insertMpa(mpa);
-        }
-        public List<Mpa> getAllMpa(){
-            return mpaDbStorage.getAllMpa();
-        }
+    @Autowired
+    public MpaService(MpaDbStorage mpaDbStorage) {
+        this.mpaDbStorage = mpaDbStorage;
     }
+
+    public Mpa getMpa(int id) {
+        return mpaDbStorage.findById(id);
+    }
+
+    public Mpa addMpa(Mpa mpa) {
+        return mpaDbStorage.insertMpa(mpa);
+    }
+
+    public List<Mpa> getAllMpa() {
+        return mpaDbStorage.getAllMpa();
+    }
+}
 

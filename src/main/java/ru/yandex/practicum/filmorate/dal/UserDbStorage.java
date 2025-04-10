@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.mapper.UserRowMapper;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +13,8 @@ import java.util.Optional;
 
 @Slf4j
 @Repository
-public class UserDbStorage extends BaseRepository<User> implements UserStorage {
-    //private final JdbcTemplate jdbcTemplate;
+public class UserDbStorage extends BaseRepository<User> {
     private static final String FIND_ALL_QUERY = "SELECT * FROM users";
-    private static final String FIND_ALL_ID_QUERY = "SELECT id FROM users";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
     private static final String ADD_USER_QUERY = "INSERT INTO users (email, login, name," +
             " birthday) Values(?,?,?,?)";
@@ -43,19 +40,12 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
         super(jdbcTemplate, mapper);
     }
 
-    @Override
     public User createUser(User user) {
-        int generateId = insert(ADD_USER_QUERY, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday());
-        return getUser(generateId);
+        int generatedId = insert(ADD_USER_QUERY, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday());
+        log.info("Создан пользователь ID {}", generatedId);
+        return getUser(generatedId);
     }
 
-    @Override
-    public void deleteUser(User user) {
-        findOne(DELETE_BY_USER_ID_QUERY, user.getId()).
-                orElseThrow(() -> new NotFoundException("Пользователь с ID " + user.getId() + " не найден"));
-    }
-
-    @Override
     public User updateUser(User user) {
         update(UPDATE_USER_BY_ID, user.getEmail(),
                 user.getLogin(), user.getName(), user.getBirthday(), user.getId());

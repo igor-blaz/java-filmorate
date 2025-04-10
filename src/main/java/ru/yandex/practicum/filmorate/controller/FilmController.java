@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.service.MpaService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.*;
@@ -19,7 +18,6 @@ public class FilmController {
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
     private final FilmService filmservice;
     private final UserService userService;
-    private final MpaService mpaService;
 
     @PostMapping
     public Film addMovie(@Valid @RequestBody Film film) {
@@ -41,6 +39,7 @@ public class FilmController {
 
     @GetMapping("/popular")
     public List<Film> getTopPopular(@RequestParam(defaultValue = "10") int count) {
+        log.info("Запрос на популярные фильмы");
         return filmservice.getTopRatedFilms(count);
     }
 

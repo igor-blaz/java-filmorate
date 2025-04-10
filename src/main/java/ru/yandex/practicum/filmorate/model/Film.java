@@ -36,16 +36,6 @@ public class Film {
     private Set<Genre> genres = new HashSet<>();
 
 
-    public Film(String name, String description, LocalDate releaseDate, Integer duration, Mpa mpa) {
-        this.name = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.duration = duration;
-        this.mpa = mpa;
-        this.genres = new HashSet<>();
-
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
