@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -9,9 +10,8 @@ import lombok.NoArgsConstructor;
 import ru.yandex.practicum.filmorate.controller.MinimumDate;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -28,29 +28,13 @@ public class Film {
     @Size(min = 1, max = 200)
     private String description;
     @MinimumDate
+    @JsonProperty("releaseDate")
     private LocalDate releaseDate;
     @Positive(message = "Продолжительность должна быть положительной")
     private Integer duration;
-    private Set<Integer> likersId = new HashSet<>();
+    private Mpa mpa;
+    private Set<Genre> genres = new HashSet<>();
 
-    public Film(String name, String description, LocalDate releaseDate, Integer duration) {
-        this.name = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.duration = duration;
-    }
-
-    public int getLikesSize() {
-        return likersId.size();
-    }
-
-    public void addLike(int id) {
-        likersId.add(id);
-    }
-
-    public void removeLike(int id) {
-        likersId.remove(id);
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -64,5 +48,12 @@ public class Film {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public Set<Genre> getGenres() {
+        return genres.stream()
+                .sorted(Comparator.comparingInt(Genre::getId))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
 
 }

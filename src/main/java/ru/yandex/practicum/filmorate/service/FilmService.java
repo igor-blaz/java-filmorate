@@ -2,46 +2,43 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dal.FilmDbStorage;
+import ru.yandex.practicum.filmorate.dal.UserDbStorage;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.util.*;
 
 @Service
 public class FilmService {
 
-    private final InMemoryFilmStorage filmStorage;
-    private final InMemoryUserStorage userStorage;
+    private final FilmDbStorage filmStorage;
+    private final UserDbStorage userStorage;
+
 
     @Autowired
-    public FilmService(InMemoryFilmStorage filmStorage, InMemoryUserStorage userStorage) {
+    public FilmService(FilmDbStorage filmStorage, UserDbStorage userStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
+
+    }
+
+    public List<Film> getRatedFilms(int count) {
+        return filmStorage.getTopRatedFilms(count);
     }
 
     public Film makeLike(int filmId, int userId) {
-        Film film = filmStorage.getFilm(filmId);
-        film.addLike(userId);
-        filmStorage.updateFilm(film);
-        return film;
+        filmStorage.makeLike(filmId, userId);
+        return filmStorage.getFilm(filmId);
     }
 
-    public Film removeLike(int filmId, int userId) {
-        userStorage.isRealUserId(List.of(filmId));
+    public void removeLike(int filmId, int userId) {
         Film film = filmStorage.getFilm(filmId);
-        film.removeLike(userId);
-        filmStorage.updateFilm(film);
-        return film;
+        filmStorage.deleteLike(filmId, userId);
     }
 
     public List<Film> getTopRatedFilms(int count) {
-        List<Film> allFilms = new ArrayList<>(filmStorage.getRatedFilms());
-        Collections.reverse(allFilms);
-        if (count >= allFilms.size()) {
-            return allFilms;
-        }
-        return allFilms.subList(0, count);
+        System.out.println("Service");
+        return filmStorage.getTopRatedFilms(count);
     }
 
     public Film createFilm(Film film) {
@@ -54,6 +51,10 @@ public class FilmService {
 
     public List<Film> getAllFilms() {
         return filmStorage.getAllFilms();
+    }
+
+    public Film getFilm(int id) {
+        return filmStorage.getFilm(id);
     }
 
 
