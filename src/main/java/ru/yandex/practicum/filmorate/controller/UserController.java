@@ -29,10 +29,10 @@ public class UserController {
         return userService.updateUser(user);
     }
 
-    @PutMapping("/{id}/friends/{friend_id}")
-    public List<User> addToFriends(@PathVariable int id, @PathVariable int friend_id) {
+    @PutMapping("/{id}/friends/{friendId}")
+    public List<User> addToFriends(@PathVariable int id, @PathVariable int friendId) {
         log.info("Запрос на добавление в друзья");
-        userService.addToFriends(id, friend_id);
+        userService.addToFriends(id, friendId);
         return userService.getUserFriends(id);
     }
 
@@ -42,9 +42,9 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/{id}/friends/common/{friend_id}")
-    public List<User> getCommonFriends(@PathVariable int id, @PathVariable int friend_id) {
-        return userService.findCommonFriends(id, friend_id);
+    @GetMapping("/{id}/friends/common/{friendId}")
+    public List<User> getCommonFriends(@PathVariable int id, @PathVariable int friendId) {
+        return userService.findCommonFriends(id, friendId);
     }
 
     @GetMapping("/{id}/friends")
