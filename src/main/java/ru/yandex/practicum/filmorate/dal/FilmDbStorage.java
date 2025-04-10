@@ -90,8 +90,8 @@ public class FilmDbStorage extends BaseRepository<Film> {
     public Film updateFilm(Film film) {
         isRealFilmId(List.of(film.getId()));
         update(UPDATE_FILM_BY_ID, film.getName(), film.getDescription(),
-                film.getReleaseDate(), film.getDuration(), film.getMpa().
-                        getId(), film.getId());
+                film.getReleaseDate(), film.getDuration(), film.getMpa()
+                        .getId(), film.getId());
 
         return film;
     }
@@ -129,8 +129,8 @@ public class FilmDbStorage extends BaseRepository<Film> {
     public List<Film> idToFilmConverter(List<Integer> ids) {
         List<Film> films = new ArrayList<>();
         for (int filmId : ids) {
-            films.add(findOne(FIND_BY_ID_QUERY, filmId).
-                    orElseThrow(() -> new NotFoundException("Фильм с ID " + filmId + " не найден")));
+            films.add(findOne(FIND_BY_ID_QUERY, filmId)
+                    .orElseThrow(() -> new NotFoundException("Фильм с ID " + filmId + " не найден")));
         }
         return films;
     }

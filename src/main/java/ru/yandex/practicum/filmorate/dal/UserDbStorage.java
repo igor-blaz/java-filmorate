@@ -77,8 +77,8 @@ public class UserDbStorage extends BaseRepository<User> {
     public List<User> integerToUserConverter(List<Integer> ids) {
         List<User> friendsAsUsers = new ArrayList<>();
         for (Integer friendId : ids) {
-            friendsAsUsers.add(findOne(FIND_BY_ID_QUERY, friendId).
-                    orElseThrow(() -> new NotFoundException("Пользователь с ID " + friendId + " не найден")));
+            friendsAsUsers.add(findOne(FIND_BY_ID_QUERY, friendId)
+                    .orElseThrow(() -> new NotFoundException("Пользователь с ID " + friendId + " не найден")));
         }
         return friendsAsUsers;
     }
