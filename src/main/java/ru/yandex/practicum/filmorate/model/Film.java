@@ -48,6 +48,7 @@ public class Film {
     public int hashCode() {
         return Objects.hash(id);
     }
+
     public Set<Genre> getGenres() {
         return genres.stream()
                 .sorted(Comparator.comparingInt(Genre::getId))

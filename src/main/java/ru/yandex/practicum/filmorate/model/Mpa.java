@@ -11,7 +11,6 @@ public class Mpa {
     }
 
 
-
     public Mpa(Integer id, String name) {
         this.id = id;
         this.name = name;
