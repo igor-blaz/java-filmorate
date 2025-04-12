@@ -78,11 +78,13 @@ public class FilmService {
     private void findMpa(Film film) {
         film.setMpa(mpaDbStorage.findById(film.getMpa().getId()));
     }
+
     public Mpa findNameForMpa(Mpa mpa) {
         return mpaDbStorage.findById(mpa.getId());
     }
+
     private void findGenres(Film film) {
-       List<Integer> genresIds = filmStorage.getIdsForGenres(film.getId());
+        List<Integer> genresIds = filmStorage.getIdsForGenres(film.getId());
         Set<Genre> genres = new HashSet<>();
         for (int genreId : genresIds) {
             genres.add(genreDbStorage.getGenre(genreId));
