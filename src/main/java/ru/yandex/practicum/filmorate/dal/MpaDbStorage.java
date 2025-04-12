@@ -31,7 +31,6 @@ public class MpaDbStorage extends BaseRepository<Mpa> {
     }
 
     public Mpa findById(int id) {
-        log.info("SQL запрос поиск Mpa {}", id);
         return findOne(FIND_BY_ID_QUERY, id)
                 .orElseThrow(() -> new NotFoundException("Рейтинг с ID " + id + " не найден"));
     }

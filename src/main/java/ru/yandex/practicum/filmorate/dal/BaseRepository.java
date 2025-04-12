@@ -24,7 +24,6 @@ public class BaseRepository<T> {
             T result = jdbc.queryForObject(query, mapper, params);
             return Optional.ofNullable(result);
         } catch (EmptyResultDataAccessException ignored) {
-            log.error("Не найден id рейтинга");
             return Optional.empty();
         }
     }
@@ -55,7 +54,6 @@ public class BaseRepository<T> {
         if (id != null) {
             return id;
         } else {
-            log.error("Ошибка. id = null!");
             throw new NotFoundException("Ошибка добавления в базу данных");
         }
     }

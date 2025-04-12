@@ -21,7 +21,6 @@ public class UserService {
 
     public void addToFriends(int id, int newFriendId) {
         isRealUserId(List.of(id, newFriendId));
-        log.info("Id прошли проверку");
         userStorage.addFriend(id, newFriendId);
     }
 
@@ -37,7 +36,6 @@ public class UserService {
 
     public List<User> getUserFriends(int id) {
         isRealUserId(List.of(id));
-        log.info("Поиск друзей...");
         return userStorage.getFriends(id);
     }
 

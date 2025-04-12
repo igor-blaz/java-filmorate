@@ -2,8 +2,6 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
@@ -15,12 +13,10 @@ import java.util.*;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
 
     @PostMapping
     public User addUser(@Valid @RequestBody User user) {
-        log.trace("Новый пользователь добавляется");
         return userService.createUser(user);
     }
 
@@ -31,14 +27,12 @@ public class UserController {
 
     @PutMapping("/{id}/friends/{friendId}")
     public List<User> addToFriends(@PathVariable int id, @PathVariable int friendId) {
-        log.info("Запрос на добавление в друзья");
         userService.addToFriends(id, friendId);
         return userService.getUserFriends(id);
     }
 
     @GetMapping
     public List<User> getAllUsers() {
-        log.info("Запрос на получение всех пользователей");
         return userService.getAllUsers();
     }
 
@@ -49,7 +43,6 @@ public class UserController {
 
     @GetMapping("/{id}/friends")
     public List<User> getUserFriends(@PathVariable int id) {
-        log.info("Запрос на получение друзей пользователя {}", id);
         return userService.getUserFriends(id);
     }
 

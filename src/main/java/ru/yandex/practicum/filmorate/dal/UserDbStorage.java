@@ -42,7 +42,6 @@ public class UserDbStorage extends BaseRepository<User> {
 
     public User createUser(User user) {
         int generatedId = insert(ADD_USER_QUERY, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday());
-        log.info("Создан пользователь ID {}", generatedId);
         return getUser(generatedId);
     }
 
@@ -62,14 +61,12 @@ public class UserDbStorage extends BaseRepository<User> {
             Optional<User> user = findOne(FIND_BY_ID_QUERY, userId);
 
             if (user.isEmpty()) {
-                log.error("id не существует {}", userId);
                 throw new NotFoundException("Аккаунт с ID " + userId + " не найден");
             }
         }
     }
 
     public List<User> getFriends(int id) {
-        log.info("SQL запрос на получение друзей пользователя ID: {}", id);
         List<Integer> friendsAsIds = findManyIds(GET_FRIENDS_QUERY, id);
         return integerToUserConverter(friendsAsIds);
     }
@@ -85,11 +82,7 @@ public class UserDbStorage extends BaseRepository<User> {
 
 
     public void addFriend(int id, int newFriend) {
-        log.info("SQL запрос на добавление в друзья");
-        int updatedRows = update(ADD_TO_FRIENDS_QUERY, id, newFriend);
-        if (updatedRows > 0) {
-            log.info("Пользователи заключили дружбу");
-        }
+         update(ADD_TO_FRIENDS_QUERY, id, newFriend);
     }
 
     public void removeFriend(int id, int deleteFriend) {
