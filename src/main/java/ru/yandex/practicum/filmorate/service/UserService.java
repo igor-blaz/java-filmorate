@@ -1,76 +1,58 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dal.UserDbStorage;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 
+@Slf4j
 @Service
 public class UserService {
-    private final InMemoryUserStorage inMemoryUserStorage;
+    private final UserDbStorage userStorage;
 
     @Autowired
-    public UserService(InMemoryUserStorage inMemoryUserStorage) {
-        this.inMemoryUserStorage = inMemoryUserStorage;
+    public UserService(UserDbStorage userStorage) {
+        this.userStorage = userStorage;
     }
 
-    public Set<Integer> addToFriends(int id, int newFriendId) {
-        User user = inMemoryUserStorage.getUser(id);
-        User newFriend = inMemoryUserStorage.getUser(newFriendId);
-        newFriend.addFriend(id);
-        user.addFriend(newFriendId);
-        return user.getFriends();
+    public void addToFriends(int id, int newFriendId) {
+        isRealUserId(List.of(id, newFriendId));
+        userStorage.addFriend(id, newFriendId);
     }
 
     public List<User> findCommonFriends(int firstId, int secondId) {
-        User firstUser = inMemoryUserStorage.getUser(firstId);
-        User secondUser = inMemoryUserStorage.getUser(secondId);
-        Set<Integer> secondUserFriends = secondUser.getFriends();
-        List<User> commonFriends = new ArrayList<>();
-        for (Integer userId : firstUser.getFriends()) {
-            if (secondUserFriends.contains(userId)) {
-                commonFriends.add(inMemoryUserStorage.getUser(userId));
-            }
-        }
-        return commonFriends;
+        isRealUserId(List.of(firstId, secondId));
+        return userStorage.getCommonFriends(firstId, secondId);
     }
 
     public void deleteFriend(int userId, int friendToDelete) {
-        User user = inMemoryUserStorage.getUser(userId);
-        User deleteUser = inMemoryUserStorage.getUser(friendToDelete);
-        deleteUser.removeFriend(userId);
-        user.removeFriend(friendToDelete);
+        isRealUserId(List.of(userId, friendToDelete));
+        userStorage.removeFriend(userId, friendToDelete);
     }
 
     public List<User> getUserFriends(int id) {
-        User user = inMemoryUserStorage.getUser(id);
-        Set<Integer> userFriends = user.getFriends();
-        return userFriends
-                .stream()
-                .map(inMemoryUserStorage::getUser)
-                .filter(Objects::nonNull)
-                .toList();
+        isRealUserId(List.of(id));
+        return userStorage.getFriends(id);
     }
 
     public User createUser(User user) {
-        return inMemoryUserStorage.createUser(user);
+        return userStorage.createUser(user);
     }
 
     public User updateUser(User user) {
-        return inMemoryUserStorage.updateUser(user);
+        isRealUserId(List.of(user.getId()));
+        return userStorage.updateUser(user);
     }
 
     public List<User> getAllUsers() {
-        return inMemoryUserStorage.getAllUsers();
+        return userStorage.getAllUsers();
     }
 
     public void isRealUserId(List<Integer> ids) {
-        inMemoryUserStorage.isRealUserId(ids);
+        userStorage.isRealUserId(ids);
     }
 }

@@ -2,8 +2,6 @@ package ru.yandex.practicum.filmorate.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
@@ -15,7 +13,6 @@ import java.util.*;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
 
     @PostMapping
@@ -25,14 +22,13 @@ public class UserController {
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
-        userService.isRealUserId(List.of(user.getId()));
         return userService.updateUser(user);
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public Set<Integer> addToFriends(@PathVariable int id, @PathVariable int friendId) {
-        userService.isRealUserId(List.of(id, friendId));
-        return userService.addToFriends(id, friendId);
+    public List<User> addToFriends(@PathVariable int id, @PathVariable int friendId) {
+        userService.addToFriends(id, friendId);
+        return userService.getUserFriends(id);
     }
 
     @GetMapping
@@ -40,9 +36,9 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getCommonFriends(@PathVariable int id, @PathVariable int otherId) {
-        return userService.findCommonFriends(id, otherId);
+    @GetMapping("/{id}/friends/common/{friendId}")
+    public List<User> getCommonFriends(@PathVariable int id, @PathVariable int friendId) {
+        return userService.findCommonFriends(id, friendId);
     }
 
     @GetMapping("/{id}/friends")
