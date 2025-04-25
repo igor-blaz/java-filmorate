@@ -8,7 +8,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
-import java.util.*;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,10 +37,9 @@ public class FilmController {
     }
 
     @GetMapping("/films/director/{directorId}")
-    public List<Film> getPopularFromDirector(@PathVariable Integer directorId, @RequestParam String sortBy){
+    public List<Film> getPopularFromDirector(@PathVariable Integer directorId, @RequestParam String sortBy) {
         return filmservice.getPopularFromDirector(directorId, sortBy);
     }
-
 
 
     @GetMapping("/popular")
