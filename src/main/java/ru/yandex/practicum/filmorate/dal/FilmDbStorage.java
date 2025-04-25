@@ -42,14 +42,7 @@ public class FilmDbStorage extends BaseRepository<Film> {
     private static final String REMOVE_LIKE_QUERY = "DELETE FROM film_likes WHERE film_id = ? AND user_id = ?";
     private static final String GET_GENRES_BY_FILM = "SELECT genre_id FROM film_genre WHERE " +
             "film_id = ?  ORDER BY genre_id";
-    String array;
-    private String FIND_POPULAR_FROM_ARRAY =
-            "SELECT film_id, COUNT(user_id) AS like_count " +
-                    "FROM film_likes " +
-                    "WHERE film_id IN (" + array + ")" +
-                    "GROUP BY film_id " +
-                    "ORDER BY like_count DESC ";
-
+   
 
     public FilmDbStorage(JdbcTemplate jdbcTemplate, FilmRowMapper mapper) {
         super(jdbcTemplate, mapper);
