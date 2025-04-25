@@ -8,7 +8,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
-import java.util.*;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -62,7 +62,10 @@ public class FilmController {
         log.info("Фильм после get запроса{}", filmservice.getFilm(id));
         return filmservice.getFilm(id);
     }
+
+    @GetMapping("/common")
+    public List<Film> getCommonFilms(@RequestParam int userId, @RequestParam int friendId) {
+        log.info("Запрос от {} на поиск общих фильмов с {}", userId, friendId);
+        return filmservice.getCommonFilms(userId, friendId);
+    }
 }
-
-
-

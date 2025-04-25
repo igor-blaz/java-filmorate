@@ -10,7 +10,9 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class FilmService {
@@ -71,6 +73,10 @@ public class FilmService {
         return film;
     }
 
+    public List<Film> getCommonFilms(int userId, int friendId) {
+        return filmStorage.getCommonFilms(userId, friendId);
+    }
+
     private void findNamesForGenres(Film film) {
         film.setGenres(genreDbStorage.getManyGenres(film.getGenres()));
     }
@@ -91,6 +97,4 @@ public class FilmService {
         }
         film.setGenres(genres);
     }
-
-
 }
