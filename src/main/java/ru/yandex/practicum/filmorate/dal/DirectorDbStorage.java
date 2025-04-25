@@ -25,7 +25,6 @@ public class DirectorDbStorage extends BaseRepository<Director> {
             "WHERE director_id = ?;";
 
 
-
     public DirectorDbStorage(JdbcTemplate jdbcTemplate, DirectorRowMapper mapper) {
         super(jdbcTemplate, mapper);
     }
@@ -33,7 +32,8 @@ public class DirectorDbStorage extends BaseRepository<Director> {
     public List<Director> findAllDirectors() {
         return findMany(FIND_ALL_DIR_QUERY);
     }
-    public List<Integer> findFilmsByDirectorId(int id){
+
+    public List<Integer> findFilmsByDirectorId(int id) {
         return findManyIds(FIND_FILM_ID_BY_DIRECTOR_QUERY, id);
     }
 

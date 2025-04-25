@@ -6,7 +6,9 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.mapper.GenreRowMapper;
 import ru.yandex.practicum.filmorate.model.Genre;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Repository
 public class GenreDbStorage extends BaseRepository<Genre> {
