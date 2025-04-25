@@ -15,11 +15,11 @@ import java.util.Set;
 @Slf4j
 @Repository
 public class FilmDbStorage extends BaseRepository<Film> {
-    private static final String FIND_ALL_QUERY = "SELECT * FROM film";
+    private static final String FIND_ALL_QUERY = "SELECT * FROM film f JOIN directors d ON f.director_id = d.id";
     private static final String UPDATE_FILM_BY_ID = """
              UPDATE film SET name = ?,
              description = ?, release_date=?, duration = ?,
-             mpa_id = ?
+             mpa_id = ?, director_id = ?
              WHERE id =?;
             """;
     private static final String FIND_TOP_POPULAR_QUERY = """
@@ -31,7 +31,7 @@ public class FilmDbStorage extends BaseRepository<Film> {
             """;
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM film WHERE id = ?";
     private static final String INSERT_FILM_VALUES = "INSERT INTO film " +
-            "(name, description, release_date, duration, mpa_id) Values(?,?,?,?,?);";
+            "(name, description, release_date, duration, mpa_id, director_id) Values(?,?,?,?,?,?);";
     private static final String INSERT_FILM_GENRE = "INSERT INTO film_genre (film_id, genre_id) Values(?,?);";
     private static final String ADD_LIKE_QUERY = "INSERT INTO film_likes (film_id, user_id) VALUES (?, ?)";
     private static final String REMOVE_LIKE_QUERY = "DELETE FROM film_likes WHERE film_id = ? AND user_id = ?";
