@@ -66,7 +66,6 @@ public class FilmService {
         directorDbStorage.insertManyDirectors(film.getId(), film.getDirectors());
         Set<Director> directorSet = directorDbStorage.findDirectorsByFilmId(film.getId());
         film.setDirectors(directorSet);
-
         return filmStorage.updateFilm(film);
     }
 
@@ -82,6 +81,10 @@ public class FilmService {
         return film;
     }
 
+    public List<Film> getCommonFilms(int userId, int friendId) {
+        return filmStorage.getCommonFilms(userId, friendId);
+    }
+
     private void findNamesForGenres(Film film) {
         film.setGenres(genreDbStorage.getManyGenres(film.getGenres()));
     }
@@ -89,7 +92,6 @@ public class FilmService {
     private void findDirectors(Film film) {
         log.info("Поиск Режиссера");
         Set<Director> directorSet = directorDbStorage.findDirectorsByFilmId(film.getId());
-
         film.setDirectors(directorSet);
     }
 
@@ -128,7 +130,7 @@ public class FilmService {
             List<Integer> sortedIds = sortIt(filmIds);
             List<Film> sortedFilms = filmStorage.findManyFilmsByArrayOfIds(sortedIds);
             directorDbStorage.setDirectorsForListOfFilms(sortedFilms);
-            log.info("Отправлка назад {}", sortedFilms);
+            log.info("Отправка назад {}", sortedFilms);
             return sortedFilms;
         } else {
             throw new NotFoundException("Некорректная форма сортировки");
@@ -152,8 +154,5 @@ public class FilmService {
                 .sorted(Map.Entry.<Integer, Integer>comparingByValue().reversed())
                 .map(Map.Entry::getKey)
                 .toList();
-
     }
-
-
 }

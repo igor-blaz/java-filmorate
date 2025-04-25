@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -48,6 +49,12 @@ private static final String FIND_TOP_POPULAR_QUERY = """
     private static final String REMOVE_LIKE_QUERY = "DELETE FROM film_likes WHERE film_id = ? AND user_id = ?";
     private static final String GET_GENRES_BY_FILM = "SELECT genre_id FROM film_genre WHERE " +
             "film_id = ?  ORDER BY genre_id";
+    private static final String GET_COMMON_FILMS = "SELECT * FROM film f WHERE f.id IN (" +
+            "SELECT fl.film_id FROM film_likes fl " +
+            "WHERE fl.user_id IN (?, ?) " +
+            "GROUP BY fl.film_id " +
+            "HAVING COUNT(user_id) = 2" +
+            "ORDER BY COUNT(user_id) DESC)";
 
     public FilmDbStorage(JdbcTemplate jdbcTemplate, FilmRowMapper mapper) {
         super(jdbcTemplate, mapper);
@@ -156,5 +163,21 @@ private static final String FIND_TOP_POPULAR_QUERY = """
                 }
             }
         }
+    }
+
+    public List<Film> getCommonFilms(int userId, int friendId) {
+        if (isFriends(userId, friendId)) {
+            return findMany(GET_COMMON_FILMS, userId, friendId);
+        }
+        throw new NotFoundException("Пользователи с id " + userId + " и " + friendId + " не являются друзьями");
+    }
+
+    private boolean isFriends(int userId, int friendId) {
+        String sqlQuery = "SELECT friend_id FROM user_friends WHERE user_id IN (?, ?) AND friend_id IN (?, ?)";
+        List<Map<String, Object>> list = jdbc.queryForList(sqlQuery, userId, friendId, userId, friendId);
+        if (list.isEmpty()) {
+            throw new NotFoundException("Пользователи с id " + userId + " и " + friendId + " не являются друзьями");
+        }
+        return true;
     }
 }

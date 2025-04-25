@@ -76,7 +76,10 @@ public class FilmController {
         log.info("Запрос на поиск фильма");
         return filmservice.getFilm(id);
     }
+
+    @GetMapping("/common")
+    public List<Film> getCommonFilms(@RequestParam int userId, @RequestParam int friendId) {
+        log.info("Запрос от {} на поиск общих фильмов с {}", userId, friendId);
+        return filmservice.getCommonFilms(userId, friendId);
+    }
 }
-
-
-
