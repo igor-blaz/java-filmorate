@@ -7,18 +7,23 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.mapper.DirectorRowMapper;
 import ru.yandex.practicum.filmorate.model.Director;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Repository
 public class DirectorDbStorage extends BaseRepository<Director> {
     private static final String FIND_ALL_DIR_QUERY = "SELECT * FROM directors;";
-    private static final String DELETE_DIRECTOR_QUERY = "DELETE FROM directors WHERE id = ?;";
-    private static final String FIND_DIRECTOR_QUERY = "SELECT * FROM directors WHERE id = ?;";
+    private static final String DELETE_DIRECTOR_QUERY = "DELETE FROM directors WHERE director_id = ?;";
+    private static final String FIND_DIRECTOR_QUERY = "SELECT * FROM directors WHERE director_id = ?;";
     private static final String INSERT_DIRECTOR_QUERY = "INSERT INTO directors " +
             "(director_name) VALUES (?);";
     private static final String UPDATE_DIRECTOR_QUERY = "UPDATE directors SET director_name = ? " +
             "WHERE director_id = ?;";
+    private static final String FIND_FILM_ID_BY_DIRECTOR_QUERY = "SELECT film_id FROM film_directors " +
+            "WHERE director_id = ?;";
+
 
 
     public DirectorDbStorage(JdbcTemplate jdbcTemplate, DirectorRowMapper mapper) {
@@ -28,8 +33,21 @@ public class DirectorDbStorage extends BaseRepository<Director> {
     public List<Director> findAllDirectors() {
         return findMany(FIND_ALL_DIR_QUERY);
     }
+    public List<Integer> findFilmsByDirectorId(int id){
+        return findManyIds(FIND_FILM_ID_BY_DIRECTOR_QUERY, id);
+    }
+
+    public Set<Director> findManyDirectorsById(Set<Director> directorsWithoutName) {
+        Set<Director> directors = new HashSet<>();
+        for (Director director : directorsWithoutName) {
+            int id = director.getId();
+            directors.add(findDirectorById(id));
+        }
+        return directors;
+    }
 
     public Director findDirectorById(int id) {
+        log.info("SQL запрос на поиск режиссера");
         return findOne(FIND_DIRECTOR_QUERY, id)
                 .orElseThrow(() -> new NotFoundException("Режиссер с ID " + id + " не найден"));
     }

@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -25,18 +24,26 @@ public class Film {
     private int id = 0;
     @NotBlank(message = "Название не должно быть null")
     private String name;
-    @NotBlank(message = "Описание не должно быть null")
-    @Size(min = 1, max = 200)
-    private String description;
+
     @MinimumDate
     @JsonProperty("releaseDate")
     private LocalDate releaseDate;
+
+    @NotBlank(message = "Описание не должно быть null")
+    @Size(min = 1, max = 200)
+    private String description;
+
     @Positive(message = "Продолжительность должна быть положительной")
     private Integer duration;
-    private Integer directorId;
+
+    @JsonProperty("mpa")
     private Mpa mpa;
+
+    @JsonProperty("genres")
     private Set<Genre> genres = new HashSet<>();
 
+    @JsonProperty("director")
+    private Set<Director> directors = new HashSet<>();
 
 
     @Override

@@ -36,6 +36,13 @@ public class FilmController {
         return filmservice.getAllFilms();
     }
 
+    @GetMapping("/films/director/{directorId}")
+    public List<Film> getPopularFromDirector(@PathVariable Integer directorId, @RequestParam String sortBy){
+        return filmservice.getPopularFromDirector(directorId, sortBy);
+    }
+
+
+
     @GetMapping("/popular")
     public List<Film> getTopPopular(@RequestParam(defaultValue = "10") int count) {
         log.info("Запрос на популярные фильмы");

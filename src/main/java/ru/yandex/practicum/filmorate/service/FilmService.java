@@ -1,17 +1,21 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.dal.FilmDbStorage;
-import ru.yandex.practicum.filmorate.dal.GenreDbStorage;
-import ru.yandex.practicum.filmorate.dal.MpaDbStorage;
-import ru.yandex.practicum.filmorate.dal.UserDbStorage;
+import ru.yandex.practicum.filmorate.dal.*;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class FilmService {
 
@@ -19,15 +23,17 @@ public class FilmService {
     private final UserDbStorage userStorage;
     private final GenreDbStorage genreDbStorage;
     private final MpaDbStorage mpaDbStorage;
+    private final DirectorDbStorage directorDbStorage;
 
 
     @Autowired
     public FilmService(FilmDbStorage filmStorage, UserDbStorage userStorage, GenreDbStorage genreDbStorage,
-                       MpaDbStorage mpaDbStorage) {
+                       MpaDbStorage mpaDbStorage, DirectorDbStorage directorDbStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
         this.genreDbStorage = genreDbStorage;
         this.mpaDbStorage = mpaDbStorage;
+        this.directorDbStorage = directorDbStorage;
     }
 
     public List<Film> getRatedFilms(int count) {
@@ -51,6 +57,7 @@ public class FilmService {
 
     public Film createFilm(Film film) {
         findNamesForGenres(film);
+        findNamesForDirectors(film);
         Mpa mpa = findNameForMpa(film.getMpa());
         film.setMpa(mpa);
         return filmStorage.createFilm(film);
@@ -75,6 +82,11 @@ public class FilmService {
         film.setGenres(genreDbStorage.getManyGenres(film.getGenres()));
     }
 
+    private void findNamesForDirectors(Film film) {
+        log.info("Поиск имени для жанра");
+        film.setDirectors(directorDbStorage.findManyDirectorsById(film.getDirectors()));
+    }
+
     private void findMpa(Film film) {
         film.setMpa(mpaDbStorage.findById(film.getMpa().getId()));
     }
@@ -92,5 +104,29 @@ public class FilmService {
         film.setGenres(genres);
     }
 
+    public List<Film> getPopularFromDirector(int directorId, String sortType) {
+        directorDbStorage.isRealDirectorId(List.of(directorId));
+        List<Integer> filmIds = directorDbStorage.findFilmsByDirectorId(directorId);
+        List<Film> films = filmStorage.findManyFilmsByArrayOfIds(filmIds);
+
+        if (sortType.equals("year")) {
+            return sortByYear(films);
+        } else if (sortType.equals("likes")) {
+            List<Integer> ids = sortByLikes(filmIds);
+            return filmStorage.findManyFilmsByArrayOfIds(ids);
+        } else {
+            throw new NotFoundException("Некорректная форма сортировки");
+        }
+    }
+
+    private List<Film> sortByYear(List<Film> films) {
+        return films.stream()
+                .sorted(Comparator.comparing(Film::getReleaseDate))
+                .collect(Collectors.toList());
+    }
+
+    private List<Integer> sortByLikes(List<Integer> filmIds) {
+        return filmStorage.findPopularFromArray(filmIds);
+    }
 
 }

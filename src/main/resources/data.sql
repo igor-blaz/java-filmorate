@@ -34,3 +34,6 @@ SELECT 4, 'R' WHERE NOT EXISTS (SELECT 1 FROM mpa WHERE id = 4);
 INSERT INTO mpa (id, name)
 SELECT 5, 'NC-17' WHERE NOT EXISTS (SELECT 1 FROM mpa WHERE id = 5);
 
+INSERT INTO directors (director_id, director_name)
+SELECT 1, 'Квентин Тарантино' WHERE NOT EXISTS (SELECT 1 FROM directors WHERE director_id = 1);
+
