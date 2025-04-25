@@ -42,7 +42,6 @@ public class FilmDbStorage extends BaseRepository<Film> {
     private static final String REMOVE_LIKE_QUERY = "DELETE FROM film_likes WHERE film_id = ? AND user_id = ?";
     private static final String GET_GENRES_BY_FILM = "SELECT genre_id FROM film_genre WHERE " +
             "film_id = ?  ORDER BY genre_id";
-   
 
     public FilmDbStorage(JdbcTemplate jdbcTemplate, FilmRowMapper mapper) {
         super(jdbcTemplate, mapper);
@@ -62,13 +61,13 @@ public class FilmDbStorage extends BaseRepository<Film> {
             return Collections.emptyList();
         }
         String params = paramsMaker(filmIds.size());
-        String FIND_POPULAR_FROM_ARRAY =
+        String findPopularFromArray =
                 "SELECT film_id, COUNT(user_id) AS like_count " +
                         "FROM film_likes " +
                         "WHERE film_id IN (" + params + ")" +
                         "GROUP BY film_id " +
                         "ORDER BY like_count DESC ";
-        return findManyIds(FIND_POPULAR_FROM_ARRAY, filmIds);
+        return findManyIds(findPopularFromArray, filmIds);
     }
 
     private String paramsMaker(int size) {
