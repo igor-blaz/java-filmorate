@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.UserDbStorage;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.*;
+import java.util.List;
 
 
 @Slf4j
@@ -58,5 +58,9 @@ public class UserService {
 
     public User deleteUser(int idForDelete) {
         return userStorage.deleteUser(idForDelete);
+    }
+
+    public User getUserById(int idOfUser) {
+        return userStorage.getUser(idOfUser);
     }
 }

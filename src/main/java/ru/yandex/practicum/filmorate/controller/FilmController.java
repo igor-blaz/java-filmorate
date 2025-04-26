@@ -8,7 +8,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
-import java.util.*;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -63,9 +63,9 @@ public class FilmController {
         return filmservice.getFilm(id);
     }
 
-    @DeleteMapping("/{idOfFilm}")
-    public Film deleteFilmById(@PathVariable int idOfFilm) {
-        return filmservice.deleteFilmById(idOfFilm);
+    @DeleteMapping("/{filmId}")
+    public void deleteFilmById(@PathVariable int filmId) {
+        filmservice.deleteFilmById(filmId);
     }
 }
 
