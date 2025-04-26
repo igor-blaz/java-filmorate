@@ -82,7 +82,10 @@ public class FilmService {
     }
 
     public List<Film> getCommonFilms(int userId, int friendId) {
-        return filmStorage.getCommonFilms(userId, friendId);
+        return filmStorage.getCommonFilms(userId, friendId).stream()
+                .peek(this::findGenres)
+                .peek(this::findMpa)
+                .toList();
     }
 
     private void findNamesForGenres(Film film) {
