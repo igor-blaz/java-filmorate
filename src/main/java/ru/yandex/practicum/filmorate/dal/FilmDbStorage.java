@@ -37,6 +37,7 @@ public class FilmDbStorage extends BaseRepository<Film> {
     private static final String REMOVE_LIKE_QUERY = "DELETE FROM film_likes WHERE film_id = ? AND user_id = ?";
     private static final String GET_GENRES_BY_FILM = "SELECT genre_id FROM film_genre WHERE " +
             "film_id = ?  ORDER BY genre_id";
+    private static final String REMOVE_FILM = "DELETE FROM film WHERE film_id=?";
 
     public FilmDbStorage(JdbcTemplate jdbcTemplate, FilmRowMapper mapper) {
         super(jdbcTemplate, mapper);
@@ -114,5 +115,12 @@ public class FilmDbStorage extends BaseRepository<Film> {
                 }
             }
         }
+    }
+
+    public Film deleteFilm(int idFilmForDelete) {
+        Film filmForDelete = findOne(FIND_BY_ID_QUERY, idFilmForDelete)
+                .orElseThrow(() -> new NotFoundException("Фильм с ID " + idFilmForDelete + "для удаления не найден"));
+        update(REMOVE_FILM, idFilmForDelete);
+        return filmForDelete;
     }
 }

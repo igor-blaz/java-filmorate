@@ -55,4 +55,8 @@ public class UserService {
     public void isRealUserId(List<Integer> ids) {
         userStorage.isRealUserId(ids);
     }
+
+    public User deleteUser(int idForDelete) {
+        return userStorage.deleteUser(idForDelete);
+    }
 }

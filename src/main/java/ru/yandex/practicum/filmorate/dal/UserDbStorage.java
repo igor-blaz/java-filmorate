@@ -35,6 +35,8 @@ public class UserDbStorage extends BaseRepository<User> {
             INSERT INTO user_friends(user_id, friend_id)
             VALUES(?,?);
             """;
+    private static final String REMOVE_USER = "DELETE FROM users WHERE user_id=?";
+
 
     public UserDbStorage(JdbcTemplate jdbcTemplate, UserRowMapper mapper) {
         super(jdbcTemplate, mapper);
@@ -98,5 +100,10 @@ public class UserDbStorage extends BaseRepository<User> {
         return findMany(FIND_ALL_QUERY);
     }
 
-
+    public User deleteUser(int idUserForDelete) {
+        User userForDelete = findOne(FIND_BY_ID_QUERY, idUserForDelete).orElseThrow(() -> new NotFoundException(
+                "Пользователь с ID " + idUserForDelete + " для удаления не найден"));
+        update(REMOVE_USER, idUserForDelete);
+        return userForDelete;
+    }
 }

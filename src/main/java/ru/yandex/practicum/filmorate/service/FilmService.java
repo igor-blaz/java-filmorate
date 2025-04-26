@@ -92,5 +92,7 @@ public class FilmService {
         film.setGenres(genres);
     }
 
-
+    public Film deleteFilmById(int idForDelete) {
+        return filmStorage.deleteFilm(idForDelete);
+    }
 }
