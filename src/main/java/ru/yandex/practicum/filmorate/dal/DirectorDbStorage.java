@@ -16,6 +16,7 @@ import java.util.Set;
 public class DirectorDbStorage extends BaseRepository<Director> {
     private static final String FIND_ALL_DIR_QUERY = "SELECT * FROM directors;";
     private static final String DELETE_DIRECTOR_QUERY = "DELETE FROM directors WHERE director_id = ?;";
+    private static final String DELETE_FILM_DIRECTOR_QUERY = "DELETE FROM film_directors WHERE film_id = ?;";
     private static final String FIND_DIRECTOR_QUERY = "SELECT * FROM directors WHERE director_id = ?;";
     private static final String INSERT_DIRECTOR_QUERY = "INSERT INTO directors " +
             "(director_name) VALUES (?);";
@@ -29,17 +30,26 @@ public class DirectorDbStorage extends BaseRepository<Director> {
             "WHERE film_id = ?;";
 
 
-    public List<Integer> findDirectorsByFilmId(int filmId){
+    public Set<Director> findDirectorsByFilmId(int filmId) {
         log.info("Storage. Запрос  {}", findManyIds(FIND_DIRECTOR_BY_FILM_QUERY, filmId));
-        return findManyIds(FIND_DIRECTOR_BY_FILM_QUERY, filmId);
+        Set<Director> directorSet = new HashSet<>();
+        List<Integer> directorIds = findManyIds(FIND_DIRECTOR_BY_FILM_QUERY, filmId);
+        for(int id : directorIds){
+            directorSet.add(findDirectorById(id));
+        }
+        return  directorSet;
     }
+
+
     public DirectorDbStorage(JdbcTemplate jdbcTemplate, DirectorRowMapper mapper) {
         super(jdbcTemplate, mapper);
     }
 
-    public void addDirectorToFilm(int filmId, int directorId){
-        insert(INSERT_FILM_DIRECTOR_QUERY, filmId, directorId);
+    public void addDirectorToFilm(int filmId, int directorId) {
+        update(INSERT_FILM_DIRECTOR_QUERY, filmId, directorId);
     }
+
+
     public List<Director> findAllDirectors() {
         return findMany(FIND_ALL_DIR_QUERY);
     }
@@ -70,10 +80,15 @@ public class DirectorDbStorage extends BaseRepository<Director> {
         director.setId(id);
         return director;
     }
-    public void insertManyDirectors(int id, Set<Director>directors){
-        for(Director dir : directors){
-            addDirectorToFilm( id, dir.getId());
+
+    public void insertManyDirectors(int filmId, Set<Director> directors) {
+        for (Director dir : directors) {
+            addDirectorToFilm(filmId, dir.getId());
         }
+    }
+
+    public void deleteDirectorsOnFilm(int filmId) {
+        update(DELETE_FILM_DIRECTOR_QUERY, filmId);
     }
 
     public Director updateDirector(Director director) {

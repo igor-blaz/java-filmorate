@@ -10,7 +10,10 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -55,7 +58,7 @@ public class FilmService {
 
     public Film createFilm(Film film) {
         findNamesForGenres(film);
-        log.info("Режиссеры фильма на добавление {}",film.getDirectors());
+        log.info("Режиссеры фильма на добавление {}", film.getDirectors());
         findNamesForDirectors(film);
         Mpa mpa = findNameForMpa(film.getMpa());
         film.setMpa(mpa);
@@ -63,7 +66,15 @@ public class FilmService {
     }
 
     public Film updateFilm(Film film) {
+        directorDbStorage.deleteDirectorsOnFilm(film.getId());
         directorDbStorage.insertManyDirectors(film.getId(), film.getDirectors());
+        Set<Director> directorSet = directorDbStorage.findDirectorsByFilmId(film.getId());
+        log.info("СМОТРИ {}", directorSet);
+
+
+        log.info("ВАЖНО{}", directorSet);
+        film.setDirectors(directorSet);
+
         return filmStorage.updateFilm(film);
     }
 
@@ -85,18 +96,25 @@ public class FilmService {
 
     private void findDirectors(Film film) {
         log.info("Поиск Режиссера");
-        List<Integer> directorIds = directorDbStorage.findDirectorsByFilmId(film.getId());
-        log.info("Айди режиссеров {}", directorIds);
-        Set<Director> directors = directorIds.stream()
-                .map(id -> new Director(id, null))
-                .collect(Collectors.toSet());
-        film.setDirectors(directorDbStorage.findManyDirectorsById(directors));
+        Set<Director> directorSet = directorDbStorage.findDirectorsByFilmId(film.getId());
 
+        film.setDirectors(directorSet);
+    }
+
+    private void setDirectorsForManyFilms(List<Film> films, int directorId) {
+        for (Film film : films) {
+            Director director = new Director();
+
+            findNamesForDirectors(film);
+        }
+        log.info("setDirectorsForMany {}", films);
     }
 
     private void findNamesForDirectors(Film film) {
         log.info("Поиск имени для режиссера");
-        film.setDirectors(directorDbStorage.findManyDirectorsById(film.getDirectors()));
+        Set<Director>directors = directorDbStorage.findManyDirectorsById(film.getDirectors());
+        log.info("ДИРЕКТОРА {}", directors);
+        film.setDirectors(directors);
     }
 
     private void findMpa(Film film) {
@@ -122,15 +140,20 @@ public class FilmService {
         List<Integer> filmIds = directorDbStorage.findFilmsByDirectorId(directorId);
         log.info("АЙди фильмов {}", filmIds);
         List<Film> films = filmStorage.findManyFilmsByArrayOfIds(filmIds);
-        log.info("Все фильмы {}", films);
+        log.info("Все фильмы {}", films); //Тут много фильмов без Directors
+        for (Film film: films){
+            Set<Director>directors = directorDbStorage.findDirectorsByFilmId(film.getId());
+            film.setDirectors(directors);
+            log.info("RRR {}", film.getDirectors()); //тут точно есть Directors
+          //  directors.clear();
+        }
+       // setDirectorsForManyFilms(films, directorId);
         if (sortType.equals("year")) {
-            log.info("Сортировка по годам");
-            log.info("Размер фильмов {} ",
-                    films.size());
-            List<Film> sorted= sortByYear(films);
+            log.info("jjjjjjjjjjjjjjjjjj {}", films);
+            List<Film> sorted = sortByYear(films);
             log.info("Массив сортировки {}", sorted.stream().map(Film::getReleaseDate).collect(Collectors.toSet()));
             log.info("Массив сортировки {}", sorted.stream().map(Film::getDirectors).collect(Collectors.toSet()));
-           return sorted;
+            return sorted;
         } else if (sortType.equals("likes")) {
             log.info("Сортировка по лайкам");
             List<Integer> ids = sortByLikes(filmIds);
@@ -141,8 +164,9 @@ public class FilmService {
     }
 
     private List<Film> sortByYear(List<Film> films) {
+        log.info("SORTED {}", films);
         return films.stream()
-                .sorted(Comparator.comparing(Film::getReleaseDate).reversed())
+                .sorted(Comparator.comparing(Film::getReleaseDate))
                 .toList();
     }
 

@@ -115,7 +115,8 @@ public class FilmDbStorage extends BaseRepository<Film> {
         update(UPDATE_FILM_BY_ID, film.getName(), film.getDescription(),
                 film.getReleaseDate(), film.getDuration(), film.getMpa()
                         .getId(), film.getId());
-
+       log.info("Updste dir {} ",film.getDirectors());
+       insertFilmAndDirector(film.getId(), film.getDirectors());
         return film;
     }
 
