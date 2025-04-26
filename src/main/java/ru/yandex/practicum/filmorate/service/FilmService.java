@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.*;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -57,6 +58,7 @@ public class FilmService {
 
     public Film createFilm(Film film) {
         findNamesForGenres(film);
+        log.info("Режиссеры фильма на добавление {}",film.getDirectors());
         findNamesForDirectors(film);
         Mpa mpa = findNameForMpa(film.getMpa());
         film.setMpa(mpa);
@@ -75,6 +77,7 @@ public class FilmService {
         Film film = filmStorage.getFilm(id);
         findMpa(film);
         findGenres(film);
+        findDirectors(film);
         return film;
     }
 
@@ -82,8 +85,19 @@ public class FilmService {
         film.setGenres(genreDbStorage.getManyGenres(film.getGenres()));
     }
 
+    private void findDirectors(Film film) {
+        log.info("Поиск Режиссера");
+        List<Integer> directorIds = directorDbStorage.findDirectorsByFilmId(film.getId());
+        log.info("Айди режиссеров {}", directorIds);
+        Set<Director> directors = directorIds.stream()
+                .map(id -> new Director(id, null))
+                .collect(Collectors.toSet());
+        film.setDirectors(directorDbStorage.findManyDirectorsById(directors));
+
+    }
+
     private void findNamesForDirectors(Film film) {
-        log.info("Поиск имени для жанра");
+        log.info("Поиск имени для режиссера");
         film.setDirectors(directorDbStorage.findManyDirectorsById(film.getDirectors()));
     }
 
@@ -105,13 +119,19 @@ public class FilmService {
     }
 
     public List<Film> getPopularFromDirector(int directorId, String sortType) {
-        directorDbStorage.isRealDirectorId(List.of(directorId));
+        //directorDbStorage.isRealDirectorId(List.of(directorId));
+        log.info("DIrector ID = {}", directorId);
         List<Integer> filmIds = directorDbStorage.findFilmsByDirectorId(directorId);
+        log.info("АЙди фильмов {}", filmIds);
         List<Film> films = filmStorage.findManyFilmsByArrayOfIds(filmIds);
 
         if (sortType.equals("year")) {
+            log.info("Сортировка по годам");
+            log.info("РАзмер фильмов ",
+                    films.size());
             return sortByYear(films);
         } else if (sortType.equals("likes")) {
+            log.info("Сортировка по лайкам");
             List<Integer> ids = sortByLikes(filmIds);
             return filmStorage.findManyFilmsByArrayOfIds(ids);
         } else {

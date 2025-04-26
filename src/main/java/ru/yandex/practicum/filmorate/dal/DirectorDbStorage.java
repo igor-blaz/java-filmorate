@@ -23,18 +23,29 @@ public class DirectorDbStorage extends BaseRepository<Director> {
             "WHERE director_id = ?;";
     private static final String FIND_FILM_ID_BY_DIRECTOR_QUERY = "SELECT film_id FROM film_directors " +
             "WHERE director_id = ?;";
+    private static final String INSERT_FILM_DIRECTOR_QUERY = "INSERT INTO film_directors " +
+            "(film_id, director_id) VALUES (?, ?);";
+    private static final String FIND_DIRECTOR_BY_FILM_QUERY = "SELECT director_id FROM film_directors " +
+            "WHERE film_id = ?;";
 
 
+    public List<Integer> findDirectorsByFilmId(int filmId){
+        log.info("Storage. Запрос  {}", findManyIds(FIND_DIRECTOR_BY_FILM_QUERY, filmId));
+        return findManyIds(FIND_DIRECTOR_BY_FILM_QUERY, filmId);
+    }
     public DirectorDbStorage(JdbcTemplate jdbcTemplate, DirectorRowMapper mapper) {
         super(jdbcTemplate, mapper);
     }
 
+    public void addDirectorToFilm(int filmId, int directorId){
+        insert(INSERT_FILM_DIRECTOR_QUERY, filmId, directorId);
+    }
     public List<Director> findAllDirectors() {
         return findMany(FIND_ALL_DIR_QUERY);
     }
 
-    public List<Integer> findFilmsByDirectorId(int id) {
-        return findManyIds(FIND_FILM_ID_BY_DIRECTOR_QUERY, id);
+    public List<Integer> findFilmsByDirectorId(int directorId) {
+        return findManyIds(FIND_FILM_ID_BY_DIRECTOR_QUERY, directorId);
     }
 
     public Set<Director> findManyDirectorsById(Set<Director> directorsWithoutName) {
@@ -52,8 +63,11 @@ public class DirectorDbStorage extends BaseRepository<Director> {
                 .orElseThrow(() -> new NotFoundException("Режиссер с ID " + id + " не найден"));
     }
 
+
     public Director insertDirector(Director director) {
-        director.setId(insert(INSERT_DIRECTOR_QUERY, director.getName()));
+        int id = insert(INSERT_DIRECTOR_QUERY, director.getName());
+        log.info("Присвоен id режиссеру {}", id);
+        director.setId(id);
         return director;
     }
 

@@ -93,7 +93,9 @@ public class FilmDbStorage extends BaseRepository<Film> {
     }
 
     public void insertFilmAndDirector(int id, Set<Director> directors) {
+
         List<Integer> directorIds = directors.stream().map(Director::getId).toList();
+        log.info("Добавление в таблицу film_directors {}", directorIds);
         for (int directorId : directorIds) {
             update(INSERT_FILM_DIRECTOR, id, directorId);
         }

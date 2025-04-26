@@ -18,12 +18,13 @@ public class DirectorController {
 
     @PostMapping
     public Director addDirector(@Valid @RequestBody Director director) {
+        log.info("Запрос на добавление режиссера {}", director);
         return directorService.addDirector(director);
     }
 
-    @DeleteMapping
-    public void deleteDirector(@Valid @RequestBody Director director) {
-        directorService.deleteDirector(director.getId());
+    @DeleteMapping("/{id}")
+    public void deleteDirector(@PathVariable int id) {
+        directorService.deleteDirector(id);
     }
 
     @GetMapping
@@ -38,6 +39,7 @@ public class DirectorController {
 
     @PutMapping
     public Director updateDirector(@Valid @RequestBody Director director) {
+        log.info("UpdateDirector {}", director);
         return directorService.updateDirector(director);
     }
 
