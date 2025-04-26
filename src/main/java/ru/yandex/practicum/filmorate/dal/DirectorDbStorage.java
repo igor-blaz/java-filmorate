@@ -70,6 +70,11 @@ public class DirectorDbStorage extends BaseRepository<Director> {
         director.setId(id);
         return director;
     }
+    public void insertManyDirectors(int id, Set<Director>directors){
+        for(Director dir : directors){
+            addDirectorToFilm( id, dir.getId());
+        }
+    }
 
     public Director updateDirector(Director director) {
         isRealDirectorId(List.of(director.getId()));

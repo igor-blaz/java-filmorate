@@ -10,10 +10,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -66,6 +63,7 @@ public class FilmService {
     }
 
     public Film updateFilm(Film film) {
+        directorDbStorage.insertManyDirectors(film.getId(), film.getDirectors());
         return filmStorage.updateFilm(film);
     }
 
@@ -124,12 +122,15 @@ public class FilmService {
         List<Integer> filmIds = directorDbStorage.findFilmsByDirectorId(directorId);
         log.info("АЙди фильмов {}", filmIds);
         List<Film> films = filmStorage.findManyFilmsByArrayOfIds(filmIds);
-
+        log.info("Все фильмы {}", films);
         if (sortType.equals("year")) {
             log.info("Сортировка по годам");
-            log.info("РАзмер фильмов ",
+            log.info("Размер фильмов {} ",
                     films.size());
-            return sortByYear(films);
+            List<Film> sorted= sortByYear(films);
+            log.info("Массив сортировки {}", sorted.stream().map(Film::getReleaseDate).collect(Collectors.toSet()));
+            log.info("Массив сортировки {}", sorted.stream().map(Film::getDirectors).collect(Collectors.toSet()));
+           return sorted;
         } else if (sortType.equals("likes")) {
             log.info("Сортировка по лайкам");
             List<Integer> ids = sortByLikes(filmIds);
@@ -141,8 +142,8 @@ public class FilmService {
 
     private List<Film> sortByYear(List<Film> films) {
         return films.stream()
-                .sorted(Comparator.comparing(Film::getReleaseDate))
-                .collect(Collectors.toList());
+                .sorted(Comparator.comparing(Film::getReleaseDate).reversed())
+                .toList();
     }
 
     private List<Integer> sortByLikes(List<Integer> filmIds) {
