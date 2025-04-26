@@ -119,7 +119,7 @@ public class FilmDbStorage extends BaseRepository<Film> {
 
     public Film deleteFilm(int idFilmForDelete) {
         Film filmForDelete = findOne(FIND_BY_ID_QUERY, idFilmForDelete)
-                .orElseThrow(() -> new NotFoundException("Фильм с ID " + idFilmForDelete + "для удаления не найден"));
+                .orElseThrow(() -> new NotFoundException("Фильм с ID " + idFilmForDelete + " для удаления не найден"));
         update(REMOVE_FILM, idFilmForDelete);
         return filmForDelete;
     }
