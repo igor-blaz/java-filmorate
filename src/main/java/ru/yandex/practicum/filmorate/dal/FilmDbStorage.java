@@ -124,18 +124,6 @@ public class FilmDbStorage extends BaseRepository<Film> {
     }
 
     public List<Film> getCommonFilms(int userId, int friendId) {
-        if (isFriends(userId, friendId)) {
-            return findMany(GET_COMMON_FILMS, userId, friendId);
-        }
-        throw new NotFoundException("Пользователи с id " + userId + " и " + friendId + " не являются друзьями");
-    }
-
-    private boolean isFriends(int userId, int friendId) {
-        String sqlQuery = "SELECT friend_id FROM user_friends WHERE user_id IN (?, ?) AND friend_id IN (?, ?)";
-        List<Map<String, Object>> list = jdbc.queryForList(sqlQuery, userId, friendId, userId, friendId);
-        if (list.isEmpty()) {
-            throw new NotFoundException("Пользователи с id " + userId + " и " + friendId + " не являются друзьями");
-        }
-        return true;
+        return findMany(GET_COMMON_FILMS, userId, friendId);
     }
 }
