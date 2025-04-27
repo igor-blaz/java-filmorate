@@ -48,6 +48,7 @@ private static final String FIND_TOP_POPULAR_QUERY = """
     private static final String REMOVE_LIKE_QUERY = "DELETE FROM film_likes WHERE film_id = ? AND user_id = ?";
     private static final String GET_GENRES_BY_FILM = "SELECT genre_id FROM film_genre WHERE " +
             "film_id = ?  ORDER BY genre_id";
+    private static final String REMOVE_FILM = "DELETE FROM film WHERE id=?";
 
     public FilmDbStorage(JdbcTemplate jdbcTemplate, FilmRowMapper mapper) {
         super(jdbcTemplate, mapper);
@@ -156,5 +157,9 @@ private static final String FIND_TOP_POPULAR_QUERY = """
                 }
             }
         }
+    }
+
+    public int deleteFilm(int idFilmForDelete) {
+        return update(REMOVE_FILM, idFilmForDelete);
     }
 }

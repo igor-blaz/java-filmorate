@@ -115,6 +115,12 @@ public class FilmService {
         film.setGenres(genres);
     }
 
+    public void deleteFilmById(int idForDelete) {
+        int deleteFilm = filmStorage.deleteFilm(idForDelete);
+        if (deleteFilm == 0) {
+            throw new NotFoundException("Фильм для удаления с id " + idForDelete + " не найден");
+        }
+    }
     public List<Film> getPopularFromDirector(int directorId, String sortType) {
         List<Integer> filmIds = directorDbStorage.findFilmsByDirectorId(directorId);
         log.info("Айди, которые надо отсортировать {}", filmIds);
@@ -154,6 +160,4 @@ public class FilmService {
                 .toList();
 
     }
-
-
 }
