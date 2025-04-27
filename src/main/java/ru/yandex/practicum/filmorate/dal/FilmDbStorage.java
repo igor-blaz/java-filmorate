@@ -22,13 +22,12 @@ public class FilmDbStorage extends BaseRepository<Film> {
              mpa_id = ?
              WHERE id =?;
             """;
-    private static final String FIND_TOP_POPULAR_QUERY = """
-            SELECT film_id
-            FROM film_likes
-            GROUP BY film_id
-            ORDER BY COUNT(user_id) DESC
-            LIMIT ?
-            """;
+    private static final String FIND_TOP_POPULAR_QUERY = "SELECT f.id FROM film f " +
+            "LEFT JOIN film_likes fl ON f.id = fl.film_id " +
+            "GROUP BY f.id " +
+            "ORDER BY COUNT(fl.user_id) DESC " +
+            "LIMIT ?";
+
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM film WHERE id = ?";
     private static final String INSERT_FILM_VALUES = "INSERT INTO film " +
             "(name, description, release_date, duration, mpa_id) Values(?,?,?,?,?);";
@@ -121,6 +120,7 @@ public class FilmDbStorage extends BaseRepository<Film> {
         Film filmForDelete = findOne(FIND_BY_ID_QUERY, idFilmForDelete)
                 .orElseThrow(() -> new NotFoundException("Фильм с ID " + idFilmForDelete + " для удаления не найден"));
         update(REMOVE_FILM, idFilmForDelete);
+        update("DELETE FROM film_likes WHERE film_id=?", idFilmForDelete);
         return filmForDelete;
     }
 }
