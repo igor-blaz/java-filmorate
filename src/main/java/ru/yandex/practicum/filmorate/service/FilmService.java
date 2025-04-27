@@ -121,7 +121,7 @@ public class FilmService {
             throw new NotFoundException("Фильм для удаления с id " + idForDelete + " не найден");
         }
     }
-    
+
     public List<Film> getPopularFromDirector(int directorId, String sortType) {
         List<Integer> filmIds = directorDbStorage.findFilmsByDirectorId(directorId);
         log.info("Айди, которые надо отсортировать {}", filmIds);
