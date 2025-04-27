@@ -30,8 +30,8 @@ public class FilmService {
         this.mpaDbStorage = mpaDbStorage;
     }
 
-    public List<Film> getRatedFilms(int count) {
-        return filmStorage.getTopRatedFilms(count);
+    public List<Film> getRatedFilms(int count, Integer genreId, Integer year) {
+        return filmStorage.getTopRatedFilms(count, genreId, year);
     }
 
     public Film makeLike(int filmId, int userId) {
@@ -44,9 +44,9 @@ public class FilmService {
         filmStorage.deleteLike(filmId, userId);
     }
 
-    public List<Film> getTopRatedFilms(int count) {
+    public List<Film> getTopRatedFilms(int count, Integer genreId, Integer year) {
         System.out.println("Service");
-        return filmStorage.getTopRatedFilms(count);
+        return filmStorage.getTopRatedFilms(count, genreId, year);
     }
 
     public Film createFilm(Film film) {

@@ -22,13 +22,19 @@ public class FilmDbStorage extends BaseRepository<Film> {
              mpa_id = ?
              WHERE id =?;
             """;
-    private static final String FIND_TOP_POPULAR_QUERY = """
-            SELECT film_id
-            FROM film_likes
-            GROUP BY film_id
-            ORDER BY COUNT(user_id) DESC
+
+private static final String FIND_TOP_POPULAR_QUERY = """
+            SELECT f.id, f.name, f.description, f.release_date, f.duration, f.mpa_id
+            FROM film f
+            JOIN film_genre g ON g.film_id = f.id
+            JOIN film_likes k ON k.film_id = f.id
+            WHERE (? = 0 OR g.genre_id = ?)
+              AND (? = 0 OR extract(year from f.release_date) = ?)
+            GROUP BY f.id, f.name, f.description, f.release_date, f.duration, f.mpa_id
+            ORDER BY count(1) DESC
             LIMIT ?
             """;
+
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM film WHERE id = ?";
     private static final String INSERT_FILM_VALUES = "INSERT INTO film " +
             "(name, description, release_date, duration, mpa_id) Values(?,?,?,?,?);";
@@ -85,13 +91,12 @@ public class FilmDbStorage extends BaseRepository<Film> {
         return findManyIds(GET_GENRES_BY_FILM, id);
     }
 
-
     public List<Film> getAllFilms() {
         return findMany(FIND_ALL_QUERY);
     }
 
-    public List<Film> getTopRatedFilms(int count) {
-        return idToFilmConverter(findManyIds(FIND_TOP_POPULAR_QUERY, count));
+    public List<Film> getTopRatedFilms(int count, Integer genreId, Integer year) {
+        return findMany(FIND_TOP_POPULAR_QUERY, genreId, genreId, year, year, count);
     }
 
     public List<Film> idToFilmConverter(List<Integer> ids) {
@@ -102,7 +107,6 @@ public class FilmDbStorage extends BaseRepository<Film> {
         }
         return films;
     }
-
 
     public void isRealFilmId(List<Integer> filmIds) {
         List<Film> films = findMany(FIND_BY_ID_QUERY, filmIds.toArray());
