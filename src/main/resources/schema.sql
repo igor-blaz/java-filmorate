@@ -47,3 +47,14 @@ CREATE TABLE IF NOT EXISTS user_friends (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (friend_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+create table if not exists user_log (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    action_timestamp timestamp DEFAULT CURRENT_TIMESTAMP,
+    user_id bigint,
+    entity_id bigint,
+    event_type varchar(10),
+    operation varchar(10),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+);
+create index if not exists user_log_i01 on user_log(user_id);

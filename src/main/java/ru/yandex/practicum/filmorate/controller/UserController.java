@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.UserLog;
+import ru.yandex.practicum.filmorate.service.UserLogService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.*;
@@ -13,7 +15,7 @@ import java.util.*;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
-
+    private final UserLogService userLogService;
 
     @PostMapping
     public User addUser(@Valid @RequestBody User user) {
@@ -28,6 +30,7 @@ public class UserController {
     @PutMapping("/{id}/friends/{friendId}")
     public List<User> addToFriends(@PathVariable int id, @PathVariable int friendId) {
         userService.addToFriends(id, friendId);
+
         return userService.getUserFriends(id);
     }
 
@@ -51,5 +54,8 @@ public class UserController {
         userService.deleteFriend(id, friendId);
     }
 
-
+    @GetMapping("/{id}/feed")
+    public List<UserLog> userLog(@PathVariable long id) {
+        return userLogService.getLogByUserId(id);
+    }
 }
