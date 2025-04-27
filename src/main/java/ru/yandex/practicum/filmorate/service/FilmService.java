@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.dal.FilmDbStorage;
 import ru.yandex.practicum.filmorate.dal.GenreDbStorage;
 import ru.yandex.practicum.filmorate.dal.MpaDbStorage;
 import ru.yandex.practicum.filmorate.dal.UserDbStorage;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -92,7 +93,10 @@ public class FilmService {
         film.setGenres(genres);
     }
 
-    public Film deleteFilmById(int idForDelete) {
-        return filmStorage.deleteFilm(idForDelete);
+    public void deleteFilmById(int idForDelete) {
+        int deleteFilm = filmStorage.deleteFilm(idForDelete);
+        if (deleteFilm == 0) {
+            throw new NotFoundException("Фильм для удаления с id " + idForDelete + " не найден");
+        }
     }
 }

@@ -100,10 +100,7 @@ public class UserDbStorage extends BaseRepository<User> {
         return findMany(FIND_ALL_QUERY);
     }
 
-    public User deleteUser(int idUserForDelete) {
-        User userForDelete = findOne(FIND_BY_ID_QUERY, idUserForDelete).orElseThrow(() -> new NotFoundException(
-                "Пользователь с ID " + idUserForDelete + " для удаления не найден"));
-        update(REMOVE_USER, idUserForDelete);
-        return userForDelete;
+    public int deleteUser(int idUserForDelete) {
+        return update(REMOVE_USER, idUserForDelete);
     }
 }
