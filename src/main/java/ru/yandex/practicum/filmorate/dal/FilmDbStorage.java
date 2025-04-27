@@ -132,8 +132,8 @@ private static final String FIND_TOP_POPULAR_QUERY = """
         return findMany(FIND_ALL_QUERY);
     }
 
-    public List<Film> getTopRatedFilms(int count) {
-        return idToFilmConverter(findManyIds(FIND_TOP_POPULAR_QUERY, count));
+    public List<Film> getTopRatedFilms(int count, Integer genreId, Integer year) {
+        return findMany(FIND_TOP_POPULAR_QUERY, genreId, genreId, year, year, count);
     }
 
     public List<Film> idToFilmConverter(List<Integer> ids) {
