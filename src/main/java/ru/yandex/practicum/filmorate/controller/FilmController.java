@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,11 +20,7 @@ public class FilmController {
 
     @PostMapping
     public Film addMovie(@Valid @RequestBody Film film) {
-
         log.info("Запрос на создание фильма");
-        log.info("Фильм целиком{}", film);
-        log.info("Direcrors == {}", film.getDirectors());
-        log.info("Genres == {}", film.getGenres());
         return filmservice.createFilm(film);
     }
 
@@ -42,7 +37,7 @@ public class FilmController {
 
     @GetMapping("/director/{directorId}")
     public List<Film> getPopularFromDirector(@PathVariable Integer directorId, @RequestParam String sortBy) {
-      log.info("Запрос на сортировку");
+        log.info("Запрос на сортировку");
         return filmservice.getPopularFromDirector(directorId, sortBy);
     }
 

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.mapper.DirectorRowMapper;
 import ru.yandex.practicum.filmorate.model.Director;
+import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.HashSet;
 import java.util.List;
@@ -34,10 +35,18 @@ public class DirectorDbStorage extends BaseRepository<Director> {
         log.info("Storage. Запрос  {}", findManyIds(FIND_DIRECTOR_BY_FILM_QUERY, filmId));
         Set<Director> directorSet = new HashSet<>();
         List<Integer> directorIds = findManyIds(FIND_DIRECTOR_BY_FILM_QUERY, filmId);
-        for(int id : directorIds){
+        for (int id : directorIds) {
             directorSet.add(findDirectorById(id));
         }
-        return  directorSet;
+        return directorSet;
+    }
+
+    public void setDirectorsForListOfFilms(List<Film> films) {
+        for (Film film : films) {
+            Set<Director> directors = findDirectorsByFilmId(film.getId());
+            film.setDirectors(directors);
+        }
+
     }
 
 

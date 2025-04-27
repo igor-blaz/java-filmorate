@@ -33,6 +33,7 @@ public class FilmDbStorage extends BaseRepository<Film> {
             ORDER BY COUNT(user_id) DESC
             LIMIT ?
             """;
+    private static final String FIND_LIKES_FOR_FILM = "SELECT user_id FROM film_likes WHERE film_id = ? ;";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM film WHERE id = ?";
     private static final String INSERT_FILM_VALUES = "INSERT INTO film " +
             "(name, description, release_date, duration, mpa_id) Values(?,?,?,?,?);";
@@ -54,20 +55,6 @@ public class FilmDbStorage extends BaseRepository<Film> {
         String params = paramsMaker(ids.size());
         String findManyFilmsQuery = "SELECT * FROM film WHERE id IN (" + params + ")";
         return findMany(findManyFilmsQuery, ids.toArray());
-    }
-
-    public List<Integer> findPopularFromArray(List<Integer> filmIds) {
-        if (filmIds.isEmpty()) {
-            return Collections.emptyList();
-        }
-        String params = paramsMaker(filmIds.size());
-        String findPopularFromArray =
-                "SELECT film_id, COUNT(user_id) AS like_count " +
-                        "FROM film_likes " +
-                        "WHERE film_id IN (" + params + ")" +
-                        "GROUP BY film_id " +
-                        "ORDER BY like_count DESC ";
-        return findManyIds(findPopularFromArray, filmIds);
     }
 
     private String paramsMaker(int size) {
@@ -92,6 +79,11 @@ public class FilmDbStorage extends BaseRepository<Film> {
         }
     }
 
+    public List<Integer> findLikesForFilm(int filmId) {
+        return findManyIds(FIND_LIKES_FOR_FILM, filmId);
+    }
+
+
     public void insertFilmAndDirector(int id, Set<Director> directors) {
 
         List<Integer> directorIds = directors.stream().map(Director::getId).toList();
@@ -115,8 +107,8 @@ public class FilmDbStorage extends BaseRepository<Film> {
         update(UPDATE_FILM_BY_ID, film.getName(), film.getDescription(),
                 film.getReleaseDate(), film.getDuration(), film.getMpa()
                         .getId(), film.getId());
-       log.info("Updste dir {} ",film.getDirectors());
-       insertFilmAndDirector(film.getId(), film.getDirectors());
+        log.info("Updste dir {} ", film.getDirectors());
+        insertFilmAndDirector(film.getId(), film.getDirectors());
         return film;
     }
 
