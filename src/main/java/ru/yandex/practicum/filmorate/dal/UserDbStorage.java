@@ -82,7 +82,7 @@ public class UserDbStorage extends BaseRepository<User> {
 
 
     public void addFriend(int id, int newFriend) {
-         update(ADD_TO_FRIENDS_QUERY, id, newFriend);
+        update(ADD_TO_FRIENDS_QUERY, id, newFriend);
     }
 
     public void removeFriend(int id, int deleteFriend) {

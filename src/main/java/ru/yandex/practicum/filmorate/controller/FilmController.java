@@ -8,7 +8,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
-import java.util.*;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,7 +21,6 @@ public class FilmController {
     @PostMapping
     public Film addMovie(@Valid @RequestBody Film film) {
         log.info("Запрос на создание фильма");
-        log.info("Фильм целиком{}", film);
         return filmservice.createFilm(film);
     }
 
@@ -35,6 +34,13 @@ public class FilmController {
     public List<Film> getMovies() {
         return filmservice.getAllFilms();
     }
+
+    @GetMapping("/director/{directorId}")
+    public List<Film> getPopularFromDirector(@PathVariable Integer directorId, @RequestParam String sortBy) {
+        log.info("Запрос на сортировку");
+        return filmservice.getPopularFromDirector(directorId, sortBy);
+    }
+
 
     @GetMapping("/popular")
     public List<Film> getTopPopular(
@@ -68,7 +74,6 @@ public class FilmController {
     @GetMapping("/{id}")
     public Film getFilm(@PathVariable Integer id) {
         log.info("Запрос на поиск фильма");
-        log.info("Фильм после get запроса{}", filmservice.getFilm(id));
         return filmservice.getFilm(id);
     }
 }
