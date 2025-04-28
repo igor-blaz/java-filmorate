@@ -18,11 +18,6 @@ public class UserService {
     private final UserDbStorage userStorage;
     private final UserLogService userLogService;
 
-//    @Autowired
-//    public UserService(UserDbStorage userStorage) {
-//        this.userStorage = userStorage;
-//    }
-
     public void addToFriends(int id, int newFriendId) {
         isRealUserId(List.of(id, newFriendId));
         userStorage.addFriend(id, newFriendId);
