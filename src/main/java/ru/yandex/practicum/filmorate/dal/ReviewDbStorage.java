@@ -14,14 +14,14 @@ import java.util.List;
 @Repository
 public class ReviewDbStorage extends BaseRepository<Review> {
     private static final String FIND_ALL_QUERY = "SELECT * FROM reviews ORDER BY useful DESC";
-    private static final String FIND_BY_FILM_ID_QUERY = "SELECT * FROM reviews WHERE film_id = ? ORDER BY useful DESC LIMIT ?";
+    private static final String FIND_BY_FILM_ID_QUERY = "SELECT * FROM reviews WHERE filmid = ? ORDER BY useful DESC LIMIT ?";
     private static final String FIND_BY_ID = "SELECT * FROM reviews WHERE id = ?";
     private static final String INSERT = "INSERT INTO reviews (content,positive,userid,filmid,useful) VALUES (?,?,?,?,?)";
-    private static final String UPDATE_REVIEW_QUERY = "UPDATE reviews SET content = ?, is_positive = ? WHERE review_id = ?";
-    private static final String INSERT_LIKE_QUERY = "INSERT INTO review_likes (review_id, user_id, is_positive) VALUES (?, ?, true)";
-    private static final String INSERT_DISLIKE_QUERY = "INSERT INTO review_likes (review_id, user_id, is_positive) VALUES (?, ?, false)";
-    private static final String UPDATE_USEFUL_QUERY = "UPDATE reviews SET useful = useful + ? WHERE review_id = ?";
-    private static final String DELETE_REVIEW_QUERY = "DELETE FROM reviews WHERE review_id = ?";
+    private static final String UPDATE_REVIEW_QUERY = "UPDATE reviews SET content = ?, positive = ? WHERE id = ?";
+    private static final String INSERT_LIKE_QUERY = "INSERT INTO review_like (id, userid, positive) VALUES (?, ?, true)";
+    private static final String INSERT_DISLIKE_QUERY = "INSERT INTO review_like (id, userid, positive) VALUES (?, ?, false)";
+    private static final String UPDATE_USEFUL_QUERY = "UPDATE reviews SET useful = useful + ? WHERE id = ?";
+    private static final String DELETE_REVIEW_QUERY = "DELETE FROM reviews WHERE id = ?";
 
     public ReviewDbStorage(JdbcTemplate jdbcTemplate, ReviewRowMapper reviewRowMapper) {
         super(jdbcTemplate, reviewRowMapper);
@@ -78,7 +78,7 @@ public class ReviewDbStorage extends BaseRepository<Review> {
 
     private void validateReview(Review review) {
         if (review.getFilmId() < 0 || review.getUserId() < 0) {
-            throw new ValidationException("ID должны быть положительными числами");
+            throw new NotFoundException("ID должны быть положительными числами");
         }
 
         if (review.getUserId() == 0 || review.getFilmId() == 0) {
