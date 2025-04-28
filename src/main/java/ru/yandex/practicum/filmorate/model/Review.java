@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,8 +27,7 @@ public class Review {
     @NotNull
     @Positive
     private Integer filmId;
-    
+
     @Positive
     private Integer useful;
-
 }
