@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.FilmDbStorage;
 import ru.yandex.practicum.filmorate.dal.GenreDbStorage;
@@ -13,22 +13,14 @@ import ru.yandex.practicum.filmorate.model.Mpa;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class FilmService {
 
     private final FilmDbStorage filmStorage;
     private final UserDbStorage userStorage;
     private final GenreDbStorage genreDbStorage;
     private final MpaDbStorage mpaDbStorage;
-
-
-    @Autowired
-    public FilmService(FilmDbStorage filmStorage, UserDbStorage userStorage, GenreDbStorage genreDbStorage,
-                       MpaDbStorage mpaDbStorage) {
-        this.filmStorage = filmStorage;
-        this.userStorage = userStorage;
-        this.genreDbStorage = genreDbStorage;
-        this.mpaDbStorage = mpaDbStorage;
-    }
+    private final UserLogService userLogService;
 
     public List<Film> getRatedFilms(int count) {
         return filmStorage.getTopRatedFilms(count);
@@ -36,12 +28,14 @@ public class FilmService {
 
     public Film makeLike(int filmId, int userId) {
         filmStorage.makeLike(filmId, userId);
+        userLogService.addUserLog(userId, filmId, userLogService.EVENT_TYPE_LIKE, userLogService.EVENT_OPERATION_ADD);
         return filmStorage.getFilm(filmId);
     }
 
     public void removeLike(int filmId, int userId) {
         Film film = filmStorage.getFilm(filmId);
         filmStorage.deleteLike(filmId, userId);
+        userLogService.addUserLog(userId, filmId, userLogService.EVENT_TYPE_LIKE, userLogService.EVENT_OPERATION_REMOVE);
     }
 
     public List<Film> getTopRatedFilms(int count) {
@@ -91,6 +85,4 @@ public class FilmService {
         }
         film.setGenres(genres);
     }
-
-
 }

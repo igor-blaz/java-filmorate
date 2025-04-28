@@ -29,11 +29,11 @@ public class UserLogService {
         this.userLogDbStorage = userLogDbStorage;
     };
 
-    public List<UserLog> getLogByUserId (long userId) {
+    public List<UserLog> getLogByUserId (int userId) {
         return userLogDbStorage.findByUserId(userId);
     }
 
-    public void addUserLog(long userId, long entityId, String eventType, String operation) {
+    public UserLog addUserLog(int userId, int entityId, String eventType, String operation) {
         UserLog userLog = new UserLog();
 
         userLog.setUserId(userId);
@@ -41,6 +41,6 @@ public class UserLogService {
         userLog.setEventType(eventType);
         userLog.setOperation(operation);
 
-        userLogDbStorage.insertUserLog(userLog);
+        return userLogDbStorage.insertUserLog(userLog);
     }
 }

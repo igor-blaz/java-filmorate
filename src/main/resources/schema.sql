@@ -50,11 +50,10 @@ CREATE TABLE IF NOT EXISTS user_friends (
 
 create table if not exists user_log (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    action_timestamp timestamp DEFAULT CURRENT_TIMESTAMP,
-    user_id bigint,
-    entity_id bigint,
+    action_timestamp timestamp,
+    user_id INT,
+    entity_id INT,
     event_type varchar(10),
     operation varchar(10),
-    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
-create index if not exists user_log_i01 on user_log(user_id);

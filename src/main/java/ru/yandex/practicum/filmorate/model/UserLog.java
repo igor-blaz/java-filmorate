@@ -8,15 +8,15 @@ import java.time.LocalDateTime;
 public class UserLog {
     private Integer id;
     private LocalDateTime timeStamp;
-    private long userId;
-    private long entityId;
+    private int userId;
+    private int entityId;
     private String eventType;
     private String operation;
 
     public UserLog() {
     }
 
-    public UserLog(long id, LocalDateTime timeStamp, long userId, long entityId, String eventType, String operation) {
+    public UserLog(int id, LocalDateTime timeStamp, int userId, int entityId, String eventType, String operation) {
         this.id = id;
         this.timeStamp = timeStamp;
         this.userId = userId;

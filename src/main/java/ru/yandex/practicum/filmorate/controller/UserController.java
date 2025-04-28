@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/feed")
-    public List<UserLog> userLog(@PathVariable long id) {
+    public List<UserLog> userLog(@PathVariable int id) {
         return userLogService.getLogByUserId(id);
     }
 }

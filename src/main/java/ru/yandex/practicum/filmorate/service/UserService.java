@@ -46,8 +46,9 @@ public class UserService {
     }
 
     public User createUser(User user) {
-        userLogService.addUserLog(user.getId(), user.getId(), userLogService.EVENT_TYPE_USER, userLogService.EVENT_OPERATION_ADD);
-        return userStorage.createUser(user);
+        User newUser = userStorage.createUser(user);
+        userLogService.addUserLog(newUser.getId(), newUser.getId(), userLogService.EVENT_TYPE_USER, userLogService.EVENT_OPERATION_ADD);
+        return newUser;
     }
 
     public User updateUser(User user) {
