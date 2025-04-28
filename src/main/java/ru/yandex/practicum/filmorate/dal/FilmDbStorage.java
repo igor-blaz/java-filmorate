@@ -52,8 +52,7 @@ private static final String FIND_TOP_POPULAR_QUERY = """
             "SELECT fl.film_id FROM film_likes fl " +
             "WHERE fl.user_id IN (?, ?) " +
             "GROUP BY fl.film_id " +
-            "HAVING COUNT(user_id) = 2" +
-            "ORDER BY COUNT(user_id) DESC)";
+            "HAVING COUNT(user_id) = 2)";
 
     public FilmDbStorage(JdbcTemplate jdbcTemplate, FilmRowMapper mapper) {
         super(jdbcTemplate, mapper);
