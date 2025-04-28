@@ -49,6 +49,11 @@ private static final String FIND_TOP_POPULAR_QUERY = """
     private static final String GET_GENRES_BY_FILM = "SELECT genre_id FROM film_genre WHERE " +
             "film_id = ?  ORDER BY genre_id";
     private static final String REMOVE_FILM = "DELETE FROM film WHERE id=?";
+    private static final String GET_COMMON_FILMS = "SELECT * FROM film f WHERE f.id IN (" +
+            "SELECT fl.film_id FROM film_likes fl " +
+            "WHERE fl.user_id IN (?, ?) " +
+            "GROUP BY fl.film_id " +
+            "HAVING COUNT(user_id) = 2)";
 
     public FilmDbStorage(JdbcTemplate jdbcTemplate, FilmRowMapper mapper) {
         super(jdbcTemplate, mapper);
@@ -161,5 +166,9 @@ private static final String FIND_TOP_POPULAR_QUERY = """
 
     public int deleteFilm(int idFilmForDelete) {
         return update(REMOVE_FILM, idFilmForDelete);
+    }
+
+    public List<Film> getCommonFilms(int userId, int friendId) {
+        return findMany(GET_COMMON_FILMS, userId, friendId);
     }
 }
