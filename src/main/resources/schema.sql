@@ -17,6 +17,11 @@ CREATE TABLE IF NOT EXISTS genre (
     name VARCHAR(50) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS directors (
+    director_id INT PRIMARY KEY AUTO_INCREMENT,
+    director_name VARCHAR(70)
+);
+
 CREATE TABLE IF NOT EXISTS users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -32,7 +37,7 @@ CREATE TABLE IF NOT EXISTS film (
     release_date DATE NOT NULL,
     duration INT NOT NULL,
     mpa_id INT,
-    FOREIGN KEY (mpa_id) REFERENCES mpa(id) ON DELETE CASCADE
+    FOREIGN KEY (mpa_id) REFERENCES mpa(id)
 );
 
 CREATE TABLE IF NOT EXISTS film_likes (
@@ -48,6 +53,13 @@ CREATE TABLE IF NOT EXISTS film_genre (
     genre_id INT NOT NULL,
     FOREIGN KEY (film_id) REFERENCES film(id) ON DELETE CASCADE,
     FOREIGN KEY (genre_id) REFERENCES genre(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS film_directors (
+film_id INT,
+director_id INT NOT NULL,
+FOREIGN KEY (film_id) REFERENCES film(id),
+FOREIGN KEY (director_id) REFERENCES directors(director_id)
 );
 
 CREATE TABLE IF NOT EXISTS user_friends (
