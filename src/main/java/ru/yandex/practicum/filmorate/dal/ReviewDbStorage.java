@@ -1,21 +1,14 @@
 package ru.yandex.practicum.filmorate.dal;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.dal.BaseRepository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.mapper.ReviewRowMapper;
 import ru.yandex.practicum.filmorate.model.Review;
 
-import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Repository
@@ -43,28 +36,19 @@ public class ReviewDbStorage extends BaseRepository<Review> {
     }
 
     public Review findById(int id) {
-        return findOne(FIND_BY_ID, id)
-                .orElseThrow(() -> new NotFoundException("Отзыв с id " + id + " не найден"));
+        return findOne(FIND_BY_ID, id).orElseThrow(() -> new NotFoundException("Отзыв с id " + id + " не найден"));
     }
 
     public Review create(Review review) {
         validateReview(review);
 
-        int generatedId = insert(INSERT,
-                review.getContent(),
-                review.getIsPositive(),
-                review.getUserId(),
-                review.getFilmId(),
-                review.getUseful());
+        int generatedId = insert(INSERT, review.getContent(), review.getIsPositive(), review.getUserId(), review.getFilmId(), review.getUseful());
 
         return findById(generatedId);
     }
 
     public Review update(Review review) {
-        update(UPDATE_REVIEW_QUERY,
-                review.getContent(),
-                review.getIsPositive(),
-                review.getReviewId());
+        update(UPDATE_REVIEW_QUERY, review.getContent(), review.getIsPositive(), review.getReviewId());
 
         return findById(review.getReviewId());
     }
