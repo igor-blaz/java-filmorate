@@ -22,7 +22,6 @@ public class User {
     @PastOrPresent(message = "День рождения не должно быть в будущем")
     private LocalDate birthday;
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
