@@ -52,6 +52,65 @@ public class FilmService {
         return filmStorage.getTopRatedFilms(count, genreId, year);
     }
 
+    public List<Film> searchBy(String query, String searchType) {
+        if (searchType.isBlank()) {
+            log.info("QueryString оказалась пустой");
+            List<Integer> filmIds = filmStorage.findAllFilmIds();
+            filmStorage.findManyFilmsByArrayOfIds(sortByLikes(filmIds));
+        }
+        switch (searchType) {
+            case "title,director"  -> {
+                    log.info("title,director");
+                    return searchByDirectorAndTitle(query);
+
+            }
+            case "director" -> {
+                log.info("director");
+                log.info("CASE DIRECTOR");
+                return searchByDirector(query);
+            }
+            case "title" -> {
+                log.info("title");
+                return searchByTitle(query);
+            }
+        }
+        return Collections.emptyList();
+
+    }
+
+    public List<Film> searchByDirectorAndTitle(String query) {
+        List<Film> films = new ArrayList<>();
+        List<Film> filmsByDirectorSearch = searchByDirector(query);
+        List<Film> filmsByTitleSearch = searchByTitle(query);
+
+        films.addAll(filmsByTitleSearch);
+        films.addAll(filmsByDirectorSearch);
+        return films.stream().distinct().toList();
+
+    }
+
+    public List<Film> searchByDirector(String directorName) {
+        log.info("searchByDirector");
+        List<Integer> directorIds = directorDbStorage.findDirectorIdsByName(directorName);
+        List<Integer> filmIds = new ArrayList<>();
+        for (int directorId : directorIds) {
+            List<Integer> ids = directorDbStorage.findFilmsByDirectorId(directorId);
+            filmIds.addAll(ids);
+        }
+        List<Film> films = filmStorage.findManyFilmsByArrayOfIds(filmIds);
+        findGenresForManyFilms(films);
+        findDirectorsForManyFilms(films);
+        return films;
+    }
+
+    public List<Film> searchByTitle(String title) {
+        log.info("searchByTitle");
+        List<Film> films = filmStorage.findFilmByNameLike(title);
+        findGenresForManyFilms(films);
+        return films;
+    }
+
+
     public Film createFilm(Film film) {
         findNamesForGenres(film);
         log.info("Режиссеры фильма на добавление {}", film.getDirectors());
@@ -86,6 +145,7 @@ public class FilmService {
         film.setGenres(genreDbStorage.getManyGenres(film.getGenres()));
     }
 
+
     private void findDirectors(Film film) {
         log.info("Поиск Режиссера");
         Set<Director> directorSet = directorDbStorage.findDirectorsByFilmId(film.getId());
@@ -104,6 +164,18 @@ public class FilmService {
 
     public Mpa findNameForMpa(Mpa mpa) {
         return mpaDbStorage.findById(mpa.getId());
+    }
+
+    private void findGenresForManyFilms(List<Film> films) {
+        for (Film film : films) {
+            findGenres(film);
+        }
+    }
+
+    private void findDirectorsForManyFilms(List<Film> films) {
+        for (Film film : films) {
+            findDirectors(film);
+        }
     }
 
     private void findGenres(Film film) {
@@ -125,7 +197,7 @@ public class FilmService {
             return sorted;
         } else if (sortType.equals("likes")) {
             log.info("Сортировка по лайкам");
-            List<Integer> sortedIds = sortIt(filmIds);
+            List<Integer> sortedIds = sortByLikes(filmIds);
             List<Film> sortedFilms = filmStorage.findManyFilmsByArrayOfIds(sortedIds);
             directorDbStorage.setDirectorsForListOfFilms(sortedFilms);
             log.info("Отправлка назад {}", sortedFilms);
@@ -141,7 +213,7 @@ public class FilmService {
                 .toList();
     }
 
-    private List<Integer> sortIt(List<Integer> filmsIds) {
+    private List<Integer> sortByLikes(List<Integer> filmsIds) {
         Map<Integer, Integer> map = new HashMap<>();
         for (Integer filmId : filmsIds) {
             int likeCount = filmStorage.findLikesForFilm(filmId).size();
