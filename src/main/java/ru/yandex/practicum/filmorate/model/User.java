@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Objects;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -21,7 +21,6 @@ public class User {
     private String name;
     @PastOrPresent(message = "День рождения не должно быть в будущем")
     private LocalDate birthday;
-
 
     @Override
     public boolean equals(Object o) {

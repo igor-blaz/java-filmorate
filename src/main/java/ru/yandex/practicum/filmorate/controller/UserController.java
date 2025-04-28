@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -36,11 +36,6 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/{idOfUser}")
-    public User getUserById(@PathVariable int idOfUser) {
-        return userService.getUserById(idOfUser);
-    }
-
     @GetMapping("/{id}/friends/common/{friendId}")
     public List<User> getCommonFriends(@PathVariable int id, @PathVariable int friendId) {
         return userService.findCommonFriends(id, friendId);
@@ -56,8 +51,5 @@ public class UserController {
         userService.deleteFriend(id, friendId);
     }
 
-    @DeleteMapping("/{userId}")
-    public void deleteUsers(@PathVariable int userId) {
-        userService.deleteUser(userId);
-    }
+
 }

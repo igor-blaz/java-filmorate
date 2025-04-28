@@ -33,7 +33,6 @@ public class BaseRepository<T> {
     }
 
     protected List<Integer> findManyIds(String query, Object... params) {
-        log.info("Поиск Айди в findManyIds");
         return jdbc.queryForList(query, Integer.class, params);
     }
 
