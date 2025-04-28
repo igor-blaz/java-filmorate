@@ -42,11 +42,12 @@ public class DirectorDbStorage extends BaseRepository<Director> {
         }
         return directorSet;
     }
+
     public List<Integer> findDirectorIdsByName(String partName) {
         log.info("Поиск айди режиссеров по имени");
-       String name = apostropheLikeMaker(partName);
-       String query = FIND_DIRECTOR_BY_NAME_QUERY_PART + name + ";";
-       return findManyIds(query);
+        String name = apostropheLikeMaker(partName);
+        String query = FIND_DIRECTOR_BY_NAME_QUERY_PART + name + ";";
+        return findManyIds(query);
     }
 
     public void setDirectorsForListOfFilms(List<Film> films) {

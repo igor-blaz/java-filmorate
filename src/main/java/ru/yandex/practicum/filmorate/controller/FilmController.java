@@ -35,7 +35,7 @@ public class FilmController {
             @RequestParam String query,
             @RequestParam String by) {
         log.info("Запрос на поиск query = {} by = {} ", query, by);
-    return filmservice.searchBy(query, by);
+        return filmservice.searchBy(query, by);
     }
 
     @GetMapping

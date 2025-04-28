@@ -59,9 +59,9 @@ public class FilmService {
             filmStorage.findManyFilmsByArrayOfIds(sortByLikes(filmIds));
         }
         switch (searchType) {
-            case "title,director"  -> {
-                    log.info("title,director");
-                    return searchByDirectorAndTitle(query);
+            case "title,director" -> {
+                log.info("title,director");
+                return searchByDirectorAndTitle(query);
 
             }
             case "director" -> {
