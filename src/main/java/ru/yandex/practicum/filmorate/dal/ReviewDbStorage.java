@@ -13,14 +13,22 @@ import java.util.List;
 @Slf4j
 @Repository
 public class ReviewDbStorage extends BaseRepository<Review> {
-    private static final String FIND_ALL_QUERY = "SELECT * FROM reviews ORDER BY useful DESC";
-    private static final String FIND_BY_FILM_ID_QUERY = "SELECT * FROM reviews WHERE filmid = ? ORDER BY useful DESC LIMIT ?";
-    private static final String FIND_BY_ID = "SELECT * FROM reviews WHERE id = ?";
-    private static final String INSERT = "INSERT INTO reviews (content,positive,userid,filmid,useful) VALUES (?,?,?,?,?)";
+    private static final String FIND_ALL_QUERY = "SELECT r.*, " +
+            "(SELECT COUNT(*) FROM reviews_like WHERE review_id = r.id AND is_like = true) - " +
+            "(SELECT COUNT(*) FROM reviews_like WHERE review_id = r.id AND is_like = false) AS useful " +
+            "FROM reviews r ORDER BY useful DESC";
+    private static final String FIND_BY_FILM_ID_QUERY = "SELECT r.*, " +
+            "(SELECT COUNT(*) FROM reviews_like WHERE review_id = r.id AND is_like = true) - " +
+            "(SELECT COUNT(*) FROM reviews_like WHERE review_id = r.id AND is_like = false) AS useful " +
+            "FROM reviews r WHERE r.filmid = ? ORDER BY useful DESC LIMIT ?";
+    private static final String FIND_BY_ID = "SELECT r.*, " +
+            "(SELECT COUNT(*) FROM reviews_like WHERE review_id = r.id AND is_like = true) - " +
+            "(SELECT COUNT(*) FROM reviews_like WHERE review_id = r.id AND is_like = false) AS useful " +
+            "FROM reviews r WHERE r.id = ?";
+    private static final String INSERT = "INSERT INTO reviews (content,positive,userid,filmid) VALUES (?,?,?,?)";
     private static final String UPDATE_REVIEW_QUERY = "UPDATE reviews SET content = ?, positive = ? WHERE id = ?";
     private static final String INSERT_LIKE_QUERY = "INSERT INTO reviews_like (review_id, user_id, is_like) VALUES (?, ?, true)";
     private static final String INSERT_DISLIKE_QUERY = "INSERT INTO reviews_like (review_id, user_id, is_like) VALUES (?, ?, false)";
-    private static final String UPDATE_USEFUL_QUERY = "UPDATE reviews SET useful = useful + ? WHERE id = ?";
     private static final String DELETE_REVIEW_QUERY = "DELETE FROM reviews WHERE id = ?";
 
     public ReviewDbStorage(JdbcTemplate jdbcTemplate, ReviewRowMapper reviewRowMapper) {
@@ -42,7 +50,7 @@ public class ReviewDbStorage extends BaseRepository<Review> {
     public Review create(Review review) {
         validateReview(review);
 
-        int generatedId = insert(INSERT, review.getContent(), review.getIsPositive(), review.getUserId(), review.getFilmId(), review.getUseful());
+        int generatedId = insert(INSERT, review.getContent(), review.getIsPositive(), review.getUserId(), review.getFilmId());
 
         return findById(generatedId);
     }
@@ -53,10 +61,6 @@ public class ReviewDbStorage extends BaseRepository<Review> {
         return findById(review.getReviewId());
     }
 
-    public void addLike(long reviewId, long userId) {
-        update(INSERT_LIKE_QUERY, reviewId, userId);
-        updateUseful(reviewId, 1);
-    }
 
     public void delete(long id) {
         int rowsAffected = update(DELETE_REVIEW_QUERY, id);
@@ -67,19 +71,20 @@ public class ReviewDbStorage extends BaseRepository<Review> {
         }
     }
 
-    public void removeLike(long reviewId, long userId) {
-        update(INSERT_DISLIKE_QUERY, reviewId, userId);
-        updateUseful(reviewId, -1);
-        log.info("Добавлен дизлайк отзыва {} пользователем {}", reviewId, userId);
+    public void addLike(long reviewId, long userId) {
+        update(INSERT_LIKE_QUERY, reviewId, userId);
+        log.info("Добавлен лайк отзыва {} пользователем {}", reviewId, userId);
     }
 
     public void addDislike(long reviewId, long userId) {
         update(INSERT_DISLIKE_QUERY, reviewId, userId);
-        updateUseful(reviewId, -1);
+        log.info("Добавлен дизлайк отзыва {} пользователем {}", reviewId, userId);
     }
 
-    private void updateUseful(long reviewId, int value) {
-        update(UPDATE_USEFUL_QUERY, value, reviewId);
+    public void removeLike(long reviewId, long userId) {
+        // Удаляем и лайки и дизлайки пользователя для этого отзыва
+        update("DELETE FROM reviews_like WHERE review_id = ? AND user_id = ?", reviewId, userId);
+        log.info("Удален лайк/дизлайк отзыва {} пользователем {}", reviewId, userId);
     }
 
     private void validateReview(Review review) {
