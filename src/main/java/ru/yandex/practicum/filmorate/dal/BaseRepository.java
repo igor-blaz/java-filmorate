@@ -41,6 +41,12 @@ public class BaseRepository<T> {
         return jdbc.update(query, params);
     }
 
+    protected String apostropheLikeMaker(String string) {
+        return "'%" +
+                string +
+                "%'";
+    }
+
     protected int insert(String query, Object... params) {
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(connection -> {

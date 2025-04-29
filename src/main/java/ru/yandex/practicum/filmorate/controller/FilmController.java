@@ -30,6 +30,14 @@ public class FilmController {
         return filmservice.updateFilm(film);
     }
 
+    @GetMapping("/search")
+    public List<Film> searchFilmsBy(
+            @RequestParam String query,
+            @RequestParam String by) {
+        log.info("Запрос на поиск query = {} by = {} ", query, by);
+        return filmservice.searchBy(query, by);
+    }
+
     @GetMapping
     public List<Film> getMovies() {
         return filmservice.getAllFilms();
