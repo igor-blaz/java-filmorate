@@ -66,7 +66,7 @@ public class ReviewController {
         reviewService.addDislike(id, userId);
     }
 
-    @DeleteMapping("/{id}/like/{userId}")
+    @DeleteMapping("/{reviewId}/like/{userId}")
     public void removeLike(@PathVariable int id, @PathVariable int userId) {
         log.info("DELETE /reviews/{}/like/{} - Удаление лайка/дизлайка", id, userId);
         reviewService.removeLike(id, userId);

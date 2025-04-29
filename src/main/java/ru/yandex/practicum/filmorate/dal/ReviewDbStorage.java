@@ -18,8 +18,8 @@ public class ReviewDbStorage extends BaseRepository<Review> {
     private static final String FIND_BY_ID = "SELECT * FROM reviews WHERE id = ?";
     private static final String INSERT = "INSERT INTO reviews (content,positive,userid,filmid,useful) VALUES (?,?,?,?,?)";
     private static final String UPDATE_REVIEW_QUERY = "UPDATE reviews SET content = ?, positive = ? WHERE id = ?";
-    private static final String INSERT_LIKE_QUERY = "INSERT INTO review_like (id, userid, positive) VALUES (?, ?, true)";
-    private static final String INSERT_DISLIKE_QUERY = "INSERT INTO review_like (id, userid, positive) VALUES (?, ?, false)";
+    private static final String INSERT_LIKE_QUERY = "INSERT INTO reviews_like (review_id, user_id, is_like) VALUES (?, ?, true)";
+    private static final String INSERT_DISLIKE_QUERY = "INSERT INTO reviews_like (review_id, user_id, is_like) VALUES (?, ?, false)";
     private static final String UPDATE_USEFUL_QUERY = "UPDATE reviews SET useful = useful + ? WHERE id = ?";
     private static final String DELETE_REVIEW_QUERY = "DELETE FROM reviews WHERE id = ?";
 
@@ -72,6 +72,12 @@ public class ReviewDbStorage extends BaseRepository<Review> {
         }
     }
 
+    public void removeLike(long reviewId, long userId) {
+        update(INSERT_DISLIKE_QUERY, reviewId, userId);
+        updateUseful(reviewId, -1);
+        log.info("Добавлен дизлайк отзыва {} пользователем {}", reviewId, userId);
+    }
+
     private void updateUseful(long reviewId, int value) {
         update(UPDATE_USEFUL_QUERY, value, reviewId);
     }
@@ -85,4 +91,6 @@ public class ReviewDbStorage extends BaseRepository<Review> {
             throw new ValidationException("Не указаны user_id и/или film_id");
         }
     }
+
+
 }

@@ -67,11 +67,10 @@ public class ReviewService {
         reviewDbStorage.addDislike(reviewId, userId);
     }
 
-    public void removeLike(long reviewId, long userId) {
+    public void removeLike(int reviewId, int userId) {
         log.info("Удаление лайка/дизлайка отзыву {} от пользователя {}", reviewId, userId);
         validateIds(reviewId, userId);
-
-        throw new UnsupportedOperationException("Метод removeLike пока не реализован");
+        reviewDbStorage.removeLike(reviewId, userId);
     }
 
     private void validateIds(long reviewId, long userId) {
