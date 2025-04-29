@@ -58,11 +58,6 @@ public class ReviewDbStorage extends BaseRepository<Review> {
         updateUseful(reviewId, 1);
     }
 
-    public void addDislike(long reviewId, long userId) {
-        update(INSERT_DISLIKE_QUERY, reviewId, userId);
-        updateUseful(reviewId, -1);
-    }
-
     public void delete(long id) {
         int rowsAffected = update(DELETE_REVIEW_QUERY, id);
         if (rowsAffected > 0) {
@@ -76,6 +71,11 @@ public class ReviewDbStorage extends BaseRepository<Review> {
         update(INSERT_DISLIKE_QUERY, reviewId, userId);
         updateUseful(reviewId, -1);
         log.info("Добавлен дизлайк отзыва {} пользователем {}", reviewId, userId);
+    }
+
+    public void addDislike(long reviewId, long userId) {
+        update(INSERT_DISLIKE_QUERY, reviewId, userId);
+        updateUseful(reviewId, -1);
     }
 
     private void updateUseful(long reviewId, int value) {

@@ -54,21 +54,21 @@ public class ReviewController {
         return reviewService.getAllReviews();
     }
 
-    @PutMapping("/{id}/like/{userId}")
-    public void addLike(@PathVariable int id, @PathVariable int userId) {
-        log.info("PUT /reviews/{}/like/{} - Добавление лайка отзыву", id, userId);
-        reviewService.addLike(id, userId);
+    @PutMapping("/{reviewId}/like/{userId}")
+    public Review addLike(@PathVariable int reviewId, @PathVariable int userId) {
+        log.info("PUT /reviews/{}/like/{} - Добавление лайка отзыву", reviewId, userId);
+        return reviewService.addLike(reviewId, userId);
     }
 
-    @PutMapping("/{id}/dislike/{userId}")
-    public void addDislike(@PathVariable int id, @PathVariable int userId) {
-        log.info("PUT /reviews/{}/dislike/{} - Добавление дизлайка отзыву", id, userId);
-        reviewService.addDislike(id, userId);
+    @PutMapping("/{reviewId}/dislike/{userId}")
+    public void addDislike(@PathVariable int reviewId, @PathVariable int userId) {
+        log.info("PUT /reviews/{}/dislike/{} - Добавление дизлайка отзыву", reviewId, userId);
+        reviewService.addDislike(reviewId, userId);
     }
 
     @DeleteMapping("/{reviewId}/like/{userId}")
-    public void removeLike(@PathVariable int id, @PathVariable int userId) {
-        log.info("DELETE /reviews/{}/like/{} - Удаление лайка/дизлайка", id, userId);
-        reviewService.removeLike(id, userId);
+    public void removeLike(@PathVariable int reviewId, @PathVariable int userId) {
+        log.info("DELETE /reviews/{}/like/{} - Удаление лайка/дизлайка", reviewId, userId);
+        reviewService.removeLike(reviewId, userId);
     }
 }

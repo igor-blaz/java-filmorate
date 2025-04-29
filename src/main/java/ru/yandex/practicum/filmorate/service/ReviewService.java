@@ -44,7 +44,7 @@ public class ReviewService {
         return reviewDbStorage.findAll();
     }
 
-    public List<Review> getReviewsByFilmId(long filmId, int count) {
+    public List<Review> getReviewsByFilmId(int filmId, int count) {
         log.info("Получение {} отзывов для фильма с ID: {}", count, filmId);
         if (filmId <= 0) {
             throw new ValidationException("ID фильма должен быть положительным");
@@ -52,16 +52,17 @@ public class ReviewService {
         if (count <= 0) {
             throw new ValidationException("Количество отзывов должно быть положительным");
         }
-        return reviewDbStorage.findByFilmId((int) filmId, count);
+        return reviewDbStorage.findByFilmId(filmId, count);
     }
 
-    public void addLike(long reviewId, long userId) {
+    public Review addLike(int reviewId, int userId) {
         log.info("Добавление лайка отзыву {} от пользователя {}", reviewId, userId);
         validateIds(reviewId, userId);
         reviewDbStorage.addLike(reviewId, userId);
+        return getById(reviewId);
     }
 
-    public void addDislike(long reviewId, long userId) {
+    public void addDislike(int reviewId, int userId) {
         log.info("Добавление дизлайка отзыву {} от пользователя {}", reviewId, userId);
         validateIds(reviewId, userId);
         reviewDbStorage.addDislike(reviewId, userId);
@@ -73,7 +74,7 @@ public class ReviewService {
         reviewDbStorage.removeLike(reviewId, userId);
     }
 
-    private void validateIds(long reviewId, long userId) {
+    private void validateIds(int reviewId, int userId) {
         if (reviewId <= 0 || userId <= 0) {
             throw new ValidationException("ID должны быть положительными числами");
         }
