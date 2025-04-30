@@ -13,23 +13,23 @@ import java.util.*;
 @Slf4j
 @Service
 public class UserLogService {
-    public final String EVENT_TYPE_USER = "USER";
-    public final String EVENT_TYPE_FILM_LIKE = "LIKE";
-    public final String EVENT_TYPE_REVIEW = "REVIEW";
-    public final String EVENT_TYPE_REVIEW_LIKE = "REVIEW LIKE";
-    public final String EVENT_TYPE_REVIEW_DISLIKE = "REVIEW DISLIKE";
-    public final String EVENT_TYPE_FRIEND = "FRIEND";
+    public static final String EVENT_TYPE_USER = "USER";
+    public static final String EVENT_TYPE_FILM_LIKE = "LIKE";
+    public static final String EVENT_TYPE_REVIEW = "REVIEW";
+    public static final String EVENT_TYPE_REVIEW_LIKE = "REVIEW LIKE";
+    public static final String EVENT_TYPE_REVIEW_DISLIKE = "REVIEW DISLIKE";
+    public static final String EVENT_TYPE_FRIEND = "FRIEND";
 
-    public final String EVENT_OPERATION_ADD = "ADD";
-    public final String EVENT_OPERATION_UPDATE = "UPDATE";
-    public final String EVENT_OPERATION_REMOVE = "REMOVE";
+    public static final String EVENT_OPERATION_ADD = "ADD";
+    public static final String EVENT_OPERATION_UPDATE = "UPDATE";
+    public static final String EVENT_OPERATION_REMOVE = "REMOVE";
 
     private final UserLogDbStorage userLogDbStorage;
 
     @Autowired
     public UserLogService(UserLogDbStorage userLogDbStorage) {
         this.userLogDbStorage = userLogDbStorage;
-    };
+    }
 
     public List<UserLog> getLogByUserId (int userId) {
         return userLogDbStorage.findByUserId(userId);
