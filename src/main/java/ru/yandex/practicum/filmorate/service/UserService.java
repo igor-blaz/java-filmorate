@@ -5,11 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.UserDbStorage;
 import ru.yandex.practicum.filmorate.dal.UserLogDbStorage;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.model.UserLog;
 
-import java.util.*;
-
+import java.util.List;
 
 @Slf4j
 @Service
@@ -58,5 +59,20 @@ public class UserService {
 
     public void isRealUserId(List<Integer> ids) {
         userStorage.isRealUserId(ids);
+    }
+
+    public void deleteUser(int idForDelete) {
+        int deleteUser = userStorage.deleteUser(idForDelete);
+        if (deleteUser == 0) {
+            throw new NotFoundException("Пользователь с ID " + idForDelete + " для удаления не найден");
+        }
+    }
+
+    public User getUserById(int idOfUser) {
+        return userStorage.getUser(idOfUser);
+    }
+
+    public List<Film> findRecommendation(Integer idUser) {
+        return userStorage.findRecommendation(idUser);
     }
 }
