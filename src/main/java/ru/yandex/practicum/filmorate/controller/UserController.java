@@ -63,6 +63,7 @@ public class UserController {
     public List<UserLog> userLog(@PathVariable int id) {
         return userLogService.getLogByUserId(id);
     }
+
     @DeleteMapping("/{userId}")
     public void deleteUsers(@PathVariable int userId) {
         userService.deleteUser(userId);
