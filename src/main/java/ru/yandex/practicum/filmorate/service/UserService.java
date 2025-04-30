@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.UserDbStorage;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
-
 
 @Slf4j
 @Service
@@ -66,5 +66,9 @@ public class UserService {
 
     public User getUserById(int idOfUser) {
         return userStorage.getUser(idOfUser);
+    }
+
+    public List<Film> findRecommendation(Integer idUser) {
+        return userStorage.findRecommendation(idUser);
     }
 }
