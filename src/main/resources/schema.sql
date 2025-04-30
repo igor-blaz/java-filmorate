@@ -60,4 +60,19 @@ CREATE TABLE IF NOT EXISTS user_friends (
     FOREIGN KEY (friend_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE if not exists reviews
+(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    content VARCHAR(700),
+    positive boolean,
+    userid INT references users (id) on delete cascade,
+    filmid INT references film (id) on delete cascade,
+    useful INT
+);
 
+CREATE TABLE if not exists reviews_like
+(
+    review_id INT references reviews (id) on delete cascade,
+    user_id INT references users (id) on delete cascade,
+    is_like boolean
+);
