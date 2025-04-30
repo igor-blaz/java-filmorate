@@ -18,11 +18,9 @@ import java.util.*;
 public class FilmService {
 
     private final FilmDbStorage filmStorage;
-    private final UserDbStorage userStorage;
     private final GenreDbStorage genreDbStorage;
     private final MpaDbStorage mpaDbStorage;
     private final DirectorDbStorage directorDbStorage;
-
     private final UserLogService userLogService;
 
     public List<Film> getRatedFilms(int count, Integer genreId, Integer year) {
@@ -31,14 +29,14 @@ public class FilmService {
 
     public Film makeLike(int filmId, int userId) {
         filmStorage.makeLike(filmId, userId);
-        userLogService.addUserLog(userId, filmId, userLogService.EVENT_TYPE_LIKE, userLogService.EVENT_OPERATION_ADD);
+        userLogService.addUserLog(userId, filmId, userLogService.EVENT_TYPE_FILM_LIKE, userLogService.EVENT_OPERATION_ADD);
         return filmStorage.getFilm(filmId);
     }
 
     public void removeLike(int filmId, int userId) {
         Film film = filmStorage.getFilm(filmId);
         filmStorage.deleteLike(filmId, userId);
-        userLogService.addUserLog(userId, filmId, userLogService.EVENT_TYPE_LIKE, userLogService.EVENT_OPERATION_REMOVE);
+        userLogService.addUserLog(userId, filmId, userLogService.EVENT_TYPE_FILM_LIKE, userLogService.EVENT_OPERATION_REMOVE);
     }
 
     public List<Film> getTopRatedFilms(int count, Integer genreId, Integer year) {
@@ -145,7 +143,6 @@ public class FilmService {
         film.setGenres(genreDbStorage.getManyGenres(film.getGenres()));
     }
 
-
     private void findDirectors(Film film) {
         log.info("Поиск Режиссера");
         Set<Director> directorSet = directorDbStorage.findDirectorsByFilmId(film.getId());
@@ -185,7 +182,6 @@ public class FilmService {
         }
         film.setGenres(genres);
     }
-}
 
     public void deleteFilmById(int idForDelete) {
         int deleteFilm = filmStorage.deleteFilm(idForDelete);

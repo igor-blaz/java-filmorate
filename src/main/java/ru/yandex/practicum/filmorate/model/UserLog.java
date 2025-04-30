@@ -2,12 +2,10 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 public class UserLog {
     private Integer id;
-    private LocalDateTime timeStamp;
+    private long timestamp;
     private int userId;
     private int entityId;
     private String eventType;
@@ -16,9 +14,9 @@ public class UserLog {
     public UserLog() {
     }
 
-    public UserLog(int id, LocalDateTime timeStamp, int userId, int entityId, String eventType, String operation) {
+    public UserLog(int id, long timestamp, int userId, int entityId, String eventType, String operation) {
         this.id = id;
-        this.timeStamp = timeStamp;
+        this.timestamp = timestamp;
         this.userId = userId;
         this.entityId = entityId;
         this.eventType = eventType;

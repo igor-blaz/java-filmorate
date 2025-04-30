@@ -12,7 +12,8 @@ public class UserLogRowMapper implements RowMapper<UserLog> {
     @Override
     public UserLog mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         UserLog userLog = new UserLog();
-        userLog.setTimeStamp(resultSet.getTimestamp("action_timestamp").toLocalDateTime());
+        userLog.setId(resultSet.getInt("id"));
+        userLog.setTimestamp(resultSet.getLong("action_timestamp"));
         userLog.setUserId(resultSet.getInt("user_id"));
         userLog.setEntityId(resultSet.getInt("entity_id"));
         userLog.setEventType(resultSet.getString("event_type"));

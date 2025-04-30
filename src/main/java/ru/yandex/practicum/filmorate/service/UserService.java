@@ -4,11 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.UserDbStorage;
-import ru.yandex.practicum.filmorate.dal.UserLogDbStorage;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.model.UserLog;
 
 import java.util.List;
 
@@ -42,9 +40,7 @@ public class UserService {
     }
 
     public User createUser(User user) {
-        User newUser = userStorage.createUser(user);
-        userLogService.addUserLog(newUser.getId(), newUser.getId(), userLogService.EVENT_TYPE_USER, userLogService.EVENT_OPERATION_ADD);
-        return newUser;
+        return userStorage.createUser(user);
     }
 
     public User updateUser(User user) {

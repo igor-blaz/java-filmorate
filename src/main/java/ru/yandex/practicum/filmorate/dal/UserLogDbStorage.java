@@ -4,7 +4,6 @@ package ru.yandex.practicum.filmorate.dal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.mapper.UserLogRowMapper;
 import ru.yandex.practicum.filmorate.model.UserLog;
 
@@ -17,7 +16,7 @@ public class UserLogDbStorage extends BaseRepository<UserLog> {
     private static final String FIND_BY_USER_ID_QUERY = "SELECT * FROM user_log WHERE user_id = ?;";
     private static final String INSERT_USER_LOG = """
         INSERT INTO user_log (action_timestamp, user_id, entity_id, event_type, operation)
-        VALUES(CURRENT_TIMESTAMP(), ?, ?, ?, ?);
+        VALUES(?, ?, ?, ?, ?);
         """;
 
     public UserLogDbStorage(JdbcTemplate jdbcTemplate, UserLogRowMapper userLogRowMapper) {
@@ -27,6 +26,7 @@ public class UserLogDbStorage extends BaseRepository<UserLog> {
     public UserLog insertUserLog(UserLog userLog) {
         int id = insert(
                 INSERT_USER_LOG,
+                userLog.getTimestamp(),
                 userLog.getUserId(),
                 userLog.getEntityId(),
                 userLog.getEventType(),
@@ -35,7 +35,7 @@ public class UserLogDbStorage extends BaseRepository<UserLog> {
         userLog.setId(id);
         return new UserLog(
                 userLog.getId(),
-                userLog.getTimeStamp(),
+                userLog.getTimestamp(),
                 userLog.getUserId(),
                 userLog.getEntityId(),
                 userLog.getEventType(),

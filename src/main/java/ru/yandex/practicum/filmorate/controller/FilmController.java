@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.service.UserLogService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.List;
@@ -18,7 +17,6 @@ import java.util.List;
 public class FilmController {
     private final FilmService filmservice;
     private final UserService userService;
-    private final UserLogService userLogService;
 
     @PostMapping
     public Film addMovie(@Valid @RequestBody Film film) {
@@ -70,14 +68,12 @@ public class FilmController {
     public void deleteLike(@PathVariable Integer id,
                            @PathVariable Integer userId) {
         filmservice.removeLike(id, userId);
-        userLogService.addUserLog(userId, id, userLogService.EVENT_TYPE_LIKE, userLogService.EVENT_OPERATION_REMOVE);
     }
 
     @PutMapping("/{id}/like/{userId}")
     public Film makeLike(@PathVariable Integer id,
                          @PathVariable Integer userId) {
         userService.isRealUserId(List.of(userId));
-        userLogService.addUserLog(userId, id, userLogService.EVENT_TYPE_LIKE, userLogService.EVENT_OPERATION_ADD);
         return filmservice.makeLike(id, userId);
     }
 

@@ -35,7 +35,7 @@ public class ReviewDbStorage extends BaseRepository<Review> {
         return findMany(FIND_BY_FILM_ID_QUERY, filmId, count);
     }
 
-    public Review findById(int id) {
+    public Review findById(long id) {
         return findOne(FIND_BY_ID, id).orElseThrow(() -> new NotFoundException("Отзыв с id " + id + " не найден"));
     }
 
