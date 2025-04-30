@@ -31,7 +31,7 @@ public class UserLogService {
         this.userLogDbStorage = userLogDbStorage;
     }
 
-    public List<UserLog> getLogByUserId (int userId) {
+    public List<UserLog> getLogByUserId(int userId) {
         return userLogDbStorage.findByUserId(userId);
     }
 
