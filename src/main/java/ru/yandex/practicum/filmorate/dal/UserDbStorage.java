@@ -35,6 +35,8 @@ public class UserDbStorage extends BaseRepository<User> {
             INSERT INTO user_friends(user_id, friend_id)
             VALUES(?,?);
             """;
+    private static final String REMOVE_USER = "DELETE FROM users WHERE id=?";
+
 
     public UserDbStorage(JdbcTemplate jdbcTemplate, UserRowMapper mapper) {
         super(jdbcTemplate, mapper);
@@ -82,7 +84,7 @@ public class UserDbStorage extends BaseRepository<User> {
 
 
     public void addFriend(int id, int newFriend) {
-         update(ADD_TO_FRIENDS_QUERY, id, newFriend);
+        update(ADD_TO_FRIENDS_QUERY, id, newFriend);
     }
 
     public void removeFriend(int id, int deleteFriend) {
@@ -98,5 +100,7 @@ public class UserDbStorage extends BaseRepository<User> {
         return findMany(FIND_ALL_QUERY);
     }
 
-
+    public int deleteUser(int idUserForDelete) {
+        return update(REMOVE_USER, idUserForDelete);
+    }
 }
