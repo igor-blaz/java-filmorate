@@ -62,8 +62,8 @@ CREATE TABLE IF NOT EXISTS film_genre (
 CREATE TABLE IF NOT EXISTS film_directors (
 film_id INT,
 director_id INT NOT NULL,
-FOREIGN KEY (film_id) REFERENCES film(id),
-FOREIGN KEY (director_id) REFERENCES directors(director_id)
+FOREIGN KEY (film_id) REFERENCES film(id) ON DELETE CASCADE,
+FOREIGN KEY (director_id) REFERENCES directors(director_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS user_friends (

@@ -29,12 +29,21 @@ public class FilmService {
     public List<Film> getRatedFilms(int count, Integer genreId, Integer year) {
         return filmStorage.getTopRatedFilms(count, genreId, year);
     }
-    public void setFieldsToFilm(List<Film> films){
-        for(Film film : films){
+
+    public List<Film> setFieldsToArrayOfFilms(List<Film> films) {
+        for (Film film : films) {
             findDirectors(film);
             findGenres(film);
             findMpa(film);
         }
+        return films;
+    }
+
+    public Film setFieldsToOneFilm(Film film) {
+        findDirectors(film);
+        findMpa(film);
+        findGenres(film);
+        return film;
     }
 
     public Film makeLike(int filmId, int userId) {
@@ -50,7 +59,6 @@ public class FilmService {
     }
 
     public List<Film> getTopRatedFilms(int count, Integer genreId, Integer year) {
-        System.out.println("Service");
         return filmStorage.getTopRatedFilms(count, genreId, year);
     }
 
