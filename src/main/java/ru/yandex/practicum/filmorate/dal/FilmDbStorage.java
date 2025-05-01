@@ -31,14 +31,14 @@ public class FilmDbStorage extends BaseRepository<Film> {
             """;
 
     private static final String FIND_TOP_POPULAR_QUERY = """
-            SELECT f.id, f.name, f.description, f.release_date, f.duration, f.mpa_id
+            SELECT f.*
             FROM film f
-            JOIN film_genre g ON g.film_id = f.id
+            LEFT JOIN film_genre g ON g.film_id = f.id
             LEFT JOIN film_likes k ON k.film_id = f.id
             WHERE (? = 0 OR g.genre_id = ?)
               AND (? = 0 OR extract(year from f.release_date) = ?)
-            GROUP BY f.id, f.name, f.description, f.release_date, f.duration, f.mpa_id
-            ORDER BY count(1) DESC
+            GROUP BY f.id
+            ORDER BY count(k.film_id) DESC
             LIMIT ?
             """;
     private static final String FIND_LIKES_FOR_FILM = "SELECT user_id FROM film_likes WHERE film_id = ? ;";
