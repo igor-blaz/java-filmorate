@@ -1,4 +1,4 @@
-DROP TABLE if exists films CASCADE;
+DROP TABLE if exists film CASCADE;
 DROP TABLE if exists users CASCADE;
 DROP TABLE if exists genre CASCADE;
 DROP TABLE if exists mpa CASCADE;

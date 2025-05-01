@@ -136,6 +136,11 @@ public class FilmService {
         directorDbStorage.insertManyDirectors(film.getId(), film.getDirectors());
         Set<Director> directorSet = directorDbStorage.findDirectorsByFilmId(film.getId());
         film.setDirectors(directorSet);
+
+        genreDbStorage.deleteGenresOnFilm(film.getId());
+        genreDbStorage.insertManyGenres(film.getId(), film.getGenres());
+        Set<Genre> genreSet = genreDbStorage.findGenresByFilmId(film.getId());
+        film.setGenres(genreSet);
         return filmStorage.updateFilm(film);
     }
 

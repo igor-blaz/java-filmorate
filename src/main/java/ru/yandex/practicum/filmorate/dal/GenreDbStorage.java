@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.mapper.GenreRowMapper;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.HashSet;
@@ -15,6 +16,12 @@ public class GenreDbStorage extends BaseRepository<Genre> {
 
     private static final String FIND_ALL_QUERY = "SELECT * FROM genre;";
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM genre WHERE id = ?;";
+    private static final String REMOVE_GENRES_BY_FILM_ID = "DELETE FROM film_genre WHERE film_id=?";
+    private static final String INSERT_FILM_GENRE = "INSERT INTO film_genre " +
+            "(film_id, genre_id) VALUES (?, ?);";
+    private static final String FIND_GENRE_BY_FILM_QUERY = "SELECT genre_id FROM film_genre " +
+            "WHERE film_id = ?;";
+    private static final String FIND_GENRE_QUERY = "SELECT * FROM genre WHERE id = ?;";
 
     public GenreDbStorage(JdbcTemplate jdbcTemplate, GenreRowMapper genreRowMapper) {
         super(jdbcTemplate, genreRowMapper);
@@ -37,5 +44,33 @@ public class GenreDbStorage extends BaseRepository<Genre> {
             genres.add(getGenre(id));
         }
         return genres;
+    }
+
+    public void deleteGenresOnFilm(int filmId) {
+        update(REMOVE_GENRES_BY_FILM_ID, filmId);
+    }
+
+    public void insertManyGenres(int filmId, Set<Genre> directors) {
+        for (Genre genre : directors) {
+            addGenreToFilm(filmId, genre.getId());
+        }
+    }
+
+    public void addGenreToFilm(int filmId, int genreId) {
+        update(INSERT_FILM_GENRE, filmId, genreId);
+    }
+
+    public Set<Genre> findGenresByFilmId(int filmId) {
+        Set<Genre> genreSet = new HashSet<>();
+        List<Integer> genreIds = findManyIds(FIND_GENRE_BY_FILM_QUERY, filmId);
+        for (int id : genreIds) {
+            genreSet.add(findGenreById(id));
+        }
+        return genreSet;
+    }
+
+    public Genre findGenreById(int id) {
+        return findOne(FIND_GENRE_QUERY, id)
+                .orElseThrow(() -> new NotFoundException("Жанра с ID " + id + " не найден"));
     }
 }
