@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.yandex.practicum.filmorate.controller.MinimumDate;
+import ru.yandex.practicum.filmorate.validation.MinimumDate;
 
 import java.time.LocalDate;
 import java.util.*;
