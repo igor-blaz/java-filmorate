@@ -21,13 +21,15 @@ public class FilmController {
     @PostMapping
     public Film addMovie(@Valid @RequestBody Film film) {
         log.info("Запрос на создание фильма");
-        return filmservice.createFilm(film);
+        filmservice.createFilm(film);
+        return filmservice.setFieldsToOneFilm(film);
     }
 
     @PutMapping
     public Film updateMovie(@Valid @RequestBody Film film) {
         log.info("Запрос на обновление фильма{}", film);
-        return filmservice.updateFilm(film);
+        filmservice.updateFilm(film);
+        return filmservice.setFieldsToOneFilm(film);
     }
 
     @GetMapping("/search")
@@ -36,19 +38,20 @@ public class FilmController {
             @RequestParam String by) {
         log.info("Запрос на поиск query = {} by = {} ", query, by);
         List<Film> films = filmservice.searchBy(query, by);
-        filmservice.setFieldsToFilm(films);
-        return films;
+        return filmservice.setFieldsToArrayOfFilms(films);
     }
 
     @GetMapping
     public List<Film> getMovies() {
-        return filmservice.getAllFilms();
+        List<Film> films = filmservice.getAllFilms();
+        return filmservice.setFieldsToArrayOfFilms(films);
     }
 
     @GetMapping("/director/{directorId}")
     public List<Film> getPopularFromDirector(@PathVariable Integer directorId, @RequestParam String sortBy) {
         log.info("Запрос на сортировку");
-        return filmservice.getPopularFromDirector(directorId, sortBy);
+        List<Film> films = filmservice.getPopularFromDirector(directorId, sortBy);
+        return filmservice.setFieldsToArrayOfFilms(films);
     }
 
     @GetMapping("/popular")
@@ -59,11 +62,12 @@ public class FilmController {
     ) {
         log.info("Запрос на популярные фильмы");
 
-        return filmservice.getTopRatedFilms(
+        List<Film> films = filmservice.getTopRatedFilms(
                 Integer.parseInt(count),
                 Integer.parseInt(genreId),
                 Integer.parseInt(year)
         );
+        return filmservice.setFieldsToArrayOfFilms(films);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
@@ -76,19 +80,22 @@ public class FilmController {
     public Film makeLike(@PathVariable Integer id,
                          @PathVariable Integer userId) {
         userService.isRealUserId(List.of(userId));
-        return filmservice.makeLike(id, userId);
+        Film film = filmservice.makeLike(id, userId);
+        return filmservice.setFieldsToOneFilm(film);
     }
 
     @GetMapping("/{id}")
     public Film getFilm(@PathVariable Integer id) {
         log.info("Запрос на поиск фильма");
-        return filmservice.getFilm(id);
+        Film film = filmservice.getFilm(id);
+        return filmservice.setFieldsToOneFilm(film);
     }
 
     @GetMapping("/common")
     public List<Film> getCommonFilms(@RequestParam int userId, @RequestParam int friendId) {
         log.info("Запрос от {} на поиск общих фильмов с {}", userId, friendId);
-        return filmservice.getCommonFilms(userId, friendId);
+        List<Film> films = filmservice.getCommonFilms(userId, friendId);
+        return filmservice.setFieldsToArrayOfFilms(films);
     }
 
     @DeleteMapping("/{filmId}")
