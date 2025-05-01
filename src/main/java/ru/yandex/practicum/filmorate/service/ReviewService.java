@@ -62,21 +62,21 @@ public class ReviewService {
         log.info("Добавление лайка отзыву {} от пользователя {}", reviewId, userId);
         validateIds(reviewId, userId);
         reviewDbStorage.addLike(reviewId, userId);
-        userLogService.addUserLog(userId, reviewId, userLogService.EVENT_TYPE_REVIEW_LIKE, userLogService.EVENT_OPERATION_ADD);
+        userLogService.addUserLog(userId, reviewId, userLogService.EVENT_TYPE_FILM_LIKE, userLogService.EVENT_OPERATION_ADD);
+
         return getById(reviewId);
     }
 
     public void addDislike(int reviewId, int userId) {
         log.info("Добавление дизлайка отзыву {} от пользователя {}", reviewId, userId);
         validateIds(reviewId, userId);
-        userLogService.addUserLog(userId, reviewId, userLogService.EVENT_TYPE_REVIEW_DISLIKE, userLogService.EVENT_OPERATION_ADD);
         reviewDbStorage.addDislike(reviewId, userId);
     }
 
     public void removeLike(int reviewId, int userId) {
         log.info("Удаление лайка/дизлайка отзыву {} от пользователя {}", reviewId, userId);
         validateIds(reviewId, userId);
-        userLogService.addUserLog(userId, reviewId, userLogService.EVENT_TYPE_REVIEW_LIKE, userLogService.EVENT_OPERATION_REMOVE);
+        userLogService.addUserLog(userId, reviewId, userLogService.EVENT_TYPE_FILM_LIKE, userLogService.EVENT_OPERATION_REMOVE);
         reviewDbStorage.removeLike(reviewId, userId);
     }
 

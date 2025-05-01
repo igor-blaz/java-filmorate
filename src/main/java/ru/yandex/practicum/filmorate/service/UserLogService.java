@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dal.UserDbStorage;
 import ru.yandex.practicum.filmorate.dal.UserLogDbStorage;
 import ru.yandex.practicum.filmorate.model.UserLog;
 
@@ -15,8 +16,6 @@ import java.util.*;
 public class UserLogService {
     public static final String EVENT_TYPE_FILM_LIKE = "LIKE";
     public static final String EVENT_TYPE_REVIEW = "REVIEW";
-    public static final String EVENT_TYPE_REVIEW_LIKE = "REVIEW LIKE";
-    public static final String EVENT_TYPE_REVIEW_DISLIKE = "REVIEW DISLIKE";
     public static final String EVENT_TYPE_FRIEND = "FRIEND";
 
     public static final String EVENT_OPERATION_ADD = "ADD";
@@ -24,13 +23,16 @@ public class UserLogService {
     public static final String EVENT_OPERATION_REMOVE = "REMOVE";
 
     private final UserLogDbStorage userLogDbStorage;
+    private final UserDbStorage userDbStorage;
 
     @Autowired
-    public UserLogService(UserLogDbStorage userLogDbStorage) {
+    public UserLogService(UserLogDbStorage userLogDbStorage, UserDbStorage userDbStorage) {
         this.userLogDbStorage = userLogDbStorage;
+        this.userDbStorage = userDbStorage;
     }
 
     public List<UserLog> getLogByUserId(int userId) {
+        userDbStorage.getUser(userId);
         return userLogDbStorage.findByUserId(userId);
     }
 
