@@ -28,6 +28,7 @@ public class FilmController {
     @PutMapping
     public Film updateMovie(@Valid @RequestBody Film film) {
         log.info("Запрос на обновление фильма{}", film);
+        log.info("PUT запрос ");
         filmservice.updateFilm(film);
         return filmservice.setFieldsToOneFilm(film);
     }

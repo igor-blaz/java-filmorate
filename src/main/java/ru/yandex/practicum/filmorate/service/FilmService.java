@@ -63,7 +63,6 @@ public class FilmService {
     }
 
     public List<Film> searchBy(String query, String searchType) {
-        String correctQuery = query.toLowerCase();
         if (searchType.isBlank()) {
             log.info("QueryString оказалась пустой");
             List<Integer> filmIds = filmStorage.findAllFilmIds();
@@ -72,17 +71,17 @@ public class FilmService {
         switch (searchType) {
             case "title,director" -> {
                 log.info("title,director");
-                return searchByDirectorAndTitle(correctQuery);
+                return searchByDirectorAndTitle(query);
 
             }
             case "director" -> {
                 log.info("director");
                 log.info("CASE DIRECTOR");
-                return searchByDirector(correctQuery);
+                return searchByDirector(query);
             }
             case "title" -> {
                 log.info("title");
-                return searchByTitle(correctQuery);
+                return searchByTitle(query);
             }
         }
         return Collections.emptyList();
@@ -93,6 +92,8 @@ public class FilmService {
         List<Film> films = new ArrayList<>();
         List<Film> filmsByDirectorSearch = searchByDirector(query);
         List<Film> filmsByTitleSearch = searchByTitle(query);
+        log.info("titleSearch{}", filmsByTitleSearch);
+        log.info("dirSearch{}", filmsByDirectorSearch);
 
         films.addAll(filmsByTitleSearch);
         films.addAll(filmsByDirectorSearch);

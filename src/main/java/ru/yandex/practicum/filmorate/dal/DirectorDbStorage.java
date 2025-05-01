@@ -31,7 +31,7 @@ public class DirectorDbStorage extends BaseRepository<Director> {
     private static final String FIND_DIRECTOR_BY_FILM_QUERY = "SELECT director_id FROM film_directors " +
             "WHERE film_id = ?;";
     private static final String FIND_DIRECTOR_BY_NAME_QUERY_PART = "SELECT director_id FROM directors " +
-            "WHERE director_name LIKE";
+            "WHERE LOWER(director_name) LIKE LOWER";
 
 
     public Set<Director> findDirectorsByFilmId(int filmId) {
@@ -47,7 +47,7 @@ public class DirectorDbStorage extends BaseRepository<Director> {
     public List<Integer> findDirectorIdsByName(String partName) {
         log.info("Поиск айди режиссеров по имени");
         String name = apostropheLikeMaker(partName);
-        String query = FIND_DIRECTOR_BY_NAME_QUERY_PART + name + ";";
+        String query = FIND_DIRECTOR_BY_NAME_QUERY_PART + "(" + name + ")" + ";";
         return findManyIds(query);
     }
 
