@@ -21,7 +21,6 @@ public class UserDbStorage extends BaseRepository<User> {
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
     private static final String ADD_USER_QUERY = "INSERT INTO users (email, login, name," +
             " birthday) Values(?,?,?,?)";
-    private static final String DELETE_BY_USER_ID_QUERY = "DELETE FROM users WHERE id = ?;";
     private static final String UPDATE_USER_BY_ID = "UPDATE users SET email = ?, " +
             "login = ?, name=?, birthday = ? WHERE id =?;";
     private static final String GET_FRIENDS_QUERY = """
@@ -48,6 +47,10 @@ public class UserDbStorage extends BaseRepository<User> {
     }
 
     public User createUser(User user) {
+        if (isNameEmpty(user.getName())) {
+            log.error("new user without name; name is login");
+            user.setName(user.getLogin());
+        }
         int generatedId = insert(ADD_USER_QUERY, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday());
         return getUser(generatedId);
     }
@@ -148,5 +151,9 @@ public class UserDbStorage extends BaseRepository<User> {
         params.add(userId);
 
         return findManyIds(sqlQuery, params.toArray());
+    }
+
+    private boolean isNameEmpty(String nameForCheck) {
+        return nameForCheck == null || nameForCheck.isBlank();
     }
 }

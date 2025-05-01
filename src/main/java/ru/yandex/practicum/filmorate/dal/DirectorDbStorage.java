@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.mapper.DirectorRowMapper;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -93,6 +94,9 @@ public class DirectorDbStorage extends BaseRepository<Director> {
 
 
     public Director insertDirector(Director director) {
+        if (isNameEmpty(director.getName())) {
+            throw new ValidationException("Не указано имя режиссёра при попытке добавления");
+        }
         int id = insert(INSERT_DIRECTOR_QUERY, director.getName());
         log.info("Присвоен id режиссеру {}", id);
         director.setId(id);
@@ -132,5 +136,7 @@ public class DirectorDbStorage extends BaseRepository<Director> {
         }
     }
 
-
+    private boolean isNameEmpty(String nameForCheck) {
+        return nameForCheck == null || nameForCheck.isBlank();
+    }
 }
