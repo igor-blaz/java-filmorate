@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.model.UserLog;
+import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserLogService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
@@ -17,6 +18,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final UserLogService userLogService;
+    private final FilmService filmService;
 
     @PostMapping
     public User addUser(@Valid @RequestBody User user) {
@@ -71,6 +73,8 @@ public class UserController {
 
     @GetMapping("/{idUser}/recommendations")
     public List<Film> findRecommendation(@PathVariable Integer idUser) {
-        return userService.findRecommendation(idUser);
+        List<Film> recommendation = userService.findRecommendation(idUser);
+        filmService.setFieldsToArrayOfFilms(recommendation);
+        return recommendation;
     }
 }
