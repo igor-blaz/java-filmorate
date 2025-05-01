@@ -32,9 +32,9 @@ public class UserLogDbStorage extends BaseRepository<UserLog> {
                 userLog.getEventType(),
                 userLog.getOperation()
         );
-        userLog.setId(id);
+        userLog.setEventId(id);
         return new UserLog(
-                userLog.getId(),
+                userLog.getEventId(),
                 userLog.getTimestamp(),
                 userLog.getUserId(),
                 userLog.getEntityId(),

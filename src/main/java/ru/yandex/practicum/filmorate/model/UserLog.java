@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class UserLog {
-    private Integer id;
+    private Integer eventId;
     private long timestamp;
     private int userId;
     private int entityId;
@@ -14,8 +14,8 @@ public class UserLog {
     public UserLog() {
     }
 
-    public UserLog(int id, long timestamp, int userId, int entityId, String eventType, String operation) {
-        this.id = id;
+    public UserLog(int eventId, long timestamp, int userId, int entityId, String eventType, String operation) {
+        this.eventId = eventId;
         this.timestamp = timestamp;
         this.userId = userId;
         this.entityId = entityId;
