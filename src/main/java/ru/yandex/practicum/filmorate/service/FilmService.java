@@ -1,9 +1,12 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.dal.*;
+import ru.yandex.practicum.filmorate.dal.DirectorDbStorage;
+import ru.yandex.practicum.filmorate.dal.FilmDbStorage;
+import ru.yandex.practicum.filmorate.dal.GenreDbStorage;
+import ru.yandex.practicum.filmorate.dal.MpaDbStorage;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -26,6 +29,13 @@ public class FilmService {
     public List<Film> getRatedFilms(int count, Integer genreId, Integer year) {
         return filmStorage.getTopRatedFilms(count, genreId, year);
     }
+    public void setFieldsToFilm(List<Film> films){
+        for(Film film : films){
+            findDirectors(film);
+            findGenres(film);
+            findMpa(film);
+        }
+    }
 
     public Film makeLike(int filmId, int userId) {
         filmStorage.makeLike(filmId, userId);
@@ -45,6 +55,7 @@ public class FilmService {
     }
 
     public List<Film> searchBy(String query, String searchType) {
+        String correctQuery = query.toLowerCase();
         if (searchType.isBlank()) {
             log.info("QueryString оказалась пустой");
             List<Integer> filmIds = filmStorage.findAllFilmIds();
@@ -53,17 +64,17 @@ public class FilmService {
         switch (searchType) {
             case "title,director" -> {
                 log.info("title,director");
-                return searchByDirectorAndTitle(query);
+                return searchByDirectorAndTitle(correctQuery);
 
             }
             case "director" -> {
                 log.info("director");
                 log.info("CASE DIRECTOR");
-                return searchByDirector(query);
+                return searchByDirector(correctQuery);
             }
             case "title" -> {
                 log.info("title");
-                return searchByTitle(query);
+                return searchByTitle(correctQuery);
             }
         }
         return Collections.emptyList();
