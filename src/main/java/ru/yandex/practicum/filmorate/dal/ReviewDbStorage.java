@@ -74,7 +74,7 @@ public class ReviewDbStorage extends BaseRepository<Review> {
     public void addDislike(int reviewId, int userId) {
         update(INSERT_DISLIKE_QUERY, reviewId, userId);
         log.info("Useful до добавления дизлайка " + findById(reviewId).getUseful());
-        updateUseful(reviewId, -2);
+        updateUseful(reviewId, -1);
         log.info("Useful после добавления дизлайка " + findById(reviewId).getUseful());
         log.info("Добавлен дизлайк отзыва {} пользователем {}", reviewId, userId);
     }
