@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.UserDbStorage;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
@@ -12,17 +12,15 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private final UserDbStorage userStorage;
-
-    @Autowired
-    public UserService(UserDbStorage userStorage) {
-        this.userStorage = userStorage;
-    }
+    private final UserLogService userLogService;
 
     public void addToFriends(int id, int newFriendId) {
         isRealUserId(List.of(id, newFriendId));
         userStorage.addFriend(id, newFriendId);
+        userLogService.addUserLog(id, newFriendId, userLogService.EVENT_TYPE_FRIEND, userLogService.EVENT_OPERATION_ADD);
     }
 
     public List<User> findCommonFriends(int firstId, int secondId) {
@@ -33,6 +31,7 @@ public class UserService {
     public void deleteFriend(int userId, int friendToDelete) {
         isRealUserId(List.of(userId, friendToDelete));
         userStorage.removeFriend(userId, friendToDelete);
+        userLogService.addUserLog(userId, friendToDelete, userLogService.EVENT_TYPE_FRIEND, userLogService.EVENT_OPERATION_REMOVE);
     }
 
     public List<User> getUserFriends(int id) {
@@ -46,6 +45,7 @@ public class UserService {
 
     public User updateUser(User user) {
         isRealUserId(List.of(user.getId()));
+        userLogService.addUserLog(user.getId(), user.getId(), userLogService.EVENT_TYPE_USER, userLogService.EVENT_OPERATION_UPDATE);
         return userStorage.updateUser(user);
     }
 

@@ -76,3 +76,13 @@ CREATE TABLE if not exists reviews_like
     user_id INT references users (id) on delete cascade,
     is_like boolean
 );
+
+create table if not exists user_log (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    action_timestamp long,
+    user_id INT,
+    entity_id INT,
+    event_type varchar(20),
+    operation varchar(10),
+    FOREIGN KEY (user_id) REFERENCES users(id) on delete cascade
+);

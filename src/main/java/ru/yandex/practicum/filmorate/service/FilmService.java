@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.*;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
@@ -14,24 +14,14 @@ import java.util.*;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class FilmService {
 
     private final FilmDbStorage filmStorage;
-    private final UserDbStorage userStorage;
     private final GenreDbStorage genreDbStorage;
     private final MpaDbStorage mpaDbStorage;
     private final DirectorDbStorage directorDbStorage;
-
-
-    @Autowired
-    public FilmService(FilmDbStorage filmStorage, UserDbStorage userStorage, GenreDbStorage genreDbStorage,
-                       MpaDbStorage mpaDbStorage, DirectorDbStorage directorDbStorage) {
-        this.filmStorage = filmStorage;
-        this.userStorage = userStorage;
-        this.genreDbStorage = genreDbStorage;
-        this.mpaDbStorage = mpaDbStorage;
-        this.directorDbStorage = directorDbStorage;
-    }
+    private final UserLogService userLogService;
 
     public List<Film> getRatedFilms(int count, Integer genreId, Integer year) {
         return filmStorage.getTopRatedFilms(count, genreId, year);
@@ -39,12 +29,14 @@ public class FilmService {
 
     public Film makeLike(int filmId, int userId) {
         filmStorage.makeLike(filmId, userId);
+        userLogService.addUserLog(userId, filmId, userLogService.EVENT_TYPE_FILM_LIKE, userLogService.EVENT_OPERATION_ADD);
         return filmStorage.getFilm(filmId);
     }
 
     public void removeLike(int filmId, int userId) {
         Film film = filmStorage.getFilm(filmId);
         filmStorage.deleteLike(filmId, userId);
+        userLogService.addUserLog(userId, filmId, userLogService.EVENT_TYPE_FILM_LIKE, userLogService.EVENT_OPERATION_REMOVE);
     }
 
     public List<Film> getTopRatedFilms(int count, Integer genreId, Integer year) {
@@ -150,7 +142,6 @@ public class FilmService {
     private void findNamesForGenres(Film film) {
         film.setGenres(genreDbStorage.getManyGenres(film.getGenres()));
     }
-
 
     private void findDirectors(Film film) {
         log.info("Поиск Режиссера");

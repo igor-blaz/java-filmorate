@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.UserLog;
+import ru.yandex.practicum.filmorate.service.UserLogService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
-
+    private final UserLogService userLogService;
 
     @PostMapping
     public User addUser(@Valid @RequestBody User user) {
@@ -55,6 +57,11 @@ public class UserController {
     @DeleteMapping("/{id}/friends/{friendId}")
     public void deleteFriend(@PathVariable int id, @PathVariable int friendId) {
         userService.deleteFriend(id, friendId);
+    }
+
+    @GetMapping("/{id}/feed")
+    public List<UserLog> userLog(@PathVariable int id) {
+        return userLogService.getLogByUserId(id);
     }
 
     @DeleteMapping("/{userId}")

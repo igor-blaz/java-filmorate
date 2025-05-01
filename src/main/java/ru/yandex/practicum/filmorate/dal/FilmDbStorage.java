@@ -146,7 +146,6 @@ public class FilmDbStorage extends BaseRepository<Film> {
         return findManyIds(GET_GENRES_BY_FILM, id);
     }
 
-
     public List<Film> getAllFilms() {
         return findMany(FIND_ALL_QUERY);
     }
@@ -163,7 +162,6 @@ public class FilmDbStorage extends BaseRepository<Film> {
         }
         return films;
     }
-
 
     public void isRealFilmId(List<Integer> filmIds) {
         List<Film> films = findMany(FIND_BY_ID_QUERY, filmIds.toArray());
