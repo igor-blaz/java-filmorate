@@ -13,7 +13,6 @@ import java.util.*;
 @Slf4j
 @Service
 public class UserLogService {
-    public static final String EVENT_TYPE_USER = "USER";
     public static final String EVENT_TYPE_FILM_LIKE = "LIKE";
     public static final String EVENT_TYPE_REVIEW = "REVIEW";
     public static final String EVENT_TYPE_REVIEW_LIKE = "REVIEW LIKE";

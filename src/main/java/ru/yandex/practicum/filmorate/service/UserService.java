@@ -47,7 +47,6 @@ public class UserService {
 
     public User updateUser(User user) {
         isRealUserId(List.of(user.getId()));
-        userLogService.addUserLog(user.getId(), user.getId(), userLogService.EVENT_TYPE_USER, userLogService.EVENT_OPERATION_UPDATE);
         return userStorage.updateUser(user);
     }
 
