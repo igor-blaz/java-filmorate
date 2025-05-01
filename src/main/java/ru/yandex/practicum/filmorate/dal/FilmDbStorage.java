@@ -1,18 +1,18 @@
 package ru.yandex.practicum.filmorate.dal;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.mapper.FilmRowMapper;
+import ru.yandex.practicum.filmorate.mapper.UserRowMapper;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -92,6 +92,15 @@ public class FilmDbStorage extends BaseRepository<Film> {
     }
 
     public void deleteLike(int filmId, int userId) {
+        getFilm(filmId);
+       /* String query = "SELECT * FROM users WHERE id = ?";
+        User user = jdbc.queryForObject(query, new UserRowMapper(), userId);
+        if (user == null) {
+            throw new NotFoundException("Не найдено пользователя с id " + userId);
+        }*/
+        if (!isUserAdded(userId)) {
+            throw new NotFoundException("Не найдено пользователя с id " + userId);
+        }
         update(REMOVE_LIKE_QUERY, filmId, userId);
     }
 
@@ -181,5 +190,18 @@ public class FilmDbStorage extends BaseRepository<Film> {
 
     public List<Film> getCommonFilms(int userId, int friendId) {
         return findMany(GET_COMMON_FILMS, userId, friendId);
+    }
+
+    private boolean isUserAdded( int userId) {
+        Optional<User> mayBeUser;
+        try {
+            String query = "SELECT * FROM users WHERE id = ?";
+            User result = jdbc.queryForObject(query, new UserRowMapper(), userId);
+            mayBeUser = Optional.ofNullable(result);
+        } catch (EmptyResultDataAccessException ignored) {
+            mayBeUser = Optional.empty();
+        }
+
+        return mayBeUser.isPresent();
     }
 }
