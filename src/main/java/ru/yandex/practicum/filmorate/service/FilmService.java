@@ -216,6 +216,7 @@ public class FilmService {
     }
 
     public List<Film> getPopularFromDirector(int directorId, String sortType) {
+
         List<Integer> filmIds = directorDbStorage.findFilmsByDirectorId(directorId);
         log.info("Айди, которые надо отсортировать {}", filmIds);
         if (sortType.equals("year")) {

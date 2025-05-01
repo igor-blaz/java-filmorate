@@ -93,11 +93,6 @@ public class FilmDbStorage extends BaseRepository<Film> {
 
     public void deleteLike(int filmId, int userId) {
         getFilm(filmId);
-       /* String query = "SELECT * FROM users WHERE id = ?";
-        User user = jdbc.queryForObject(query, new UserRowMapper(), userId);
-        if (user == null) {
-            throw new NotFoundException("Не найдено пользователя с id " + userId);
-        }*/
         if (!isUserAdded(userId)) {
             throw new NotFoundException("Не найдено пользователя с id " + userId);
         }
@@ -192,7 +187,7 @@ public class FilmDbStorage extends BaseRepository<Film> {
         return findMany(GET_COMMON_FILMS, userId, friendId);
     }
 
-    private boolean isUserAdded( int userId) {
+    private boolean isUserAdded(int userId) {
         Optional<User> mayBeUser;
         try {
             String query = "SELECT * FROM users WHERE id = ?";
