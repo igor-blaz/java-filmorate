@@ -42,9 +42,9 @@ public class BaseRepository<T> {
     }
 
     protected String apostropheLikeMaker(String string) {
-        return "'%" +
+        return "%" +
                 string +
-                "%'";
+                "%";
     }
 
     protected int insert(String query, Object... params) {

@@ -22,7 +22,7 @@ public class FilmDbStorage extends BaseRepository<Film> {
     private static final String FIND_ALL_QUERY = "SELECT * FROM film ";
     private static final String FIND_ALL_FILM_ID_QUERY = "SELECT film_id FROM film ";
     private static final String FIND_FILM_BY_NAME_QUERY_PART = "SELECT * FROM film WHERE " +
-            "name LIKE ";
+            "LOWER(name) LIKE LOWER(?);";
     private static final String UPDATE_FILM_BY_ID = """
              UPDATE film SET name = ?,
              description = ?, release_date=?, duration = ?,
@@ -73,8 +73,7 @@ public class FilmDbStorage extends BaseRepository<Film> {
 
     public List<Film> findFilmByNameLike(String likeQuery) {
         String name = apostropheLikeMaker(likeQuery);
-        String query = FIND_FILM_BY_NAME_QUERY_PART + name + ";";
-        return findMany(query);
+        return findMany(FIND_FILM_BY_NAME_QUERY_PART, name);
     }
 
     public List<Integer> findAllFilmIds() {
