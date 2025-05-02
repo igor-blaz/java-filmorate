@@ -1,16 +1,3 @@
-DROP TABLE if exists film CASCADE;
-DROP TABLE if exists users CASCADE;
-DROP TABLE if exists genre CASCADE;
-DROP TABLE if exists mpa CASCADE;
-DROP TABLE if exists directors CASCADE;
-DROP TABLE if exists film_likes CASCADE;
-DROP TABLE if exists user_friends CASCADE;
-DROP TABLE if exists film_genre CASCADE;
-DROP TABLE if exists  reviews CASCADE;
-DROP TABLE if exists  reviews_like CASCADE;
-DROP TABLE if exists  user_log CASCADE;
-DROP TABLE if exists  film_directors CASCADE;
-
 CREATE TABLE IF NOT EXISTS mpa (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(20) NOT NULL
