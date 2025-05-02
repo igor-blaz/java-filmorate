@@ -33,11 +33,18 @@ public class BaseRepository<T> {
     }
 
     protected List<Integer> findManyIds(String query, Object... params) {
+        log.info("Поиск Айди в findManyIds");
         return jdbc.queryForList(query, Integer.class, params);
     }
 
     protected int update(String query, Object... params) {
         return jdbc.update(query, params);
+    }
+
+    protected String apostropheLikeMaker(String string) {
+        return "%" +
+                string +
+                "%";
     }
 
     protected int insert(String query, Object... params) {

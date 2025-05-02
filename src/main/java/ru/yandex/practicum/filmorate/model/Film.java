@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.yandex.practicum.filmorate.controller.MinimumDate;
+import ru.yandex.practicum.filmorate.validation.MinimumDate;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -24,16 +24,26 @@ public class Film {
     private int id = 0;
     @NotBlank(message = "Название не должно быть null")
     private String name;
-    @NotBlank(message = "Описание не должно быть null")
-    @Size(min = 1, max = 200)
-    private String description;
+
     @MinimumDate
     @JsonProperty("releaseDate")
     private LocalDate releaseDate;
+
+    @NotBlank(message = "Описание не должно быть null")
+    @Size(min = 1, max = 200)
+    private String description;
+
     @Positive(message = "Продолжительность должна быть положительной")
     private Integer duration;
+
+    @JsonProperty("mpa")
     private Mpa mpa;
+
+    @JsonProperty("genres")
     private Set<Genre> genres = new HashSet<>();
+
+    @JsonProperty("directors")
+    private Set<Director> directors = new HashSet<>();
 
 
     @Override
