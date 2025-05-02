@@ -102,7 +102,6 @@ public class FilmDbStorage extends BaseRepository<Film> {
         update(REMOVE_LIKE_QUERY, filmId, userId);
     }
 
-
     public void insertFilmAndGenre(int id, Set<Genre> genres) {
         List<Integer> genreIds = genres.stream().map(Genre::getId).toList();
         for (int genreId : genreIds) {
@@ -113,7 +112,6 @@ public class FilmDbStorage extends BaseRepository<Film> {
     public List<Integer> findLikesForFilm(int filmId) {
         return findManyIds(FIND_LIKES_FOR_FILM, filmId);
     }
-
 
     public void insertFilmAndDirector(int id, Set<Director> directors) {
 
@@ -159,15 +157,6 @@ public class FilmDbStorage extends BaseRepository<Film> {
 
     public List<Film> getTopRatedFilms(int count, Integer genreId, Integer year) {
         return findMany(FIND_TOP_POPULAR_QUERY, genreId, genreId, year, year, count);
-    }
-
-    public List<Film> idToFilmConverter(List<Integer> ids) {
-        List<Film> films = new ArrayList<>();
-        for (int filmId : ids) {
-            films.add(findOne(FIND_BY_ID_QUERY, filmId)
-                    .orElseThrow(() -> new NotFoundException("Фильм с ID " + filmId + " не найден")));
-        }
-        return films;
     }
 
     public void isRealFilmId(List<Integer> filmIds) {

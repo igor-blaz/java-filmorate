@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dal.UserDbStorage;
 import ru.yandex.practicum.filmorate.dal.UserLogDbStorage;
@@ -10,9 +10,9 @@ import ru.yandex.practicum.filmorate.model.UserLog;
 import java.time.Instant;
 import java.util.List;
 
-
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserLogService {
     public static final String EVENT_TYPE_FILM_LIKE = "LIKE";
     public static final String EVENT_TYPE_REVIEW = "REVIEW";
@@ -24,12 +24,6 @@ public class UserLogService {
 
     private final UserLogDbStorage userLogDbStorage;
     private final UserDbStorage userDbStorage;
-
-    @Autowired
-    public UserLogService(UserLogDbStorage userLogDbStorage, UserDbStorage userDbStorage) {
-        this.userLogDbStorage = userLogDbStorage;
-        this.userDbStorage = userDbStorage;
-    }
 
     public List<UserLog> getLogByUserId(int userId) {
         userDbStorage.getUser(userId);

@@ -18,9 +18,8 @@ public class GenreDbStorage extends BaseRepository<Genre> {
     private static final String REMOVE_GENRES_BY_FILM_ID = "DELETE FROM film_genre WHERE film_id=?";
     private static final String INSERT_FILM_GENRE = "INSERT INTO film_genre " +
             "(film_id, genre_id) VALUES (?, ?);";
-    private static final String FIND_GENRE_BY_FILM_QUERY = "SELECT genre_id FROM film_genre " +
-            "WHERE film_id = ?;";
-    private static final String FIND_GENRE_QUERY = "SELECT * FROM genre WHERE id = ?;";
+    private static final String FIND_GENRE_BY_FILM_QUERY = "SELECT g.id, g.name FROM film_genre fg " +
+            "JOIN genre g ON g.id = fg.genre_id WHERE fg.film_id = ?";
 
     public GenreDbStorage(JdbcTemplate jdbcTemplate, GenreRowMapper genreRowMapper) {
         super(jdbcTemplate, genreRowMapper);
@@ -36,7 +35,6 @@ public class GenreDbStorage extends BaseRepository<Genre> {
     }
 
     public Set<Genre> getManyGenres(Set<Genre> genresWithoutName) {
-
         Set<Genre> genres = new HashSet<>();
         for (Genre genre : genresWithoutName) {
             int id = genre.getId();
@@ -60,16 +58,6 @@ public class GenreDbStorage extends BaseRepository<Genre> {
     }
 
     public Set<Genre> findGenresByFilmId(int filmId) {
-        Set<Genre> genreSet = new HashSet<>();
-        List<Integer> genreIds = findManyIds(FIND_GENRE_BY_FILM_QUERY, filmId);
-        for (int id : genreIds) {
-            genreSet.add(findGenreById(id));
-        }
-        return genreSet;
-    }
-
-    public Genre findGenreById(int id) {
-        return findOne(FIND_GENRE_QUERY, id)
-                .orElseThrow(() -> new NotFoundException("Жанра с ID " + id + " не найден"));
+        return new HashSet<>(findMany(FIND_GENRE_BY_FILM_QUERY, filmId));
     }
 }

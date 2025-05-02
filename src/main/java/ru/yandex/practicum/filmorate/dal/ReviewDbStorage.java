@@ -41,18 +41,15 @@ public class ReviewDbStorage extends BaseRepository<Review> {
 
     public Review create(Review review) {
         validateReview(review);
-
-        int generatedId = insert(INSERT, review.getContent(), review.getIsPositive(), review.getUserId(), review.getFilmId(), review.getUseful());
-
+        int generatedId = insert(INSERT, review.getContent(), review.getIsPositive(), review.getUserId(),
+                review.getFilmId(), review.getUseful());
         return findById(generatedId);
     }
 
     public Review update(Review review) {
         update(UPDATE_REVIEW_QUERY, review.getContent(), review.getIsPositive(), review.getReviewId());
-
         return findById(review.getReviewId());
     }
-
 
     public void delete(long id) {
         int rowsAffected = update(DELETE_REVIEW_QUERY, id);
@@ -64,26 +61,19 @@ public class ReviewDbStorage extends BaseRepository<Review> {
     }
 
     public void addLike(int reviewId, int userId) {
-        log.info("Useful до добавления лайка " + findById(reviewId).getUseful());
         update(INSERT_LIKE_QUERY, reviewId, userId);
         updateUseful(reviewId, 1);
-        log.info("Useful после добавления лайка " + findById(reviewId).getUseful());
-
     }
 
     public void addDislike(int reviewId, int userId) {
         update(INSERT_DISLIKE_QUERY, reviewId, userId);
-        log.info("Useful до добавления дизлайка " + findById(reviewId).getUseful());
         updateUseful(reviewId, -1);
-        log.info("Useful после добавления дизлайка " + findById(reviewId).getUseful());
         log.info("Добавлен дизлайк отзыва {} пользователем {}", reviewId, userId);
     }
 
     public void removeLike(int reviewId, int userId) {
-        log.info("Useful до удаления лайка " + findById(reviewId).getUseful());
         update(INSERT_DISLIKE_QUERY, reviewId, userId);
         updateUseful(reviewId, -1);
-        log.info("Useful после удаления лайка " + findById(reviewId).getUseful());
     }
 
     private void updateUseful(long reviewId, int value) {
@@ -94,11 +84,8 @@ public class ReviewDbStorage extends BaseRepository<Review> {
         if (review.getFilmId() < 0 || review.getUserId() < 0) {
             throw new NotFoundException("ID должны быть положительными числами");
         }
-
         if (review.getUserId() == 0 || review.getFilmId() == 0) {
             throw new ValidationException("Не указаны user_id и/или film_id");
         }
     }
-
-
 }

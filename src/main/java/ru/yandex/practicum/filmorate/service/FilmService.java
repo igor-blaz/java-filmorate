@@ -19,16 +19,11 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class FilmService {
-
     private final FilmDbStorage filmStorage;
     private final GenreDbStorage genreDbStorage;
     private final MpaDbStorage mpaDbStorage;
     private final DirectorDbStorage directorDbStorage;
     private final UserLogService userLogService;
-
-    public List<Film> getRatedFilms(int count, Integer genreId, Integer year) {
-        return filmStorage.getTopRatedFilms(count, genreId, year);
-    }
 
     public List<Film> setFieldsToArrayOfFilms(List<Film> films) {
         for (Film film : films) {
@@ -85,7 +80,6 @@ public class FilmService {
             }
         }
         return Collections.emptyList();
-
     }
 
     public List<Film> searchByDirectorAndTitle(String query) {
@@ -97,7 +91,6 @@ public class FilmService {
         films.addAll(filmsByDirectorSearch);
         films.addAll(filmsByTitleSearch);
         return films.stream().distinct().toList();
-
     }
 
     public List<Film> searchByDirector(String directorName) {

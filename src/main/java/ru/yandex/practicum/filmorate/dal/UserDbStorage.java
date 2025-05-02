@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.mapper.FilmRowMapper;
 import ru.yandex.practicum.filmorate.mapper.UserRowMapper;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
@@ -90,7 +91,6 @@ public class UserDbStorage extends BaseRepository<User> {
         return friendsAsUsers;
     }
 
-
     public void addFriend(int id, int newFriend) {
         update(ADD_TO_FRIENDS_QUERY, id, newFriend);
     }
@@ -117,10 +117,7 @@ public class UserDbStorage extends BaseRepository<User> {
         List<Integer> users = usersWithSimilarLikes(Long.valueOf(idUser));
 
         if (!users.isEmpty()) {
-            List<Integer> recommendations = filmRecommendations(idUser, users);
-            for (Integer id : recommendations) {
-                films.add(filmDbStorage.getFilm(id));
-            }
+            films = filmRecommendations(idUser, users);
         }
         return films;
     }
@@ -137,20 +134,20 @@ public class UserDbStorage extends BaseRepository<User> {
         return findManyIds(sqlQuery, userId);
     }
 
-    private List<Integer> filmRecommendations(Integer userId, List<Integer> userIds) {
+    private List<Film> filmRecommendations(Integer userId, List<Integer> userIds) {
         if (userIds.isEmpty()) {
             return Collections.emptyList();
         }
 
         String inSql = String.join(",", Collections.nCopies(userIds.size(), "?"));
-        final String sqlQuery = "SELECT fl.film_id FROM film_likes fl " +
+        final String sqlQuery = "SELECT f.* FROM film_likes fl JOIN film f ON fl.film_id = f.id " +
                 "WHERE fl.user_id IN (" + inSql + ") " +
                 "AND fl.film_id NOT IN (SELECT ul.film_id FROM film_likes ul WHERE ul.user_id = ?)";
 
         List<Object> params = new ArrayList<>(userIds);
         params.add(userId);
 
-        return findManyIds(sqlQuery, params.toArray());
+        return jdbc.query(sqlQuery, new FilmRowMapper(), params.toArray());
     }
 
     private boolean isNameEmpty(String nameForCheck) {

@@ -28,26 +28,22 @@ public class DirectorDbStorage extends BaseRepository<Director> {
             "WHERE director_id = ?;";
     private static final String INSERT_FILM_DIRECTOR_QUERY = "INSERT INTO film_directors " +
             "(film_id, director_id) VALUES (?, ?);";
-    private static final String FIND_DIRECTOR_BY_FILM_QUERY = "SELECT director_id FROM film_directors " +
-            "WHERE film_id = ?;";
+    private static final String FIND_DIRECTOR_BY_FILM_QUERY = "SELECT d.director_id, d.director_name " +
+            "FROM film_directors fd JOIN directors d ON fd.director_id = d.director_id WHERE fd.film_id = ?;";
     private static final String FIND_DIRECTOR_BY_NAME_QUERY_PART =
             "SELECT director_id FROM directors WHERE LOWER(director_name) LIKE LOWER(?);";
 
+    public DirectorDbStorage(JdbcTemplate jdbcTemplate, DirectorRowMapper mapper) {
+        super(jdbcTemplate, mapper);
+    }
 
     public Set<Director> findDirectorsByFilmId(int filmId) {
-        log.info("Storage. Запрос  {}", findManyIds(FIND_DIRECTOR_BY_FILM_QUERY, filmId));
-        Set<Director> directorSet = new HashSet<>();
-        List<Integer> directorIds = findManyIds(FIND_DIRECTOR_BY_FILM_QUERY, filmId);
-        for (int id : directorIds) {
-            directorSet.add(findDirectorById(id));
-        }
-        return directorSet;
+        return new HashSet<>(findMany(FIND_DIRECTOR_BY_FILM_QUERY, filmId));
     }
 
     public List<Integer> findDirectorIdsByName(String partName) {
         log.info("Поиск айди режиссеров по имени");
         String name = apostropheLikeMaker(partName);
-        String query = FIND_DIRECTOR_BY_NAME_QUERY_PART;
         return findManyIds(FIND_DIRECTOR_BY_NAME_QUERY_PART, name);
     }
 
@@ -59,15 +55,9 @@ public class DirectorDbStorage extends BaseRepository<Director> {
 
     }
 
-
-    public DirectorDbStorage(JdbcTemplate jdbcTemplate, DirectorRowMapper mapper) {
-        super(jdbcTemplate, mapper);
-    }
-
-    public void addDirectorToFilm(int filmId, int directorId) {
+    private void addDirectorToFilm(int filmId, int directorId) {
         update(INSERT_FILM_DIRECTOR_QUERY, filmId, directorId);
     }
-
 
     public List<Director> findAllDirectors() {
         return findMany(FIND_ALL_DIR_QUERY);
@@ -92,7 +82,6 @@ public class DirectorDbStorage extends BaseRepository<Director> {
         return findOne(FIND_DIRECTOR_QUERY, id)
                 .orElseThrow(() -> new NotFoundException("Режиссер с ID " + id + " не найден"));
     }
-
 
     public Director insertDirector(Director director) {
         if (isNameEmpty(director.getName())) {
@@ -125,7 +114,7 @@ public class DirectorDbStorage extends BaseRepository<Director> {
         update(DELETE_DIRECTOR_QUERY, id);
     }
 
-    public void isRealDirectorId(List<Integer> directorIds) {
+    private void isRealDirectorId(List<Integer> directorIds) {
         List<Director> directors = findMany(FIND_DIRECTOR_QUERY, directorIds.toArray());
 
         if (directors.size() != directorIds.size()) {
