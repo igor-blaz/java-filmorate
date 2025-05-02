@@ -93,9 +93,8 @@ public class FilmService {
         List<Film> filmsByTitleSearch = searchByTitle(query);
         log.info("titleSearch{}", filmsByTitleSearch);
         log.info("dirSearch{}", filmsByDirectorSearch);
-
-        films.addAll(filmsByTitleSearch);
         films.addAll(filmsByDirectorSearch);
+        films.addAll(filmsByTitleSearch);
         return films.stream().distinct().toList();
 
     }
