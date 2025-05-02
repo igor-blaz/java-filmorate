@@ -8,7 +8,7 @@ import ru.yandex.practicum.filmorate.dal.UserLogDbStorage;
 import ru.yandex.practicum.filmorate.model.UserLog;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.List;
 
 
 @Slf4j

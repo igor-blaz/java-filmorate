@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.mapper.UserLogRowMapper;
 import ru.yandex.practicum.filmorate.model.UserLog;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Repository
@@ -16,9 +15,9 @@ public class UserLogDbStorage extends BaseRepository<UserLog> {
 
     private static final String FIND_BY_USER_ID_QUERY = "SELECT * FROM user_log WHERE user_id = ?;";
     private static final String INSERT_USER_LOG = """
-        INSERT INTO user_log (action_timestamp, user_id, entity_id, event_type, operation)
-        VALUES(?, ?, ?, ?, ?);
-        """;
+            INSERT INTO user_log (action_timestamp, user_id, entity_id, event_type, operation)
+            VALUES(?, ?, ?, ?, ?);
+            """;
 
     public UserLogDbStorage(JdbcTemplate jdbcTemplate, UserLogRowMapper userLogRowMapper) {
         super(jdbcTemplate, userLogRowMapper);

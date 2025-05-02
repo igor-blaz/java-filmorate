@@ -89,7 +89,7 @@ public class FilmDbStorage extends BaseRepository<Film> {
     public void makeLike(int filmId, int userId) {
         String sql = "SELECT f.* FROM film_likes fl LEFT JOIN film f ON fl.film_id = f.id " +
                 "WHERE fl.film_id = ? AND fl.user_id = ?;";
-        if (findOne(sql,filmId, userId).isEmpty()) {
+        if (findOne(sql, filmId, userId).isEmpty()) {
             update(ADD_LIKE_QUERY, filmId, userId);
         }
     }
