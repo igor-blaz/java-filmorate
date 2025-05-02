@@ -62,8 +62,6 @@ public class ReviewService {
         log.info("Добавление лайка отзыву {} от пользователя {}", reviewId, userId);
         validateIds(reviewId, userId);
         reviewDbStorage.addLike(reviewId, userId);
-        userLogService.addUserLog(userId, reviewId, userLogService.EVENT_TYPE_FILM_LIKE, userLogService.EVENT_OPERATION_ADD);
-
         return getById(reviewId);
     }
 
