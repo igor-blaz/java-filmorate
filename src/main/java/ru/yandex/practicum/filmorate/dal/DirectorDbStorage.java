@@ -1,20 +1,16 @@
 package ru.yandex.practicum.filmorate.dal;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.mapper.DirectorRowMapper;
-import ru.yandex.practicum.filmorate.mapper.UserRowMapper;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -36,7 +32,6 @@ public class DirectorDbStorage extends BaseRepository<Director> {
             "WHERE film_id = ?;";
     private static final String FIND_DIRECTOR_BY_NAME_QUERY_PART =
             "SELECT director_id FROM directors WHERE LOWER(director_name) LIKE LOWER(?);";
-
 
 
     public Set<Director> findDirectorsByFilmId(int filmId) {

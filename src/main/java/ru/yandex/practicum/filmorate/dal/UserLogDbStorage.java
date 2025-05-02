@@ -46,8 +46,4 @@ public class UserLogDbStorage extends BaseRepository<UserLog> {
     public List<UserLog> findByUserId(long userId) {
         return findMany(FIND_BY_USER_ID_QUERY, userId);
     }
-
-    public Optional<UserLog> findUserLog(String sql, Object ...params) {
-        return findOne(sql, params);
-    }
 }
