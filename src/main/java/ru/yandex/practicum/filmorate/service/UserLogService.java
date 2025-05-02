@@ -37,14 +37,18 @@ public class UserLogService {
     }
 
     public UserLog addUserLog(int userId, int entityId, String eventType, String operation) {
-        UserLog userLog = new UserLog();
+        /*String sql = "SELECT * FROM user_log WHERE user_id = ? AND entity_id = ? AND event_type = ? AND operation = ?";
+        Optional<UserLog> userLogOptional = userLogDbStorage.findUserLog(sql, userId, entityId, eventType, operation);
+        if (userLogOptional.isPresent()) {
+            return userLogOptional.get();
+        }*/
 
+        UserLog userLog = new UserLog();
         userLog.setUserId(userId);
         userLog.setTimestamp(Instant.now().toEpochMilli());
         userLog.setEntityId(entityId);
         userLog.setEventType(eventType);
         userLog.setOperation(operation);
-
         return userLogDbStorage.insertUserLog(userLog);
     }
 }
